@@ -1,5 +1,6 @@
 # Spotter 
 **Collaborators**: Brianna Matey, Aaron Huang, Anjali Amin, Bidipta Roy
+<br>
 A fitness app built by students, for students — designed specifically for the Boston University community.
 Spotter helps students track workouts, join challenges, stay motivated, and build healthier habits through a supportive, campus-centered platform.
 
