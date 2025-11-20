@@ -11,12 +11,12 @@ p{
 #bu_pic{
     width : 90px;
     height:80px;
-    align-items: center;
+    justify-content: left;
 }
 
 .brand {
   display: flex;
-  
+  justify-content: center;
   align-items: center;
   gap: 10px; /* space between SPOTTER and image */
 }
@@ -28,7 +28,7 @@ body{
   
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-weight:900;
-    font-size: 40px;
+    font-size: 70px;
     align-items: center;
     
 
@@ -46,7 +46,7 @@ body{
 #navbar ul {
   list-style: none;   /* No bullets */
   display: flex;      /* Puts items in a row */
-  gap: 40px;          /* Space between links */
+  gap: 50px;          /* Space between links */
   margin: 0;          /* Remove default margin */
   padding: 0;   
 font-size: 50;
@@ -92,7 +92,7 @@ header{
     border-radius: 12px;         
     width: 650px;                
     margin: 20px auto;         
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.37);
     height: 1200px;
     width: 900px;
 
@@ -105,7 +105,8 @@ header{
   color: rgb(1, 1, 1);            /* Link text color */
   text-decoration: none;   /* Remove underline */
   font-weight: 500;
-    font-size:22px;
+    font-size:20px;
+    font-family: "Poppins";
 }
   .textBox{
    
@@ -182,8 +183,8 @@ header{
   border: 1px solid #721111;
   border-radius: 5px;
   cursor: pointer;
-  background-color: white;
-  color: #520101;
+  background-color: rgb(0, 0, 0);
+  color: #ffffff;
   transition: 0.2s;
   user-select: none;
 
@@ -208,5 +209,6 @@ header{
 #navbar a:hover {
   border-bottom: 2px solid #721111;
   background-color: #ff9797;
+  border-radius: 8px;
 
 }
