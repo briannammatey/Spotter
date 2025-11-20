@@ -3,46 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LogWorkout</title>
-    <link rel = "stylesheet" href = "style.css">
+    <title>Log Workout - Spotter</title>
+    <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <title>Document</title>
 </head>
+
 <body>
-    <header class = "site-header">
-    <div id = "background">
-    
-    <nav id = "navbar">
-        <div class="brand">
-        
-        <img id ="bu_pic" src = "\img\bu_dog.png">
-        <p id = "title">🐾SPOTTER 🐾</p>
-        </div>
-        <ul>
-            <li><a href = "index.html">Create A Challenge</a></li>
-            <li><a href = "logWorkout.html">LogWorkout</a></li>
-            <li><a href = "recipe.html">Recipe Generator</a></li>
-            <li></li>
-        </ul>
-    </nav>
+<header class="site-header">
+    <div id="background">
+        <nav id="navbar">
+            <div class="brand">
+                <img id="bu_pic" src="\img\bu_dog.png">
+                <p id="title">🐾SPOTTER 🐾</p>
+            </div>
+            <ul>
+                <li><a href="index.html">Create A Challenge</a></li>
+                <li><a href="logWorkout.html">LogWorkout</a></li>
+                <li><a href="recipe.html">Recipe Generator</a></li>
+            </ul>
+        </nav>
     </div>
-    
-    
-   
 </header>
-<h1 id ="challenge">Log Workout</h1>
-<h4 class = "questions">WHAT IS THE NAME OF YOUR WORKOUT</h4>
-    <textarea type="text" placeholder="Enter your Challenge Title here" class = "textBox"></textarea>
 
-    <h4 class = "questions">Goal</h4>
-    <textarea type="text" placeholder="Enter your Goal here" class = "textBox"></textarea>
-    <h4 class = "questions"> Start Date</h4>
-    <label for="date"></label>
-        <input type="date" id="date" class = "date-box">
-    <h4 class = "questions">End Date</h4>
-     <label for="date"></label>
-        <input type="date" id="date" class = "date-box">
+<div class="webbody">
+    <h2 id="challenge">LOG YOUR WORKOUT</h2>
+    <div class="box">
+        <h4 class="questions">Workout Name</h4>
+        <textarea type="text" placeholder="e.g., Morning Run, Leg Day, Yoga Session" class="textBox"></textarea>
 
-    <button></button>
+        <h4 class="questions">Date</h4>
+        <label for="workout-date"></label>
+        <input type="date" id="workout-date" class="date-box">
+
+        <h4 class="questions">Duration (minutes)</h4>
+        <textarea type="number" placeholder="Enter duration in minutes" class="textBox"></textarea>
+
+        <h4 class="questions">Workout Type</h4>
+        <div class="button-toggle">
+            <input type="radio" id="cardio" name="workout-type" value="cardio">
+            <label for="cardio">Cardio</label>
+
+            <input type="radio" id="strength" name="workout-type" value="strength">
+            <label for="strength">Strength</label>
+        </div>
+
+        <div class="button-toggle" style="margin-top: 10px;">
+            <input type="radio" id="flexibility" name="workout-type" value="flexibility">
+            <label for="flexibility">Flexibility</label>
+
+            <input type="radio" id="sports" name="workout-type" value="sports">
+            <label for="sports">Sports</label>
+        </div>
+
+        <h4 class="questions">Intensity Level</h4>
+        <div class="button-toggle">
+            <input type="radio" id="low" name="intensity" value="low">
+            <label for="low">Low</label>
+
+            <input type="radio" id="medium" name="intensity" value="medium">
+            <label for="medium">Medium</label>
+
+            <input type="radio" id="high" name="intensity" value="high">
+            <label for="high">High</label>
+        </div>
+
+        <h4 class="questions">Calories Burned (optional)</h4>
+        <textarea type="number" placeholder="Estimated calories burned" class="textBox"></textarea>
+
+        <h4 class="questions">Workout Notes</h4>
+        <textarea class="big-box" placeholder="Add any notes about your workout - exercises performed, how you felt, personal records, etc."></textarea>
+
+        <form>
+            <div class="button-toggle-2">
+                <input type="radio" id="logWorkout" name="log" value="log">
+                <label for="logWorkout">LOG WORKOUT</label>
+            </div>
+        </form>
+    </div>
+</div>
+
 </body>
 </html>

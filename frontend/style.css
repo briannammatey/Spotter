@@ -1,214 +1,328 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap');
 
-*{
-    margin:20;
-    padding:0;
+* {
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
 }
-p{
-    line-height:2;
+
+body {
+    background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+    font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
 }
-#bu_pic{
-    width : 90px;
-    height:80px;
-    justify-content: left;
+
+p {
+    line-height: 1.8;
+}
+
+/* Header Styles */
+header {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f8f8 100%);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 3px solid #ff6b6b;
 }
 
 .brand {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px; /* space between SPOTTER and image */
-}
-body{
-    background-color: rgb(245, 244, 244);
-    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-#title{
-  
-    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-weight:900;
-    font-size: 70px;
+    display: flex;
+    justify-content: center;
     align-items: center;
-    
-
-
+    gap: 15px;
+    padding: 15px 0;
 }
+
+#bu_pic {
+    width: 90px;
+    height: 80px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    transition: transform 0.3s ease;
+}
+
+#bu_pic:hover {
+    transform: scale(1.05);
+}
+
+#title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 900;
+    font-size: 60px;
+    background: linear-gradient(135deg, #ff6b6b 0%, #c92a2a 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: 2px;
+    margin: 0;
+}
+
+/* Navigation Styles */
 #navbar {
-   /* Dark background */
-  padding: 10px 20px; 
-  align-items: center;
-  /* Space around the links */
-  
+    padding: 0 20px 20px;
 }
 
-/* Remove bullet points & arrange links horizontally */
 #navbar ul {
-  list-style: none;   /* No bullets */
-  display: flex;      /* Puts items in a row */
-  gap: 50px;          /* Space between links */
-  margin: 0;          /* Remove default margin */
-  padding: 0;   
-font-size: 50;
-  justify-content: center;      /* Remove default padding */
+    list-style: none;
+    display: flex;
+    gap: 40px;
+    margin: 0;
+    padding: 0;
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
-header{
-    border-bottom: 2px solid black; /* thickness + color */
+#navbar a {
+    color: #2c2c2c;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 18px;
+    font-family: 'Poppins', sans-serif;
+    padding: 10px 20px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    position: relative;
 }
-#challenge{
+
+#navbar a::after {
+    content: '';
+    position: absolute;
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 3px;
+    background: #ff6b6b;
+    transition: width 0.3s ease;
+}
+
+#navbar a:hover {
+    background-color: #fff0f0;
+    transform: translateY(-2px);
+}
+
+#navbar a:hover::after {
+    width: 80%;
+}
+
+/* Main Content */
+.webbody {
+    padding: 40px 20px;
+}
+
+#challenge {
     text-align: center;
-    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-weight:900;
-    font-size: 40px;
-
+    font-family: 'Poppins', sans-serif;
+    font-weight: 900;
+    font-size: 48px;
+    color: #2c2c2c;
+    margin-bottom: 40px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.questions{
-   
-    font-size: 22px;
-    margin-left:100px;
-    font-family: "Poppins"; 
-    font-weight: 600px;
-    margin-top: 25px;
-    color:#600d0d
-}
-.date-box {
-  padding: 10px;
-  border: 2px solid #000000;
-  border-radius: 3x;
-  font-size: 16px;
-    margin: 0 auto;
-    display:block;
-    width:500px;
-    height:20;
-    margin-left:90px;
-}
-
-
+/* Main Box Container */
 .box {
-    background-color: #ffebeb;  
-    padding: 20px;               
-    border-radius: 12px;         
-    width: 650px;                
-    margin: 20px auto;         
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.37);
-    height: 1200px;
-    width: 900px;
-
-  }
-
-  .box h2 {
-    margin-top: 0;               /* remove top spacing */
-  }
-  #navbar a {
-  color: rgb(1, 1, 1);            /* Link text color */
-  text-decoration: none;   /* Remove underline */
-  font-weight: 500;
-    font-size:20px;
-    font-family: "Poppins";
+    background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
+    padding: 40px;
+    border-radius: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    min-height: auto;
+    border: 2px solid #ffcccc;
 }
-  .textBox{
-   
-  border: 2px solid #b5a8a8;
-  border-radius: 8px;
-  padding: 10px;  
-  font-size: 16px;
-    margin: 0 auto;
-    display:block;
-    width:550px;
-    height:50px;
-    margin-left: 89px;
-    
-  }
-    .textBox-2{
-    
-  border: 2px solid #3c1212;
-  border-radius: 8px;
-  font-size: 16px;
-    margin: 0 auto;
-    display:block;
-    width:600px;
-    height:100px;
-  }
 
+.box h2 {
+    margin-top: 0;
+}
+
+/* Form Elements */
+.questions {
+    font-size: 20px;
+    margin-left: 20px;
+    margin-top: 30px;
+    margin-bottom: 12px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    color: #600d0d;
+}
+
+.textBox {
+    border: 2px solid #ddb5b5;
+    border-radius: 12px;
+    padding: 15px;
+    font-size: 16px;
+    font-family: 'Poppins', sans-serif;
+    width: calc(100% - 40px);
+    margin: 0 20px;
+    height: 55px;
+    transition: all 0.3s ease;
+    background-color: white;
+    resize: none;
+}
+
+.textBox:focus {
+    outline: none;
+    border-color: #ff6b6b;
+    box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+    transform: translateY(-2px);
+}
+
+.date-box {
+    padding: 15px;
+    border: 2px solid #ddb5b5;
+    border-radius: 12px;
+    font-size: 16px;
+    font-family: 'Poppins', sans-serif;
+    width: calc(100% - 40px);
+    margin: 0 20px;
+    background-color: white;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.date-box:focus {
+    outline: none;
+    border-color: #ff6b6b;
+    box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+}
 
 .big-box {
-  width: 600px;   
-  height: 200px;  
-  padding: 10px;  
-  font-size: 16px;
-  border-radius: 8px;
-  margin-left: 90px;
-
+    width: calc(100% - 40px);
+    min-height: 150px;
+    padding: 15px;
+    font-size: 16px;
+    font-family: 'Poppins', sans-serif;
+    border: 2px solid #ddb5b5;
+    border-radius: 12px;
+    margin: 0 20px;
+    resize: vertical;
+    background-color: white;
+    transition: all 0.3s ease;
 }
+
+.big-box:focus {
+    outline: none;
+    border-color: #ff6b6b;
+    box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+}
+
+/* Toggle Buttons */
 .button-toggle {
-  display: flex;
-  gap: 4px; /* space between buttons */
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin: 0 20px;
 }
 
 .button-toggle input[type="radio"] {
-  display: none; /* hide the actual radio buttons */
+    display: none;
 }
 
 .button-toggle label {
-  padding: 15px 60px;
-  border: 1px solid #721111;
-  border-radius: 5px;
-  cursor: pointer;
-  background-color: white;
-  color: #520101;
-  transition: 0.2s;
-  user-select: none;
-  margin-left: 80px;
-  font-weight:14px;
- 
-  font-size: 20px;
+    padding: 15px 40px;
+    border: 2px solid #c92a2a;
+    border-radius: 12px;
+    cursor: pointer;
+    background-color: white;
+    color: #c92a2a;
+    transition: all 0.3s ease;
+    user-select: none;
+    font-weight: 600;
+    font-size: 18px;
+    font-family: 'Poppins', sans-serif;
+    box-shadow: 0 4px 12px rgba(201, 42, 42, 0.1);
 }
 
 .button-toggle input[type="radio"]:checked + label {
-  background-color: #ff0037;
-  color: white;
+    background: linear-gradient(135deg, #ff6b6b 0%, #c92a2a 100%);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(201, 42, 42, 0.3);
 }
+
 .button-toggle label:hover {
-  background-color: #750303;
-  color: white;
-  
+    background-color: #fff0f0;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(201, 42, 42, 0.2);
 }
-.button-toggle-2 input[type="radio"]{
-    display:none;
+
+/* Submit Button */
+.button-toggle-2 {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
 }
+
+.button-toggle-2 input[type="radio"] {
+    display: none;
+}
+
 .button-toggle-2 label {
-  padding: 20px 40px;        /* 2px was too small, adjusted for a real button */
-  border: 1px solid #721111;
-  border-radius: 5px;
-  cursor: pointer;
-  background-color: rgb(0, 0, 0);
-  color: #ffffff;
-  transition: 0.2s;
-  user-select: none;
-
-  font-weight: 600;          /* FIXED: font-weight cannot be 14px */
-  font-size: 20px;
-
-  display: inline-block;            /* FIXED: "flexbox" is not valid */
-  margin-left: 260px;
-  margin-top: 40px; 
-          /* center button horizontally */
+    padding: 20px 60px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
+    color: white;
+    transition: all 0.3s ease;
+    user-select: none;
+    font-weight: 700;
+    font-size: 20px;
+    font-family: 'Poppins', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 
 .button-toggle-2 input[type="radio"]:checked + label {
-  background-color: #471193;
-  color: white;
+    background: linear-gradient(135deg, #7950f2 0%, #5f3dc4 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(121, 80, 242, 0.4);
 }
 
 .button-toggle-2 label:hover {
-  background-color: #0e0eb6;
-  color: white;
+    background: linear-gradient(135deg, #5f3dc4 0%, #4c2e99 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(95, 61, 196, 0.4);
 }
-#navbar a:hover {
-  border-bottom: 2px solid #721111;
-  background-color: #ff9797;
-  border-radius: 8px;
 
+/* Responsive Design */
+@media (max-width: 768px) {
+    #title {
+        font-size: 40px;
+    }
+   
+    #challenge {
+        font-size: 32px;
+    }
+   
+    .box {
+        padding: 25px;
+    }
+   
+    #navbar ul {
+        gap: 20px;
+    }
+   
+    #navbar a {
+        font-size: 16px;
+        padding: 8px 15px;
+    }
+   
+    .button-toggle {
+        gap: 10px;
+    }
+   
+    .button-toggle label {
+        padding: 12px 30px;
+        font-size: 16px;
+    }
+   
+    .button-toggle-2 label {
+        padding: 18px 50px;
+        font-size: 18px;
+    }
 }
