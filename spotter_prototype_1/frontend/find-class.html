@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPOTTER - Find Class</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <button class="menu-btn" id="menuBtn">☰</button>
+            <h1 class="logo">SPOTTER</h1>
+            <button class="search-btn" id="searchBtn">🔍</button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <h2 class="page-title">FIND CLASS</h2>
+
+            <!-- Location Selection -->
+            <section class="form-section">
+                <h3 class="section-title">WHERE WOULD YOU LIKE TO WORK OUT?</h3>
+                <div class="button-row">
+                    <button class="location-btn active" data-location="on_campus">ON CAMPUS</button>
+                    <button class="location-btn" data-location="off_campus">OFF CAMPUS</button>
+                </div>
+            </section>
+
+            <!-- Class Type Selection -->
+            <section class="form-section">
+                <h3 class="section-title">WHAT TYPES OF CLASSES ARE YOU INTERESTED IN?</h3>
+                <div class="dropdown-container">
+                    <select id="classTypeSelect" class="dropdown-select" multiple>
+                        <option value="" disabled>SELECT CLASS TYPE</option>
+                        <option value="BOXING">BOXING</option>
+                        <option value="CARDIO">CARDIO</option>
+                        <option value="CYCLING">CYCLING</option>
+                        <option value="DANCE">DANCE</option>
+                        <option value="PILATES">PILATES</option>
+                        <option value="YOGA">YOGA</option>
+                        <option value="STRENGTH">STRENGTH</option>
+                        <option value="HIIT">HIIT</option>
+                    </select>
+                </div>
+            </section>
+
+            <!-- Action Button -->
+            <button id="findClassBtn" class="action-btn">FIND CLASS</button>
+
+            <!-- Results Display -->
+            <div id="classResults" class="results-container" style="display: none;">
+                <h3 class="results-title">CLASS SUGGESTIONS</h3>
+                <div id="classList" class="class-list"></div>
+            </div>
+
+            <!-- Error Message -->
+            <div id="errorMessage" class="error-message" style="display: none;"></div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <span class="nav-icon">🏠</span>
+            <span class="nav-label">Home</span>
+        </a>
+        <a href="new-workout.html" class="nav-item active">
+            <span class="nav-icon">🏋️</span>
+            <span class="nav-label">Workout</span>
+        </a>
+        <a href="find-recipes.html" class="nav-item">
+            <span class="nav-icon">🍽️</span>
+            <span class="nav-label">Nutrition</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <span class="nav-icon">👤</span>
+            <span class="nav-label">Profile</span>
+        </a>
+    </nav>
+
+    <script src="js/find-class.js"></script>
+</body>
+</html>
+
