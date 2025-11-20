@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPOTTER - Log Workout</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <button class="menu-btn" id="menuBtn">☰</button>
+            <h1 class="logo">SPOTTER</h1>
+            <button class="search-btn" id="searchBtn">🔍</button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <h2 class="page-title">LOG WORKOUT</h2>
+
+            <!-- Workout Description -->
+            <section class="form-section">
+                <h3 class="section-title">ENTER A DESCRIPTION OF YOUR WORKOUT:</h3>
+                <textarea id="workoutDescription" class="text-input" rows="4" placeholder="ENTER DESCRIPTION HERE"></textarea>
+            </section>
+
+            <!-- Media Upload -->
+            <section class="form-section">
+                <h3 class="section-title">
+                    UPLOAD PHOTO OR VIDEO
+                    <span class="plus-icon">+</span>
+                </h3>
+                <div class="upload-options">
+                    <button class="upload-btn" id="cameraBtn">CAMERA</button>
+                    <button class="upload-btn" id="cameraRollBtn">CAMERA ROLL</button>
+                </div>
+                <input type="file" id="mediaInput" accept="image/*,video/*" style="display: none;">
+                <div id="mediaPreview" class="media-preview" style="display: none;"></div>
+            </section>
+
+            <!-- Personal Record Entry -->
+            <section class="form-section">
+                <h3 class="section-title">ENTER PERSONAL RECORD:</h3>
+                <input type="text" id="personalRecord" class="text-input" placeholder="ENTER DESCRIPTION HERE">
+            </section>
+
+            <!-- Privacy Selection -->
+            <section class="form-section">
+                <h3 class="section-title">WOULD YOU LIKE THIS WORKOUT TO BE PRIVATE OR PUBLIC?</h3>
+                <div class="button-row">
+                    <button class="privacy-btn" data-privacy="private">PRIVATE</button>
+                    <button class="privacy-btn" data-privacy="public">PUBLIC</button>
+                </div>
+            </section>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons-row">
+                <button id="postToFeedBtn" class="action-btn action-btn-half">POST TO FEED</button>
+                <button id="saveToProfileBtn" class="action-btn action-btn-half">SAVE TO PROFILE</button>
+            </div>
+
+            <!-- Success/Error Message -->
+            <div id="message" class="message" style="display: none;"></div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <span class="nav-icon">🏠</span>
+            <span class="nav-label">Home</span>
+        </a>
+        <a href="new-workout.html" class="nav-item active">
+            <span class="nav-icon">🏋️</span>
+            <span class="nav-label">Workout</span>
+        </a>
+        <a href="find-recipes.html" class="nav-item">
+            <span class="nav-icon">🍽️</span>
+            <span class="nav-label">Nutrition</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <span class="nav-icon">👤</span>
+            <span class="nav-label">Profile</span>
+        </a>
+    </nav>
+
+    <script src="js/main.js"></script>
+    <script src="js/log-workout.js"></script>
+</body>
+</html>
+

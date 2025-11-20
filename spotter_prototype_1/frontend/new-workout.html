@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPOTTER - New Workout</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <button class="menu-btn" id="menuBtn">☰</button>
+            <h1 class="logo">SPOTTER</h1>
+            <button class="search-btn" id="searchBtn">🔍</button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <h2 class="page-title">NEW WORKOUT</h2>
+
+            <!-- Body Parts Selection -->
+            <section class="form-section">
+                <h3 class="section-title">WHAT BODY PARTS WOULD YOU LIKE TO WORK OUT?</h3>
+                <div class="button-grid">
+                    <button class="body-part-btn" data-body-part="ARMS">ARMS</button>
+                    <button class="body-part-btn" data-body-part="LEGS">LEGS</button>
+                    <button class="body-part-btn" data-body-part="ABS">ABS</button>
+                    <button class="body-part-btn" data-body-part="CHEST">CHEST</button>
+                    <button class="body-part-btn" data-body-part="SHOULDERS">SHOULDERS</button>
+                    <button class="body-part-btn" data-body-part="BACK">BACK</button>
+                </div>
+            </section>
+
+            <!-- Muscle Target Selection -->
+            <section class="form-section">
+                <h3 class="section-title">WHICH MUSCLES WOULD YOU LIKE TO TARGET?</h3>
+                <div class="dropdown-container">
+                    <select id="muscleSelect" class="dropdown-select" multiple>
+                        <option value="" disabled>SELECT MUSCLES</option>
+                    </select>
+                </div>
+            </section>
+
+            <!-- Action Button -->
+            <button id="getWorkoutBtn" class="action-btn">GET WORKOUT</button>
+
+            <!-- Results Display -->
+            <div id="workoutResults" class="results-container" style="display: none;">
+                <h3 class="results-title">YOUR WORKOUT ROUTINE</h3>
+                <div id="routineList" class="routine-list"></div>
+            </div>
+
+            <!-- Error Message -->
+            <div id="errorMessage" class="error-message" style="display: none;"></div>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <span class="nav-icon">🏠</span>
+            <span class="nav-label">Home</span>
+        </a>
+        <a href="new-workout.html" class="nav-item active">
+            <span class="nav-icon">🏋️</span>
+            <span class="nav-label">Workout</span>
+        </a>
+        <a href="find-recipes.html" class="nav-item">
+            <span class="nav-icon">🍽️</span>
+            <span class="nav-label">Nutrition</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+            <span class="nav-icon">👤</span>
+            <span class="nav-label">Profile</span>
+        </a>
+    </nav>
+
+    <script src="js/main.js"></script>
+    <script src="js/new-workout.js"></script>
+</body>
+</html>
+
