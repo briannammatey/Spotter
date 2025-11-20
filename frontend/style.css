@@ -1,0 +1,212 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+*{
+    margin:20;
+    padding:0;
+    box-sizing: border-box;
+}
+p{
+    line-height:2;
+}
+#bu_pic{
+    width : 90px;
+    height:80px;
+    align-items: center;
+}
+
+.brand {
+  display: flex;
+  
+  align-items: center;
+  gap: 10px; /* space between SPOTTER and image */
+}
+body{
+    background-color: rgb(245, 244, 244);
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+#title{
+  
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight:900;
+    font-size: 40px;
+    align-items: center;
+    
+
+
+}
+#navbar {
+   /* Dark background */
+  padding: 10px 20px; 
+  align-items: center;
+  /* Space around the links */
+  
+}
+
+/* Remove bullet points & arrange links horizontally */
+#navbar ul {
+  list-style: none;   /* No bullets */
+  display: flex;      /* Puts items in a row */
+  gap: 40px;          /* Space between links */
+  margin: 0;          /* Remove default margin */
+  padding: 0;   
+font-size: 50;
+  justify-content: center;      /* Remove default padding */
+}
+
+header{
+    border-bottom: 2px solid black; /* thickness + color */
+}
+#challenge{
+    text-align: center;
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight:900;
+    font-size: 40px;
+
+}
+
+.questions{
+   
+    font-size: 22px;
+    margin-left:100px;
+    font-family: "Poppins"; 
+    font-weight: 600px;
+    margin-top: 25px;
+    color:#600d0d
+}
+.date-box {
+  padding: 10px;
+  border: 2px solid #000000;
+  border-radius: 3x;
+  font-size: 16px;
+    margin: 0 auto;
+    display:block;
+    width:500px;
+    height:20;
+    margin-left:90px;
+}
+
+
+.box {
+    background-color: #ffebeb;  
+    padding: 20px;               
+    border-radius: 12px;         
+    width: 650px;                
+    margin: 20px auto;         
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    height: 1200px;
+    width: 900px;
+
+  }
+
+  .box h2 {
+    margin-top: 0;               /* remove top spacing */
+  }
+  #navbar a {
+  color: rgb(1, 1, 1);            /* Link text color */
+  text-decoration: none;   /* Remove underline */
+  font-weight: 500;
+    font-size:22px;
+}
+  .textBox{
+   
+  border: 2px solid #b5a8a8;
+  border-radius: 8px;
+  padding: 10px;  
+  font-size: 16px;
+    margin: 0 auto;
+    display:block;
+    width:550px;
+    height:50px;
+    margin-left: 89px;
+    
+  }
+    .textBox-2{
+    
+  border: 2px solid #3c1212;
+  border-radius: 8px;
+  font-size: 16px;
+    margin: 0 auto;
+    display:block;
+    width:600px;
+    height:100px;
+  }
+
+
+.big-box {
+  width: 600px;   
+  height: 200px;  
+  padding: 10px;  
+  font-size: 16px;
+  border-radius: 8px;
+  margin-left: 90px;
+
+}
+.button-toggle {
+  display: flex;
+  gap: 4px; /* space between buttons */
+}
+
+.button-toggle input[type="radio"] {
+  display: none; /* hide the actual radio buttons */
+}
+
+.button-toggle label {
+  padding: 15px 60px;
+  border: 1px solid #721111;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: white;
+  color: #520101;
+  transition: 0.2s;
+  user-select: none;
+  margin-left: 80px;
+  font-weight:14px;
+ 
+  font-size: 20px;
+}
+
+.button-toggle input[type="radio"]:checked + label {
+  background-color: #ff0037;
+  color: white;
+}
+.button-toggle label:hover {
+  background-color: #750303;
+  color: white;
+  
+}
+.button-toggle-2 input[type="radio"]{
+    display:none;
+}
+.button-toggle-2 label {
+  padding: 20px 40px;        /* 2px was too small, adjusted for a real button */
+  border: 1px solid #721111;
+  border-radius: 5px;
+  cursor: pointer;
+  background-color: white;
+  color: #520101;
+  transition: 0.2s;
+  user-select: none;
+
+  font-weight: 600;          /* FIXED: font-weight cannot be 14px */
+  font-size: 20px;
+
+  display: inline-block;            /* FIXED: "flexbox" is not valid */
+  margin-left: 260px;
+  margin-top: 40px; 
+          /* center button horizontally */
+}
+
+.button-toggle-2 input[type="radio"]:checked + label {
+  background-color: #471193;
+  color: white;
+}
+
+.button-toggle-2 label:hover {
+  background-color: #0e0eb6;
+  color: white;
+}
+#navbar a:hover {
+  border-bottom: 2px solid #721111;
+  background-color: #ff9797;
+
+}

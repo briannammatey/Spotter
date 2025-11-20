@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UserFeed</title>
+    <link rel = "stylesheet" href = "style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+</head>
+
+
+
+<body><header class = "site-header">
+    <div id = "background">
+    
+    <nav id = "navbar">
+        <div class="brand">
+        
+        <img id ="bu_pic" src = "\img\bu_dog.png">
+        <p id = "title">SPOTTER</p>
+        </div>
+        <ul>
+            <li><a href = "index.html">Create A Challenge</a></li>
+            <li><a href = "logWorkout.html">LogWorkout</a></li>
+            <li><a href = "recipe.html">Recipe Generator</a></li>
+            <li></li>
+        </ul>
+    </nav>
+    </div>
+    
+   
+</header>
+<div class ="webbody">
+ <h2 id = "challenge">CREATE A NEW CHALLENGE</h2>
+    <div class="box">
+    <h4 class = "questions">Challenge Title</h4>
+    <textarea type="text" placeholder="Enter your Challenge Title here" class = "textBox"></textarea>
+
+    <h4 class = "questions">Goal</h4>
+    <textarea type="text" placeholder="Enter your Goal here" class = "textBox"></textarea>
+    <h4 class = "questions"> Start Date</h4>
+    <label for="date"></label>
+        <input type="date" id="date" class = "date-box">
+    <h4 class = "questions">End Date</h4>
+     <label for="date"></label>
+        <input type="date" id="date" class = "date-box">
+
+    <button></button>
+    <h4 class = "questions">Enter Challenge Description</h4>
+      <textarea class="big-box" placeholder="Describe your workout..."></textarea>
+     
+    <form>
+  <h4 class="questions">Select privacy:</h4>
+<div class="button-toggle">
+  <input type="radio" id="privateOption" name="privacy" value="private">
+  <label for="privateOption">Private</label>
+
+  <input type="radio" id="publicOption" name="privacy" value="public">
+  <label for="publicOption">Public</label>
+</div>
+
+<br>
+
+<form>
+  <div class="button-toggle-2">
+    <input type="radio" id="startChallenge" name="start" value="start">
+    <label for="startChallenge">START CHALLENGE</label>
+  </div>
+</form>
+    </div>
+    
+   
+</div>
+</body>
+
+</html>
