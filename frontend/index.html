@@ -17,64 +17,244 @@
     <nav id = "navbar">
         <div class="brand">
         
-        <img id ="bu_pic" src = "\img\bu_dog.png">
+        <img id ="bu_pic" src = "/img/bu_dog.png">
         <p id = "title">🐾SPOTTER 🐾</p>
         </div>
         <ul>
-          <li><a href="homepage.html">Homepage</a></li>
-            <li><a href = "index.html">Create A Challenge</a></li>
-            <li><a href = "logWorkout.html">LogWorkout</a></li>
-            <li><a href = "recipe.html">Recipe Generator</a></li>
-            <li></li>
+            <li><a href = "homepage.html">Homepage</a></li>
+            <li><a href = "index.html">Challenge</a></li>
+            <li><a href = "logWorkout.html">Workout</a></li>
+            <li><a href = "recipe.html">Recipes</a></li>
         </ul>
     </nav>
     </div>
     
    
 </header>
-<form action = "/create_challenge" method = "POST">
 <div class ="webbody">
  <h2 id = "challenge">CREATE A NEW CHALLENGE</h2>
     <div class="box">
+    <!-- Error/Success Messages -->
+    <div id="messageContainer" style="display: none;"></div>
+    
     <h4 class = "questions">Challenge Title</h4>
-    <textarea type="text" name = "title" placeholder="Enter your Challenge Title here" class = "textBox"></textarea>
+    <textarea id="challengeTitle" type="text" placeholder="Enter your Challenge Title here" class = "textBox"></textarea>
 
     <h4 class = "questions">Goal</h4>
-    <textarea name = "goal" type="text" placeholder="Enter your Goal here" class = "textBox"></textarea>
-    <h4 class = "questions"> Start Date</h4>
-    <label for="date"></label>
-        <input type="date" name = "start_date" id="date" class = "date-box">
-    <h4 class = "questions">End Date</h4>
-     <label for="date"></label>
-        <input type="date" id="date" name = "end_date" class = "date-box">
-
-    <button></button>
-    <h4 class = "questions">Enter Challenge Description</h4>
-      <textarea class="big-box" name = "description" placeholder="Describe your workout..."></textarea>
-     
-    <form>
-  <h4 class="questions">Select privacy:</h4>
-<div class="button-toggle">
-  <input type="radio" id="privateOption" name="privacy" value="private">
-  <label for="privateOption">Private</label>
-
-  <input type="radio" id="publicOption" name="privacy" value="public">
-  <label for="publicOption">Public</label>
-</div>
-
-<br>
-
-<form>
-  <div class="button-toggle-2">
-    <input type="radio" id="startChallenge" name="start" value="start">
-    <label for="startChallenge">START CHALLENGE</label>
-  </div>
-</form>
-    </div>
+    <textarea id="challengeGoal" type="text" placeholder="Enter your Goal here" class = "textBox"></textarea>
     
-   
+    <h4 class = "questions">Start Date</h4>
+    <label for="startDate"></label>
+    <input type="date" id="startDate" class = "date-box">
+    
+    <h4 class = "questions">End Date</h4>
+    <label for="endDate"></label>
+    <input type="date" id="endDate" class = "date-box">
+
+    <h4 class = "questions">Enter Challenge Description</h4>
+    <textarea id="challengeDescription" class="big-box" placeholder="Describe your challenge..."></textarea>
+     
+    <h4 class="questions">Select privacy:</h4>
+    <div class="button-toggle">
+      <input type="radio" id="privateOption" name="privacy" value="private">
+      <label for="privateOption">Private</label>
+
+      <input type="radio" id="publicOption" name="privacy" value="public">
+      <label for="publicOption">Public</label>
+    </div>
+
+    <h4 class="questions">Invite Friends:</h4>
+    <div class="invite-friends-container">
+      <input type="text" id="friendSearch" class="textBox" placeholder="Search for friends to invite...">
+      <div class="invited-friends-list" id="invitedFriendsList">
+        <!-- Selected friends will appear here -->
+      </div>
+    </div>
+
+    <br>
+
+    <div class="button-toggle-2">
+      <button type="button" id="startChallengeBtn" class="submit-challenge-btn">START CHALLENGE</button>
+    </div>
+    </div>
 </div>
-</form>
+
+<script>
+// Sample friend data (this would come from backend in production)
+const sampleFriends = [
+    "Alice Johnson", "Bob Smith", "Charlie Brown", "Diana Prince",
+    "Emma Watson", "Frank Miller", "Grace Lee", "Henry Davis",
+    "Isabella Garcia", "Jack Wilson", "Kate Martinez", "Liam Taylor"
+];
+
+let invitedFriends = new Set();
+
+const friendSearchInput = document.getElementById('friendSearch');
+const invitedFriendsList = document.getElementById('invitedFriendsList');
+
+// Create dropdown for search suggestions
+const dropdown = document.createElement('div');
+dropdown.className = 'friend-dropdown';
+dropdown.style.display = 'none';
+friendSearchInput.parentElement.appendChild(dropdown);
+
+// Add search functionality
+friendSearchInput.addEventListener('input', function(e) {
+    const searchTerm = e.target.value.toLowerCase().trim();
+    
+    if (searchTerm.length === 0) {
+        dropdown.style.display = 'none';
+        return;
+    }
+    
+    const matches = sampleFriends.filter(friend => 
+        friend.toLowerCase().includes(searchTerm) && !invitedFriends.has(friend)
+    );
+    
+    if (matches.length > 0) {
+        dropdown.innerHTML = matches.map(friend => 
+            `<div class="friend-option" data-name="${friend}">${friend}</div>`
+        ).join('');
+        dropdown.style.display = 'block';
+    } else {
+        dropdown.style.display = 'none';
+    }
+});
+
+// Handle friend selection from dropdown
+dropdown.addEventListener('click', function(e) {
+    if (e.target.classList.contains('friend-option')) {
+        const friendName = e.target.getAttribute('data-name');
+        addFriend(friendName);
+        friendSearchInput.value = '';
+        dropdown.style.display = 'none';
+    }
+});
+
+// Add friend to invited list
+function addFriend(name) {
+    if (invitedFriends.has(name)) return;
+    
+    invitedFriends.add(name);
+    
+    const friendTag = document.createElement('div');
+    friendTag.className = 'friend-tag';
+    friendTag.innerHTML = `
+        <span>${name}</span>
+        <span class="remove-friend" data-name="${name}">✕</span>
+    `;
+    
+    invitedFriendsList.appendChild(friendTag);
+}
+
+// Remove friend from invited list
+invitedFriendsList.addEventListener('click', function(e) {
+    if (e.target.classList.contains('remove-friend')) {
+        const friendName = e.target.getAttribute('data-name');
+        invitedFriends.delete(friendName);
+        e.target.parentElement.remove();
+    }
+});
+
+// Hide dropdown when clicking outside
+document.addEventListener('click', function(e) {
+    if (!friendSearchInput.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.style.display = 'none';
+    }
+});
+
+// Form submission handler
+document.getElementById('startChallengeBtn').addEventListener('click', async function() {
+    // Get form values
+    const title = document.getElementById('challengeTitle').value.trim();
+    const goal = document.getElementById('challengeGoal').value.trim();
+    const startDate = document.getElementById('startDate').value;
+    const endDate = document.getElementById('endDate').value;
+    const description = document.getElementById('challengeDescription').value.trim();
+    const privacy = document.querySelector('input[name="privacy"]:checked')?.value;
+    
+    // Client-side validation
+    const errors = [];
+    
+    if (!title) errors.push("Challenge title is required");
+    if (!goal) errors.push("Goal is required");
+    if (!startDate) errors.push("Start date is required");
+    if (!endDate) errors.push("End date is required");
+    if (!description) errors.push("Challenge description is required");
+    if (!privacy) errors.push("Privacy setting is required");
+    
+    if (startDate && endDate && new Date(endDate) <= new Date(startDate)) {
+        errors.push("End date must be after start date");
+    }
+    
+    if (errors.length > 0) {
+        showMessage(errors.join('<br>'), 'error');
+        return;
+    }
+    
+    // Prepare data
+    const challengeData = {
+        title,
+        goal,
+        start_date: startDate,
+        end_date: endDate,
+        description,
+        privacy,
+        invited_friends: Array.from(invitedFriends)
+    };
+    
+    // Disable button while submitting
+    const btn = document.getElementById('startChallengeBtn');
+    const originalText = btn.textContent;
+    btn.textContent = 'CREATING...';
+    btn.disabled = true;
+    
+    try {
+        // Send to backend
+        const response = await fetch('/api/create_challenge', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(challengeData)
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            showMessage('Challenge created successfully! Redirecting...', 'success');
+            // Redirect to homepage after 1.5 seconds
+            setTimeout(() => {
+                window.location.href = 'homepage.html';
+            }, 1500);
+        } else {
+            showMessage(result.errors.join('<br>'), 'error');
+            btn.textContent = originalText;
+            btn.disabled = false;
+        }
+    } catch (error) {
+        showMessage('Error connecting to server. Please make sure the backend is running.', 'error');
+        btn.textContent = originalText;
+        btn.disabled = false;
+    }
+});
+
+// Show message function
+function showMessage(message, type) {
+    const messageContainer = document.getElementById('messageContainer');
+    messageContainer.innerHTML = message;
+    messageContainer.className = type === 'success' ? 'success-message' : 'error-message';
+    messageContainer.style.display = 'block';
+    
+    // Auto-hide after 5 seconds for errors
+    if (type === 'error') {
+        setTimeout(() => {
+            messageContainer.style.display = 'none';
+        }, 5000);
+    }
+}
+</script>
+
 </body>
 
 </html>

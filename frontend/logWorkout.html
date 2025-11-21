@@ -13,14 +13,14 @@
     <div id="background">
         <nav id="navbar">
             <div class="brand">
-                <img id="bu_pic" src="\img\bu_dog.png">
+                <img id="bu_pic" src="/img/bu_dog.png">
                 <p id="title">🐾SPOTTER 🐾</p>
             </div>
             <ul>
                 <li><a href="homepage.html">Homepage</a></li>
-                <li><a href="index.html">Create A Challenge</a></li>
-                <li><a href="logWorkout.html">LogWorkout</a></li>
-                <li><a href="recipe.html">Recipe Generator</a></li>
+                <li><a href="index.html">Challenge</a></li>
+                <li><a href="logWorkout.html">Workout</a></li>
+                <li><a href="recipe.html">Recipes</a></li>
             </ul>
         </nav>
     </div>
@@ -29,17 +29,18 @@
 <div class="webbody">
     <h2 id="challenge">LOG YOUR WORKOUT</h2>
     <div class="box">
-        <form action="/log-workout" method="POST">
-
+        <!-- Error/Success Messages -->
+        <div id="messageContainer" style="display: none;"></div>
+        
         <h4 class="questions">Workout Name</h4>
-         <textarea name="workout_name" placeholder="e.g., Morning Run, Leg Day, Yoga Session" class="textBox"></textarea>
+        <textarea id="workoutName" type="text" placeholder="e.g., Morning Run, Leg Day, Yoga Session" class="textBox"></textarea>
 
         <h4 class="questions">Date</h4>
         <label for="workout-date"></label>
-        <input type="date" id="workout-date" class="date-box" name="workout-date">
+        <input type="date" id="workout-date" class="date-box">
 
         <h4 class="questions">Duration (minutes)</h4>
-    <textarea name="duration" placeholder="Enter duration in minutes" class="textBox"></textarea>
+        <textarea id="workoutDuration" type="number" placeholder="Enter duration in minutes" class="textBox"></textarea>
 
         <h4 class="questions">Workout Type</h4>
         <div class="button-toggle">
@@ -71,18 +72,110 @@
         </div>
 
         <h4 class="questions">Calories Burned (optional)</h4>
-        <textarea type="number" placeholder="Estimated calories burned" class="textBox" name = "calories"></textarea>
+        <textarea id="workoutCalories" type="number" placeholder="Estimated calories burned" class="textBox"></textarea>
+
         <h4 class="questions">Workout Notes</h4>
-         <textarea name="notes" class="big-box" placeholder="Add any notes about your workout"></textarea>
-        <form>
-            <div class="button-toggle-2">
-                <input type="radio" id="logWorkout" name="log" value="log">
-                <label for="logWorkout">LOG WORKOUT</label>
-            </div>
-        </form>
+        <textarea id="workoutNotes" class="big-box" placeholder="Add any notes about your workout - exercises performed, how you felt, personal records, etc."></textarea>
+
+        <div class="button-toggle-2">
+            <button type="button" id="logWorkoutBtn" class="submit-challenge-btn">LOG WORKOUT</button>
+        </div>
     </div>
 </div>
-</form>
+
+<script>
+// Form submission handler
+document.getElementById('logWorkoutBtn').addEventListener('click', async function() {
+    // Get form values
+    const workoutName = document.getElementById('workoutName').value.trim();
+    const workoutDate = document.getElementById('workout-date').value;
+    const duration = document.getElementById('workoutDuration').value.trim();
+    const workoutType = document.querySelector('input[name="workout-type"]:checked')?.value;
+    const intensity = document.querySelector('input[name="intensity"]:checked')?.value;
+    const calories = document.getElementById('workoutCalories').value.trim();
+    const notes = document.getElementById('workoutNotes').value.trim();
+    
+    // Client-side validation
+    const errors = [];
+    
+    if (!workoutName) errors.push("Workout name is required");
+    if (!workoutDate) errors.push("Workout date is required");
+    if (!duration) errors.push("Duration is required");
+    if (!workoutType) errors.push("Workout type is required");
+    if (!intensity) errors.push("Intensity level is required");
+    if (!notes) errors.push("Workout notes are required");
+    
+    if (errors.length > 0) {
+        showMessage(errors.join('<br>'), 'error');
+        return;
+    }
+    
+    // Prepare data
+    const workoutData = {
+        workout_name: workoutName,
+        date: workoutDate,
+        duration: duration,
+        workout_type: workoutType,
+        intensity: intensity,
+        notes: notes
+    };
+    
+    // Only add calories if it's provided
+    if (calories && calories.trim() !== '') {
+        workoutData.calories = calories;
+    }
+    
+    // Disable button while submitting
+    const btn = document.getElementById('logWorkoutBtn');
+    const originalText = btn.textContent;
+    btn.textContent = 'LOGGING...';
+    btn.disabled = true;
+    
+    try {
+        // Send to backend
+        const response = await fetch('/api/log_workout', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(workoutData)
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            showMessage('Workout logged successfully! Redirecting...', 'success');
+            // Redirect to homepage after 1.5 seconds
+            setTimeout(() => {
+                window.location.href = 'homepage.html';
+            }, 1500);
+        } else {
+            showMessage(result.errors.join('<br>'), 'error');
+            btn.textContent = originalText;
+            btn.disabled = false;
+        }
+    } catch (error) {
+        showMessage('Error connecting to server. Please make sure the backend is running.', 'error');
+        btn.textContent = originalText;
+        btn.disabled = false;
+    }
+});
+
+// Show message function
+function showMessage(message, type) {
+    const messageContainer = document.getElementById('messageContainer');
+    messageContainer.innerHTML = message;
+    messageContainer.className = type === 'success' ? 'success-message' : 'error-message';
+    messageContainer.style.display = 'block';
+    
+    // Auto-hide after 5 seconds for errors
+    if (type === 'error') {
+        setTimeout(() => {
+            messageContainer.style.display = 'none';
+        }, 5000);
+    }
+}
+</script>
 
 </body>
 </html>
