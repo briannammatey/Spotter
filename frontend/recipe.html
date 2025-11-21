@@ -165,7 +165,7 @@ document.getElementById("generateRecipeBtn").addEventListener("click", async fun
     output.innerHTML = "<p>Generating your plan...</p>";
 
     try {
-        const res = await fetch("http://localhost:5000/api/recipe-plan", {
+        const res = await fetch("http://localhost:5001/api/recipe-plan", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(body),
