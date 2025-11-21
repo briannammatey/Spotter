@@ -1,4 +1,6 @@
 # Spotter Backend Application
+from dotenv import load_dotenv 
+load_dotenv()
 from recipeSuggestions.suggest import generate_day_plan
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
