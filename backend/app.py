@@ -1,5 +1,5 @@
 # Spotter Backend Application
-from recipeSuggestions.suggest import suggest_recipes
+from recipeSuggestions.suggest import generate_day_plan
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import os
@@ -161,21 +161,21 @@ def api_get_workout(workout_id):
         }), 500
 
 # API Routes - Future Features (wait to be implemented)
-@app.route("/api/recipes", methods=["POST"])
-def get_recipes():
+@app.route("/api/recipe-plan", methods=["POST"])
+def recipe_plan():
     data = request.get_json() or {}
 
-    recipes = suggest_recipes(
+    plan = generate_day_plan(
         goal=data.get("goal"),
         diet=data.get("diet"),
-        meal_type=data.get("meal_type"),
-        calorie_band=data.get("calorie_band"),
-        cook_time_band=data.get("cook_time_band"),
-        include_ingredients=data.get("include_ingredients"),
-        avoid_ingredients=data.get("avoid_ingredients"),
+        calorie_target=data.get("calorieTarget"),
+        cooking_time=data.get("cookingTime"),
+        have_ingredients=data.get("ingredients"),
+        avoid_ingredients=data.get("allergies"),
     )
 
-    return jsonify({"recipes": recipes})
+    return jsonify(plan), 200
+
 
 # TODO: Add recipe generation routes
 # @app.route("/api/generate_recipe", methods=["POST"])
