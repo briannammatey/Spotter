@@ -1,6 +1,10 @@
 # Spotter Backend Application
 from dotenv import load_dotenv 
 load_dotenv()
+
+import os
+print("Loaded API key:", os.environ.get("OPENAI_API_KEY"))
+
 from recipeSuggestions.suggest import generate_day_plan
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
