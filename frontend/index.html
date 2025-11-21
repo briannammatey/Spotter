@@ -21,10 +21,11 @@
         <p id = "title">🐾SPOTTER 🐾</p>
         </div>
         <ul>
-            <li><a href = "homepage.html">Homepage</a></li>
+          <li><a href="homepage.html">Homepage</a></li>
             <li><a href = "index.html">Create A Challenge</a></li>
             <li><a href = "logWorkout.html">LogWorkout</a></li>
             <li><a href = "recipe.html">Recipe Generator</a></li>
+            <li></li>
         </ul>
     </nav>
     </div>
@@ -36,20 +37,20 @@
  <h2 id = "challenge">CREATE A NEW CHALLENGE</h2>
     <div class="box">
     <h4 class = "questions">Challenge Title</h4>
-    <textarea type="text" placeholder="Enter your Challenge Title here" class = "textBox"></textarea>
+    <textarea type="text" name = "title" placeholder="Enter your Challenge Title here" class = "textBox"></textarea>
 
     <h4 class = "questions">Goal</h4>
-    <textarea type="text" placeholder="Enter your Goal here" class = "textBox"></textarea>
+    <textarea name = "goal" type="text" placeholder="Enter your Goal here" class = "textBox"></textarea>
     <h4 class = "questions"> Start Date</h4>
     <label for="date"></label>
-        <input type="date" id="date" class = "date-box">
+        <input type="date" name = "start_date" id="date" class = "date-box">
     <h4 class = "questions">End Date</h4>
      <label for="date"></label>
-        <input type="date" id="date" class = "date-box">
+        <input type="date" id="date" name = "end_date" class = "date-box">
 
     <button></button>
     <h4 class = "questions">Enter Challenge Description</h4>
-      <textarea class="big-box" placeholder="Describe your workout..."></textarea>
+      <textarea class="big-box" name = "description" placeholder="Describe your workout..."></textarea>
      
     <form>
   <h4 class="questions">Select privacy:</h4>

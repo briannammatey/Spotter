@@ -19,6 +19,7 @@ def create_challenge():
     ## okay
 
     # check if challenge title is a good size
+    
 
     # check if goal str is a good size
 
