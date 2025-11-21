@@ -449,6 +449,299 @@ header {
     transform: translateY(-2px);
 }
 
+/* Activity Feed Styles */
+.feed-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.feed-item {
+    background: white;
+    border-radius: 16px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.feed-item:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    border-color: #ffcccc;
+    transform: translateY(-2px);
+}
+
+.feed-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+}
+
+.feed-user-info {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.feed-avatar {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #ff6b6b 0%, #c92a2a 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.feed-user-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.feed-username {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    color: #2c2c2c;
+    margin: 0;
+}
+
+.feed-timestamp {
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    color: #888;
+    margin: 0;
+}
+
+.feed-type-badge {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    color: white;
+    white-space: nowrap;
+}
+
+.workout-badge {
+    background: linear-gradient(135deg, #7950f2 0%, #5f3dc4 100%);
+}
+
+.challenge-badge {
+    background: linear-gradient(135deg, #ff922b 0%, #fd7e14 100%);
+}
+
+.achievement-badge {
+    background: linear-gradient(135deg, #20c997 0%, #12b886 100%);
+}
+
+.recipe-badge {
+    background: linear-gradient(135deg, #ff6b6b 0%, #c92a2a 100%);
+}
+
+.feed-content {
+    margin-bottom: 20px;
+}
+
+.feed-title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    color: #2c2c2c;
+    margin: 0 0 10px 0;
+}
+
+.feed-description {
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.feed-stats {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 15px;
+}
+
+.stat-item {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #600d0d;
+    background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
+    padding: 8px 16px;
+    border-radius: 12px;
+    border: 1px solid #ffcccc;
+}
+
+.feed-actions {
+    display: flex;
+    gap: 12px;
+    padding-top: 15px;
+    border-top: 1px solid #f0f0f0;
+    flex-wrap: wrap;
+}
+
+.feed-btn {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+    color: #495057;
+}
+
+.feed-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.like-btn:hover {
+    background: #fff0f0;
+    color: #ff6b6b;
+}
+
+.comment-btn:hover {
+    background: #e7f5ff;
+    color: #1971c2;
+}
+
+.share-btn:hover {
+    background: #f3f0ff;
+    color: #7950f2;
+}
+
+.join-btn:hover {
+    background: #d3f9d8;
+    color: #2b8a3e;
+}
+
+.save-btn:hover {
+    background: #fff4e6;
+    color: #e8590c;
+}
+
+.challenge-info {
+    background: linear-gradient(135deg, #fff9f0 0%, #ffefdb 100%);
+    padding: 15px;
+    border-radius: 12px;
+    border: 2px solid #ffd699;
+    margin-top: 15px;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.challenge-detail {
+    display: flex;
+    flex-direction: column;
+}
+
+.challenge-label {
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.challenge-value {
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #2c2c2c;
+    margin-top: 3px;
+}
+
+.achievement-badge-large {
+    background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
+    padding: 20px;
+    border-radius: 16px;
+    border: 2px solid #ffcccc;
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.achievement-icon {
+    font-size: 60px;
+}
+
+.achievement-text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #c92a2a;
+}
+
+.feed-empty {
+    text-align: center;
+    padding: 60px 20px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.empty-icon {
+    font-size: 80px;
+    margin-bottom: 20px;
+}
+
+.feed-empty h3 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: #2c2c2c;
+    margin-bottom: 10px;
+}
+
+.feed-empty p {
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.empty-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.empty-btn {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 15px 35px;
+    border-radius: 12px;
+    text-decoration: none;
+    background: linear-gradient(135deg, #ff6b6b 0%, #c92a2a 100%);
+    color: white;
+    transition: all 0.3s ease;
+    display: inline-block;
+    box-shadow: 0 4px 12px rgba(201, 42, 42, 0.3);
+}
+
+.empty-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(201, 42, 42, 0.4);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     #title {
@@ -493,5 +786,39 @@ header {
     .recipe-output {
         margin: 30px 10px;
         padding: 20px;
+    }
+    
+    .feed-container {
+        padding: 10px;
+    }
+    
+    .feed-item {
+        padding: 20px;
+    }
+    
+    .feed-title {
+        font-size: 18px;
+    }
+    
+    .feed-stats {
+        gap: 10px;
+    }
+    
+    .stat-item {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+    
+    .feed-actions {
+        gap: 8px;
+    }
+    
+    .feed-btn {
+        font-size: 12px;
+        padding: 8px 15px;
+    }
+    
+    .challenge-info {
+        gap: 15px;
     }
 }
