@@ -241,6 +241,56 @@ RECIPES: List[Dict[str, Any]] = [
         "ingredients": ["bell peppers", "ground turkey", "quinoa", "tomatoes", "cheese"],
         "instructions": "Stuff peppers with cooked turkey-quinoa mixture, top with cheese, bake until tender."
     },
+    {
+        "name": "Quick Veggie Quesadilla Bowl",
+        "goal": ["Bulking", "Maintenance"],
+        "diet": ["Vegetarian"],
+        "meal_type": "Dinner",
+        "calories": 680,
+        "cook_time_min": 12,
+        "ingredients": ["tortilla", "black beans", "cheese", "avocado", "salsa", "sour cream"],
+        "instructions": "Heat tortilla with beans and cheese, top with avocado, salsa, and sour cream."
+    },
+    {
+        "name": "Microwave Veggie Burrito Bowl",
+        "goal": ["Bulking", "Maintenance"],
+        "diet": ["Vegetarian"],
+        "meal_type": "Dinner",
+        "calories": 720,
+        "cook_time_min": 10,
+        "ingredients": ["rice", "black beans", "cheese", "corn", "avocado", "salsa"],
+        "instructions": "Microwave rice and beans, top with cheese, corn, avocado, and salsa."
+    },
+    {
+        "name": "Speedy Pesto Pasta with Veggies",
+        "goal": ["Bulking", "Maintenance"],
+        "diet": ["Vegetarian"],
+        "meal_type": "Dinner",
+        "calories": 690,
+        "cook_time_min": 13,
+        "ingredients": ["pasta", "pesto", "cherry tomatoes", "mozzarella", "pine nuts"],
+        "instructions": "Cook pasta, toss with pesto, add halved tomatoes, mozzarella, and pine nuts."
+    },
+    {
+        "name": "Quick Chickpea Curry",
+        "goal": ["Bulking", "Maintenance", "Cutting"],
+        "diet": ["Vegetarian", "Vegan"],
+        "meal_type": "Dinner",
+        "calories": 650,
+        "cook_time_min": 14,
+        "ingredients": ["chickpeas", "curry sauce", "spinach", "rice", "coconut milk"],
+        "instructions": "Heat curry sauce with chickpeas and spinach, serve over microwaved rice."
+    },
+    {
+        "name": "Fast Veggie Fried Rice",
+        "goal": ["Bulking", "Maintenance"],
+        "diet": ["Vegetarian", "Vegan"],
+        "meal_type": "Dinner",
+        "calories": 710,
+        "cook_time_min": 12,
+        "ingredients": ["rice", "mixed vegetables", "soy sauce", "sesame oil", "tofu"],
+        "instructions": "Stir-fry cooked rice with veggies, crumbled tofu, soy sauce, and sesame oil."
+    },
 
     # SNACK 
     {
@@ -388,10 +438,6 @@ def generate_day_plan(
         return True
 
     candidates = [r for r in RECIPES if recipe_ok(r)]
-
-    # Fallback if over-filtered
-    if not candidates:
-        candidates = RECIPES.copy()
 
     # Determine which meal types to include
     if meal_type:
