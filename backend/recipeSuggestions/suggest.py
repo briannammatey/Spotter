@@ -4,9 +4,9 @@ from typing import List, Dict, Any
 import random
 
 
-# ---- Tiny in-memory "database" of recipes ----
+
 RECIPES: List[Dict[str, Any]] = [
-    # BREAKFAST
+    # BREAKFAST 
     {
         "name": "High-Protein Berry Oatmeal",
         "goal": ["Bulking", "Maintenance", "Cutting"],
@@ -20,15 +20,65 @@ RECIPES: List[Dict[str, Any]] = [
     {
         "name": "Veggie Egg Scramble with Toast",
         "goal": ["Bulking", "Maintenance"],
-        "diet": ["No Preference"],
+        "diet": ["No Preference", "Vegetarian"],
         "meal_type": "Breakfast",
         "calories": 500,
         "cook_time_min": 15,
         "ingredients": ["eggs", "spinach", "peppers", "olive oil", "toast"],
         "instructions": "Scramble eggs with veggies in olive oil, serve with toast."
     },
+    {
+        "name": "Avocado Toast with Poached Eggs",
+        "goal": ["Bulking", "Maintenance"],
+        "diet": ["No Preference", "Vegetarian"],
+        "meal_type": "Breakfast",
+        "calories": 450,
+        "cook_time_min": 12,
+        "ingredients": ["avocado", "eggs", "whole grain bread", "cherry tomatoes"],
+        "instructions": "Mash avocado on toasted bread, top with poached eggs and tomatoes."
+    },
+    {
+        "name": "Protein Pancakes with Berries",
+        "goal": ["Bulking", "Maintenance"],
+        "diet": ["No Preference", "Vegetarian", "High Protein"],
+        "meal_type": "Breakfast",
+        "calories": 520,
+        "cook_time_min": 18,
+        "ingredients": ["protein powder", "banana", "eggs", "oats", "berries"],
+        "instructions": "Blend ingredients, cook pancakes, top with fresh berries."
+    },
+    {
+        "name": "Vegan Protein Smoothie Bowl",
+        "goal": ["Cutting", "Maintenance"],
+        "diet": ["Vegan", "Vegetarian"],
+        "meal_type": "Breakfast",
+        "calories": 350,
+        "cook_time_min": 8,
+        "ingredients": ["banana", "spinach", "vegan protein powder", "almond milk", "chia seeds"],
+        "instructions": "Blend all ingredients until smooth, top with chia seeds and fresh fruit."
+    },
+    {
+        "name": "Keto Breakfast Scramble",
+        "goal": ["Cutting", "Maintenance"],
+        "diet": ["Keto", "No Preference"],
+        "meal_type": "Breakfast",
+        "calories": 420,
+        "cook_time_min": 12,
+        "ingredients": ["eggs", "cheese", "bacon", "spinach", "butter"],
+        "instructions": "Cook bacon, scramble eggs with cheese and spinach in butter."
+    },
+    {
+        "name": "Overnight Oats with Nut Butter",
+        "goal": ["Bulking", "Maintenance"],
+        "diet": ["Vegetarian", "Vegan"],
+        "meal_type": "Breakfast",
+        "calories": 380,
+        "cook_time_min": 5,
+        "ingredients": ["oats", "almond milk", "peanut butter", "maple syrup"],
+        "instructions": "Mix all ingredients and refrigerate overnight. Enjoy cold in the morning."
+    },
 
-    # LUNCH
+    # LUNCH 
     {
         "name": "Chicken Rice Power Bowl",
         "goal": ["Bulking", "Maintenance", "Cutting"],
@@ -49,8 +99,68 @@ RECIPES: List[Dict[str, Any]] = [
         "ingredients": ["tofu", "quinoa", "spinach", "tomato"],
         "instructions": "Pan-fry tofu, cook quinoa, mix with veggies."
     },
+    {
+        "name": "Turkey & Avocado Wrap",
+        "goal": ["Cutting", "Maintenance"],
+        "diet": ["No Preference", "High Protein"],
+        "meal_type": "Lunch",
+        "calories": 480,
+        "cook_time_min": 10,
+        "ingredients": ["turkey breast", "avocado", "whole wheat tortilla", "lettuce", "tomato"],
+        "instructions": "Layer turkey, sliced avocado, lettuce, and tomato in tortilla and wrap."
+    },
+    {
+        "name": "Mediterranean Chickpea Salad",
+        "goal": ["Cutting", "Maintenance"],
+        "diet": ["Vegetarian", "Vegan"],
+        "meal_type": "Lunch",
+        "calories": 420,
+        "cook_time_min": 12,
+        "ingredients": ["chickpeas", "cucumber", "tomatoes", "feta cheese", "olive oil"],
+        "instructions": "Toss chickpeas with chopped veggies, feta, and olive oil dressing."
+    },
+    {
+        "name": "Grilled Salmon Caesar Salad",
+        "goal": ["Cutting", "Maintenance"],
+        "diet": ["No Preference", "High Protein"],
+        "meal_type": "Lunch",
+        "calories": 520,
+        "cook_time_min": 20,
+        "ingredients": ["salmon", "romaine lettuce", "parmesan", "caesar dressing"],
+        "instructions": "Grill salmon, toss lettuce with dressing and parmesan, top with salmon."
+    },
+    {
+        "name": "Veggie Stir-Fry with Brown Rice",
+        "goal": ["Maintenance", "Cutting"],
+        "diet": ["Vegetarian", "Vegan"],
+        "meal_type": "Lunch",
+        "calories": 490,
+        "cook_time_min": 20,
+        "ingredients": ["mixed vegetables", "brown rice", "soy sauce", "ginger", "garlic"],
+        "instructions": "Stir-fry veggies with ginger and garlic, serve over brown rice with soy sauce."
+    },
+    {
+        "name": "Tuna Poke Bowl",
+        "goal": ["Cutting", "Maintenance"],
+        "diet": ["No Preference", "High Protein"],
+        "meal_type": "Lunch",
+        "calories": 540,
+        "cook_time_min": 15,
+        "ingredients": ["tuna", "rice", "edamame", "avocado", "seaweed"],
+        "instructions": "Dice tuna, serve over rice with edamame, avocado, and seaweed."
+    },
+    {
+        "name": "Black Bean & Sweet Potato Bowl",
+        "goal": ["Bulking", "Maintenance"],
+        "diet": ["Vegetarian", "Vegan"],
+        "meal_type": "Lunch",
+        "calories": 580,
+        "cook_time_min": 28,
+        "ingredients": ["black beans", "sweet potato", "quinoa", "corn", "lime"],
+        "instructions": "Roast sweet potato, cook quinoa, mix with black beans and corn, squeeze lime."
+    },
 
-    # DINNER
+    # DINNER 
     {
         "name": "Salmon, Sweet Potato & Asparagus",
         "goal": ["Bulking", "Maintenance", "Cutting"],
@@ -71,12 +181,72 @@ RECIPES: List[Dict[str, Any]] = [
         "ingredients": ["lentil pasta", "tomato sauce", "garlic"],
         "instructions": "Cook lentil pasta and mix with heated marinara sauce."
     },
+    {
+        "name": "Grilled Chicken with Roasted Vegetables",
+        "goal": ["Bulking", "Maintenance", "Cutting"],
+        "diet": ["No Preference", "High Protein"],
+        "meal_type": "Dinner",
+        "calories": 620,
+        "cook_time_min": 35,
+        "ingredients": ["chicken breast", "bell peppers", "zucchini", "carrots", "olive oil"],
+        "instructions": "Grill chicken, roast vegetables with olive oil and herbs."
+    },
+    {
+        "name": "Beef Stir-Fry with Vegetables",
+        "goal": ["Bulking", "Maintenance"],
+        "diet": ["No Preference", "High Protein"],
+        "meal_type": "Dinner",
+        "calories": 720,
+        "cook_time_min": 25,
+        "ingredients": ["beef", "mixed vegetables", "soy sauce", "rice", "ginger"],
+        "instructions": "Stir-fry beef with veggies and ginger, serve over rice with soy sauce."
+    },
+    {
+        "name": "Vegetarian Buddha Bowl",
+        "goal": ["Maintenance", "Cutting"],
+        "diet": ["Vegetarian", "Vegan"],
+        "meal_type": "Dinner",
+        "calories": 560,
+        "cook_time_min": 25,
+        "ingredients": ["chickpeas", "quinoa", "kale", "tahini", "sweet potato"],
+        "instructions": "Roast chickpeas and sweet potato, serve over quinoa with kale and tahini dressing."
+    },
+    {
+        "name": "Keto Zucchini Noodles with Pesto",
+        "goal": ["Cutting", "Maintenance"],
+        "diet": ["Keto", "Vegetarian"],
+        "meal_type": "Dinner",
+        "calories": 480,
+        "cook_time_min": 18,
+        "ingredients": ["zucchini", "pesto", "parmesan", "pine nuts", "cherry tomatoes"],
+        "instructions": "Spiralize zucchini, sauté lightly, toss with pesto, top with parmesan and tomatoes."
+    },
+    {
+        "name": "Shrimp Taco Bowl",
+        "goal": ["Maintenance", "Cutting"],
+        "diet": ["No Preference", "High Protein"],
+        "meal_type": "Dinner",
+        "calories": 580,
+        "cook_time_min": 22,
+        "ingredients": ["shrimp", "cauliflower rice", "black beans", "salsa", "avocado"],
+        "instructions": "Sauté shrimp with spices, serve over cauliflower rice with beans, salsa, and avocado."
+    },
+    {
+        "name": "Stuffed Bell Peppers",
+        "goal": ["Bulking", "Maintenance"],
+        "diet": ["No Preference", "High Protein"],
+        "meal_type": "Dinner",
+        "calories": 640,
+        "cook_time_min": 40,
+        "ingredients": ["bell peppers", "ground turkey", "quinoa", "tomatoes", "cheese"],
+        "instructions": "Stuff peppers with cooked turkey-quinoa mixture, top with cheese, bake until tender."
+    },
 
-    # SNACK
+    # SNACK 
     {
         "name": "Greek Yogurt with Banana & PB",
         "goal": ["Bulking", "Maintenance"],
-        "diet": ["No Preference", "High Protein"],
+        "diet": ["No Preference", "High Protein", "Vegetarian"],
         "meal_type": "Snack",
         "calories": 300,
         "cook_time_min": 5,
@@ -93,6 +263,66 @@ RECIPES: List[Dict[str, Any]] = [
         "ingredients": ["apple", "almonds"],
         "instructions": "Slice apple and eat with almonds."
     },
+    {
+        "name": "Protein Energy Balls",
+        "goal": ["Bulking", "Maintenance"],
+        "diet": ["Vegetarian", "Vegan"],
+        "meal_type": "Snack",
+        "calories": 280,
+        "cook_time_min": 10,
+        "ingredients": ["oats", "peanut butter", "honey", "chocolate chips"],
+        "instructions": "Mix all ingredients, roll into balls, refrigerate for 30 minutes."
+    },
+    {
+        "name": "Hummus with Veggie Sticks",
+        "goal": ["Cutting", "Maintenance"],
+        "diet": ["Vegetarian", "Vegan"],
+        "meal_type": "Snack",
+        "calories": 180,
+        "cook_time_min": 5,
+        "ingredients": ["hummus", "carrots", "celery", "cucumber"],
+        "instructions": "Cut vegetables into sticks and serve with hummus."
+    },
+    {
+        "name": "Cheese & Crackers with Grapes",
+        "goal": ["Maintenance", "Bulking"],
+        "diet": ["Vegetarian", "No Preference"],
+        "meal_type": "Snack",
+        "calories": 250,
+        "cook_time_min": 5,
+        "ingredients": ["cheese", "whole grain crackers", "grapes"],
+        "instructions": "Arrange cheese, crackers, and grapes on a plate."
+    },
+    {
+        "name": "Trail Mix",
+        "goal": ["Bulking", "Maintenance"],
+        "diet": ["Vegetarian", "Vegan", "No Preference"],
+        "meal_type": "Snack",
+        "calories": 320,
+        "cook_time_min": 5,
+        "ingredients": ["mixed nuts", "dried fruit", "dark chocolate chips"],
+        "instructions": "Mix nuts, dried fruit, and chocolate chips in a bowl."
+    },
+    {
+        "name": "Cottage Cheese with Berries",
+        "goal": ["Cutting", "Maintenance"],
+        "diet": ["Vegetarian", "High Protein"],
+        "meal_type": "Snack",
+        "calories": 220,
+        "cook_time_min": 5,
+        "ingredients": ["cottage cheese", "mixed berries", "honey"],
+        "instructions": "Top cottage cheese with fresh berries and a drizzle of honey."
+    },
+    {
+        "name": "Rice Cakes with Almond Butter",
+        "goal": ["Maintenance", "Cutting"],
+        "diet": ["Vegetarian", "Vegan"],
+        "meal_type": "Snack",
+        "calories": 240,
+        "cook_time_min": 5,
+        "ingredients": ["rice cakes", "almond butter", "banana"],
+        "instructions": "Spread almond butter on rice cakes, top with banana slices."
+    },
 ]
 
 
@@ -105,6 +335,7 @@ def _normalize_list_field(field: str) -> List[str]:
 def generate_day_plan(
     goal: str,
     diet: str,
+    meal_type: str,
     calorie_target: str,
     cooking_time: str,
     have_ingredients: str,
@@ -112,30 +343,31 @@ def generate_day_plan(
     max_daily_calories: int = 2000,
 ) -> Dict[str, Any]:
     """
-    Build a simple 1-day meal plan given preferences.
+    Build a meal plan given preferences.
+    If meal_type is specified, only returns recipes for that meal type.
     Returns dict: {"meals": [...], "total_calories": int}
     """
     goal = (goal or "No Preference").strip()
     diet = (diet or "No Preference").strip()
+    meal_type = (meal_type or "").strip()
 
     have_list = _normalize_list_field(have_ingredients)
     avoid_list = _normalize_list_field(avoid_ingredients)
 
     # Map the UI's cooking time button to minutes
     max_time = 999
-    if cooking_time == "Under 15 min":
+    if cooking_time == "quick":
         max_time = 15
-    elif cooking_time == "15-30 min":
+    elif cooking_time == "medium":
         max_time = 30
-    elif cooking_time == "30+ min":
+    elif cooking_time == "long":
         max_time = 120
 
-    # Optional per-meal target from UI (~300, ~500, etc.)
+    # Optional per-meal target from UI (300, 500, etc.)
     per_meal_target = None
     if calorie_target:
-        # "~300 cal" -> 300
         try:
-            per_meal_target = int(calorie_target.strip(" ~cal"))
+            per_meal_target = int(calorie_target)
         except ValueError:
             per_meal_target = None
 
@@ -150,8 +382,9 @@ def generate_day_plan(
         # Must not contain avoided ingredients
         if avoid_list and any(a in r["ingredients"] for a in avoid_list):
             return False
-        # If user listed ingredients they have, prefer recipes that overlap;
-        # we don't require it, we just mark them later.
+        # Filter by meal type if specified
+        if meal_type and r["meal_type"].lower() != meal_type.lower():
+            return False
         return True
 
     candidates = [r for r in RECIPES if recipe_ok(r)]
@@ -160,8 +393,16 @@ def generate_day_plan(
     if not candidates:
         candidates = RECIPES.copy()
 
-    # Group by meal type so we can assemble a full day
-    grouped: Dict[str, List[Dict[str, Any]]] = {"Breakfast": [], "Lunch": [], "Dinner": [], "Snack": []}
+    # Determine which meal types to include
+    if meal_type:
+        # User selected a specific meal type - only return that type
+        meal_types_to_include = [meal_type.capitalize()]
+    else:
+        # No specific meal type - return full day plan
+        meal_types_to_include = ["Breakfast", "Lunch", "Dinner", "Snack"]
+
+    # Group by meal type
+    grouped: Dict[str, List[Dict[str, Any]]] = {}
     for r in candidates:
         grouped.setdefault(r["meal_type"], []).append(r)
 
@@ -173,11 +414,12 @@ def generate_day_plan(
         for mt in grouped:
             random.shuffle(grouped[mt])
 
-    # Build the plan: breakfast, lunch, dinner, snack (if fits)
+    # Build the plan based on selected meal types
     plan_meals: List[Dict[str, Any]] = []
     total_cal = 0
-    for meal_type in ["Breakfast", "Lunch", "Dinner", "Snack"]:
-        options = grouped.get(meal_type, [])
+    
+    for meal_type_name in meal_types_to_include:
+        options = grouped.get(meal_type_name, [])
         if not options:
             continue
         for recipe in options:

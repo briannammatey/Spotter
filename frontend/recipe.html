@@ -165,7 +165,7 @@ document.getElementById("generateRecipeBtn").addEventListener("click", async fun
     };
 
     const output = document.getElementById("recipeOutput");
-    output.innerHTML = "<p>Generating your plan...</p>";
+    output.innerHTML = '<div class="loading-recipe"><div class="loading-spinner">🍳</div><p class="loading-text">Generating your personalized recipe...</p></div>';
 
     try {
         const res = await fetch("http://localhost:5001/api/recipe-plan", {
@@ -177,25 +177,35 @@ document.getElementById("generateRecipeBtn").addEventListener("click", async fun
         const data = await res.json();
 
         if (!data.meals || data.meals.length === 0) {
-            output.innerHTML = "<p>No recipes found. Try adjusting your preferences.</p>";
+            output.innerHTML = '<div class="no-recipes"><div class="no-recipes-icon">😔</div><h3 class="no-recipes-title">No Recipes Found</h3><p class="no-recipes-text">Try adjusting your preferences or removing some filters to find more options!</p></div>';
             return;
         }
 
         const mealHtml = data.meals.map(meal => `
             <div class="meal-card">
-                <h3>${meal.meal_type} – ${meal.name} (${meal.calories} cal)</h3>
-                <p><strong>Ingredients:</strong> ${meal.ingredients.join(", ")}</p>
-                <p><strong>Instructions:</strong> ${meal.instructions}</p>
+                <div class="meal-header">
+                    <h3 class="meal-name">${meal.meal_type} – ${meal.name}</h3>
+                    <span class="meal-calories">🔥 ${meal.calories} cal</span>
+                </div>
+                <div class="meal-section">
+                    <h4 class="meal-section-title">🛒 Ingredients:</h4>
+                    <p class="meal-ingredients">${meal.ingredients.join(", ")}</p>
+                </div>
+                <div class="meal-section">
+                    <h4 class="meal-section-title">👨‍🍳 Instructions:</h4>
+                    <p class="meal-instructions">${meal.instructions}</p>
+                </div>
             </div>
         `).join("");
 
         output.innerHTML = `
-            <h3>Your 1-Day Plan (${data.total_calories} cal)</h3>
+            <h3 class="recipe-result-title">✨ Your Recipe ${data.meals.length > 1 ? 'Plan' : ''}</h3>
+            <div class="total-calories">Total: ${data.total_calories} calories</div>
             ${mealHtml}
         `;
    } catch (err) {
     console.error("Recipe error:", err);
-    output.innerHTML = "<p>Something went wrong generating your plan.</p>";
+    output.innerHTML = '<div class="recipe-error"><div class="error-icon">⚠️</div><h3 class="error-title">Oops! Something Went Wrong</h3><p class="error-text">Unable to generate your recipe plan. Please make sure the backend is running and try again.</p></div>';
     }
 });
 </script>

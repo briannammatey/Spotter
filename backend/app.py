@@ -160,7 +160,7 @@ def api_get_workout(workout_id):
             "errors": [f"Server error: {str(e)}"]
         }), 500
 
-# API Routes - Future Features (wait to be implemented)
+# API Routes - Recipe Generation
 @app.route("/api/recipe-plan", methods=["POST"])
 def recipe_plan():
     data = request.get_json() or {}
@@ -168,6 +168,7 @@ def recipe_plan():
     plan = generate_day_plan(
         goal=data.get("goal"),
         diet=data.get("diet"),
+        meal_type=data.get("mealType"),
         calorie_target=data.get("calorieTarget"),
         cooking_time=data.get("cookingTime"),
         have_ingredients=data.get("ingredients"),

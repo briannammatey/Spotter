@@ -327,6 +327,195 @@ header {
     font-size: 16px;
 }
 
+/* Recipe Result Styles */
+.recipe-result-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: #2c2c2c;
+    margin-bottom: 15px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.total-calories {
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: #c92a2a;
+    text-align: center;
+    margin-bottom: 25px;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
+    border-radius: 12px;
+    border: 2px solid #ffcccc;
+    display: inline-block;
+    width: auto;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    width: fit-content;
+}
+
+.meal-card {
+    background: linear-gradient(135deg, #ffffff 0%, #fafafa 100%);
+    border: 2px solid #e0e0e0;
+    border-radius: 16px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.meal-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    border-color: #ff6b6b;
+}
+
+.meal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.meal-name {
+    font-family: 'Poppins', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: #2c2c2c;
+    margin: 0;
+}
+
+.meal-calories {
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+    background: linear-gradient(135deg, #ff6b6b 0%, #c92a2a 100%);
+    padding: 8px 16px;
+    border-radius: 20px;
+    box-shadow: 0 2px 8px rgba(201, 42, 42, 0.3);
+}
+
+.meal-section {
+    margin-bottom: 15px;
+}
+
+.meal-section:last-child {
+    margin-bottom: 0;
+}
+
+.meal-section-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #600d0d;
+    margin-bottom: 8px;
+}
+
+.meal-ingredients, .meal-instructions {
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    color: #555;
+    line-height: 1.8;
+    margin: 0;
+    padding: 12px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 10px;
+    border-left: 4px solid #ff6b6b;
+}
+
+/* Loading Recipe Styles */
+.loading-recipe {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.loading-spinner {
+    font-size: 60px;
+    animation: rotate 2s linear infinite;
+    margin-bottom: 20px;
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.loading-text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: #666;
+    margin: 0;
+}
+
+/* No Recipes Found Styles */
+.no-recipes {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.no-recipes-icon {
+    font-size: 60px;
+    margin-bottom: 15px;
+}
+
+.no-recipes-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #2c2c2c;
+    margin: 0 0 10px 0;
+}
+
+.no-recipes-text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    color: #666;
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* Recipe Error Styles */
+.recipe-error {
+    text-align: center;
+    padding: 40px 20px;
+    background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
+    border-radius: 12px;
+    border: 2px solid #ffcccc;
+}
+
+.error-icon {
+    font-size: 60px;
+    margin-bottom: 15px;
+}
+
+.error-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #c92a2a;
+    margin: 0 0 10px 0;
+}
+
+.error-text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    color: #666;
+    margin: 0;
+    line-height: 1.6;
+}
+
 .recipe-content {
     display: none;
 }
