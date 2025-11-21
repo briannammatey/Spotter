@@ -187,7 +187,7 @@ document.getElementById("generateRecipeBtn").addEventListener("click", async fun
         `).join("");
 
         output.innerHTML = `
-            <h3>Your 1-Day Plan (${data.total_calories} cal)</h3>
+            <h3>Your Current Meal (${data.total_calories} cal)</h3>
             ${mealHtml}
         `;
    } catch (err) {
