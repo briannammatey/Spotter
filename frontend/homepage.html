@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage - Spotter</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+<header class="site-header">
+    <div id="background">
+        <nav id="navbar">
+            <div class="brand">
+                <img id="bu_pic" src="/img/bu_dog.png">
+                <p id="title">🐾SPOTTER 🐾</p>
+            </div>
+            <ul>
+                <li><a href="homepage.html">Homepage</a></li>
+                <li><a href="index.html">Challenge</a></li>
+                <li><a href="logWorkout.html">Workout</a></li>
+                <li><a href="recipe.html">Recipes</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<div class="webbody">
+    <h2 id="challenge">ACTIVITY FEED</h2>
+    
+    <div class="feed-container" id="feedContainer">
+        <!-- Activity Feed Items will be loaded dynamically -->
+        <div class="loading-message" id="loadingMessage">
+            <p>Loading activities...</p>
+        </div>
+        
+        <!-- Empty State Message (shown when there are no activities) -->
+        <div class="feed-empty" id="emptyState" style="display: none;">
+            <div class="empty-icon">📭</div>
+            <h3>No Activities Yet</h3>
+            <p>Start your fitness journey by logging a workout or creating a challenge!</p>
+            <div class="empty-actions">
+                <a href="logWorkout.html" class="empty-btn">Log Workout</a>
+                <a href="index.html" class="empty-btn">Create Challenge</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Function to format date
+function formatDate(dateString) {
+    const date = new Date(dateString);
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
+}
+
+// Function to calculate time ago
+function timeAgo(dateString) {
+    const date = new Date(dateString);
+    const now = new Date();
+    const seconds = Math.floor((now - date) / 1000);
+    
+    if (seconds < 60) return 'Just now';
+    if (seconds < 3600) return `${Math.floor(seconds / 60)} minutes ago`;
+    if (seconds < 86400) return `${Math.floor(seconds / 3600)} hours ago`;
+    if (seconds < 604800) return `${Math.floor(seconds / 86400)} days ago`;
+    return formatDate(dateString);
+}
+
+// Function to create a challenge feed item
+function createChallengeFeedItem(challenge) {
+    return `
+        <div class="feed-item">
+            <div class="feed-header">
+                <div class="feed-user-info">
+                    <div class="feed-avatar">👤</div>
+                    <div class="feed-user-details">
+                        <h3 class="feed-username">${challenge.creator || 'User'}</h3>
+                        <p class="feed-timestamp">${timeAgo(challenge.created_at)}</p>
+                    </div>
+                </div>
+                <div class="feed-type-badge challenge-badge">🏆 Challenge</div>
+            </div>
+            <div class="feed-content">
+                <h4 class="feed-title">${challenge.title}</h4>
+                <p class="feed-description">${challenge.description}</p>
+                <div class="challenge-info">
+                    <div class="challenge-detail">
+                        <span class="challenge-label">Goal:</span>
+                        <span class="challenge-value">${challenge.goal}</span>
+                    </div>
+                    <div class="challenge-detail">
+                        <span class="challenge-label">Start:</span>
+                        <span class="challenge-value">${formatDate(challenge.start_date)}</span>
+                    </div>
+                    <div class="challenge-detail">
+                        <span class="challenge-label">End:</span>
+                        <span class="challenge-value">${formatDate(challenge.end_date)}</span>
+                    </div>
+                    <div class="challenge-detail">
+                        <span class="challenge-label">Participants:</span>
+                        <span class="challenge-value">${challenge.participants || 1} joined</span>
+                    </div>
+                </div>
+                ${challenge.invited_friends && challenge.invited_friends.length > 0 ? `
+                    <div class="invited-friends-display">
+                        <span class="friends-label">👥 Invited:</span>
+                        ${challenge.invited_friends.slice(0, 3).join(', ')}
+                        ${challenge.invited_friends.length > 3 ? ` +${challenge.invited_friends.length - 3} more` : ''}
+                    </div>
+                ` : ''}
+            </div>
+            <div class="feed-actions">
+                <button class="feed-btn like-btn">❤️ Like</button>
+                <button class="feed-btn comment-btn">💬 Comment</button>
+                <button class="feed-btn join-btn">✅ Join Challenge</button>
+            </div>
+        </div>
+    `;
+}
+
+// Function to create a workout feed item
+function createWorkoutFeedItem(workout) {
+    // Map workout type to emoji
+    const typeEmojis = {
+        'cardio': '🏃',
+        'strength': '💪',
+        'flexibility': '🧘',
+        'sports': '⚽'
+    };
+    
+    // Map intensity to display
+    const intensityDisplay = {
+        'low': 'Low',
+        'medium': 'Medium',
+        'high': 'High'
+    };
+    
+    return `
+        <div class="feed-item">
+            <div class="feed-header">
+                <div class="feed-user-info">
+                    <div class="feed-avatar">👤</div>
+                    <div class="feed-user-details">
+                        <h3 class="feed-username">${workout.creator || 'User'}</h3>
+                        <p class="feed-timestamp">${timeAgo(workout.created_at)}</p>
+                    </div>
+                </div>
+                <div class="feed-type-badge workout-badge">${typeEmojis[workout.workout_type] || '🏋️'} Workout</div>
+            </div>
+            <div class="feed-content">
+                <h4 class="feed-title">${workout.workout_name}</h4>
+                <p class="feed-description">${workout.notes}</p>
+                <div class="feed-stats">
+                    <span class="stat-item">📅 ${formatDate(workout.date)}</span>
+                    <span class="stat-item">⏱️ ${workout.duration} min</span>
+                    ${workout.calories ? `<span class="stat-item">🔥 ${workout.calories} cal</span>` : ''}
+                    <span class="stat-item">💪 ${intensityDisplay[workout.intensity] || workout.intensity}</span>
+                    <span class="stat-item">${typeEmojis[workout.workout_type] || '🏋️'} ${workout.workout_type.charAt(0).toUpperCase() + workout.workout_type.slice(1)}</span>
+                </div>
+            </div>
+            <div class="feed-actions">
+                <button class="feed-btn like-btn">❤️ Like</button>
+                <button class="feed-btn comment-btn">💬 Comment</button>
+                <button class="feed-btn share-btn">🔗 Share</button>
+            </div>
+        </div>
+    `;
+}
+
+// Function to load activities
+async function loadActivities() {
+    const feedContainer = document.getElementById('feedContainer');
+    const loadingMessage = document.getElementById('loadingMessage');
+    const emptyState = document.getElementById('emptyState');
+    
+    try {
+        const response = await fetch('/api/activities');
+        const result = await response.json();
+        
+        // Hide loading message
+        loadingMessage.style.display = 'none';
+        
+        if (result.success && result.activities.length > 0) {
+            // Hide empty state
+            emptyState.style.display = 'none';
+            
+            // Display activities
+            const feedHTML = result.activities.map(activity => {
+                if (activity.type === 'challenge') {
+                    return createChallengeFeedItem(activity);
+                } else if (activity.type === 'workout') {
+                    return createWorkoutFeedItem(activity);
+                }
+                // Add other activity types here (recipe, etc.)
+                return '';
+            }).join('');
+            
+            feedContainer.innerHTML = feedHTML;
+        } else {
+            // Show empty state
+            emptyState.style.display = 'block';
+        }
+    } catch (error) {
+        console.error('Error loading activities:', error);
+        loadingMessage.innerHTML = '<p style="color: #c92a2a;">Error loading activities. Please make sure the backend is running.</p>';
+    }
+}
+
+// Load activities when page loads
+document.addEventListener('DOMContentLoaded', loadActivities);
+</script>
+
+</body>
+</html>
+

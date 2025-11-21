@@ -290,39 +290,722 @@ header {
 }
 
 /* Responsive Design */
+/* Recipe Page Specific Styles */
+.recipe-box {
+    background: linear-gradient(135deg, #fff9f0 0%, #ffefdb 100%);
+    border: 2px solid #ffd699;
+}
+
+.recipe-output {
+    margin: 40px 20px 20px;
+    padding: 30px;
+    background: white;
+    border-radius: 16px;
+    border: 2px dashed #ddb5b5;
+    min-height: 200px;
+    transition: all 0.3s ease;
+}
+
+.recipe-output:hover {
+    border-color: #ff6b6b;
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.1);
+}
+
+.recipe-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #600d0d;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.recipe-placeholder {
+    text-align: center;
+    color: #888;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+}
+
+.recipe-content {
+    display: none;
+}
+
+.recipe-content.active {
+    display: block;
+}
+
+.recipe-section {
+    margin-bottom: 25px;
+}
+
+.recipe-section h4 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: #c92a2a;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.recipe-section ul {
+    list-style: none;
+    padding-left: 10px;
+}
+
+.recipe-section li {
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    color: #333;
+    padding: 6px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.recipe-section li:last-child {
+    border-bottom: none;
+}
+
+.recipe-section ol {
+    padding-left: 20px;
+}
+
+.recipe-section ol li {
+    padding: 10px 0;
+    line-height: 1.6;
+}
+
+.nutrition-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.nutrition-item {
+    background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
+    padding: 15px;
+    border-radius: 12px;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.nutrition-item:hover {
+    transform: translateY(-3px);
+}
+
+.nutrition-value {
+    font-family: 'Poppins', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #c92a2a;
+}
+
+.nutrition-label {
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Checkbox Style for Multiple Selection */
+.checkbox-toggle {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+    margin: 0 20px;
+}
+
+.checkbox-toggle input[type="checkbox"] {
+    display: none;
+}
+
+.checkbox-toggle label {
+    padding: 15px 30px;
+    border: 2px solid #c92a2a;
+    border-radius: 12px;
+    cursor: pointer;
+    background-color: white;
+    color: #c92a2a;
+    transition: all 0.3s ease;
+    user-select: none;
+    font-weight: 600;
+    font-size: 16px;
+    font-family: 'Poppins', sans-serif;
+    box-shadow: 0 4px 12px rgba(201, 42, 42, 0.1);
+}
+
+.checkbox-toggle input[type="checkbox"]:checked + label {
+    background: linear-gradient(135deg, #ff6b6b 0%, #c92a2a 100%);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(201, 42, 42, 0.3);
+}
+
+.checkbox-toggle label:hover {
+    background-color: #fff0f0;
+    transform: translateY(-2px);
+}
+
+/* Submit Button Styles */
+.submit-challenge-btn {
+    padding: 20px 60px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
+    color: white;
+    transition: all 0.3s ease;
+    user-select: none;
+    font-weight: 700;
+    font-size: 20px;
+    font-family: 'Poppins', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.submit-challenge-btn:hover:not(:disabled) {
+    background: linear-gradient(135deg, #5f3dc4 0%, #4c2e99 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(95, 61, 196, 0.4);
+}
+
+.submit-challenge-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* Message Containers */
+.success-message, .error-message {
+    padding: 15px 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    animation: slideIn 0.3s ease;
+}
+
+.success-message {
+    background: linear-gradient(135deg, #d3f9d8 0%, #b2f2bb 100%);
+    color: #2b8a3e;
+    border: 2px solid #51cf66;
+}
+
+.error-message {
+    background: linear-gradient(135deg, #ffe0e0 0%, #ffc9c9 100%);
+    color: #c92a2a;
+    border: 2px solid #ff6b6b;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Invite Friends Styles */
+.invite-friends-container {
+    margin: 0 20px;
+    position: relative;
+}
+
+.friend-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 2px solid #ddb5b5;
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 50;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    margin-top: -12px;
+}
+
+.friend-option {
+    padding: 12px 15px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    color: #2c2c2c;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.friend-option:last-child {
+    border-bottom: none;
+}
+
+.friend-option:hover {
+    background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
+    color: #c92a2a;
+    font-weight: 600;
+}
+
+.invited-friends-list {
+    margin-top: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    min-height: 40px;
+}
+
+.friend-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: linear-gradient(135deg, #ff6b6b 0%, #c92a2a 100%);
+    color: white;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(201, 42, 42, 0.3);
+    animation: fadeIn 0.3s ease;
+}
+
+.friend-tag .remove-friend {
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+    transition: transform 0.2s ease;
+}
+
+.friend-tag .remove-friend:hover {
+    transform: scale(1.2);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Activity Feed Styles */
+.feed-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.loading-message {
+    text-align: center;
+    padding: 40px 20px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 18px;
+    color: #666;
+}
+
+.invited-friends-display {
+    margin-top: 15px;
+    padding: 12px 15px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 10px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    color: #495057;
+}
+
+.friends-label {
+    font-weight: 600;
+    margin-right: 8px;
+}
+
+.feed-item {
+    background: white;
+    border-radius: 16px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.feed-item:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    border-color: #ffcccc;
+    transform: translateY(-2px);
+}
+
+.feed-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+}
+
+.feed-user-info {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.feed-avatar {
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #ff6b6b 0%, #c92a2a 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.feed-user-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.feed-username {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 18px;
+    color: #2c2c2c;
+    margin: 0;
+}
+
+.feed-timestamp {
+    font-family: 'Poppins', sans-serif;
+    font-size: 13px;
+    color: #888;
+    margin: 0;
+}
+
+.feed-type-badge {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    color: white;
+    white-space: nowrap;
+}
+
+.workout-badge {
+    background: linear-gradient(135deg, #7950f2 0%, #5f3dc4 100%);
+}
+
+.challenge-badge {
+    background: linear-gradient(135deg, #ff922b 0%, #fd7e14 100%);
+}
+
+.achievement-badge {
+    background: linear-gradient(135deg, #20c997 0%, #12b886 100%);
+}
+
+.recipe-badge {
+    background: linear-gradient(135deg, #ff6b6b 0%, #c92a2a 100%);
+}
+
+.feed-content {
+    margin-bottom: 20px;
+}
+
+.feed-title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    color: #2c2c2c;
+    margin: 0 0 10px 0;
+}
+
+.feed-description {
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    color: #555;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.feed-stats {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 15px;
+}
+
+.stat-item {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #600d0d;
+    background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
+    padding: 8px 16px;
+    border-radius: 12px;
+    border: 1px solid #ffcccc;
+}
+
+.feed-actions {
+    display: flex;
+    gap: 12px;
+    padding-top: 15px;
+    border-top: 1px solid #f0f0f0;
+    flex-wrap: wrap;
+}
+
+.feed-btn {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #f8f9fa;
+    color: #495057;
+}
+
+.feed-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.like-btn:hover {
+    background: #fff0f0;
+    color: #ff6b6b;
+}
+
+.comment-btn:hover {
+    background: #e7f5ff;
+    color: #1971c2;
+}
+
+.share-btn:hover {
+    background: #f3f0ff;
+    color: #7950f2;
+}
+
+.join-btn:hover {
+    background: #d3f9d8;
+    color: #2b8a3e;
+}
+
+.save-btn:hover {
+    background: #fff4e6;
+    color: #e8590c;
+}
+
+.challenge-info {
+    background: linear-gradient(135deg, #fff9f0 0%, #ffefdb 100%);
+    padding: 15px;
+    border-radius: 12px;
+    border: 2px solid #ffd699;
+    margin-top: 15px;
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.challenge-detail {
+    display: flex;
+    flex-direction: column;
+}
+
+.challenge-label {
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.challenge-value {
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #2c2c2c;
+    margin-top: 3px;
+}
+
+.achievement-badge-large {
+    background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
+    padding: 20px;
+    border-radius: 16px;
+    border: 2px solid #ffcccc;
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.achievement-icon {
+    font-size: 60px;
+}
+
+.achievement-text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #c92a2a;
+}
+
+.feed-empty {
+    text-align: center;
+    padding: 60px 20px;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.empty-icon {
+    font-size: 80px;
+    margin-bottom: 20px;
+}
+
+.feed-empty h3 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: #2c2c2c;
+    margin-bottom: 10px;
+}
+
+.feed-empty p {
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.empty-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.empty-btn {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 15px 35px;
+    border-radius: 12px;
+    text-decoration: none;
+    background: linear-gradient(135deg, #ff6b6b 0%, #c92a2a 100%);
+    color: white;
+    transition: all 0.3s ease;
+    display: inline-block;
+    box-shadow: 0 4px 12px rgba(201, 42, 42, 0.3);
+}
+
+.empty-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(201, 42, 42, 0.4);
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
     #title {
         font-size: 40px;
     }
-   
+    
     #challenge {
         font-size: 32px;
     }
-   
+    
     .box {
         padding: 25px;
     }
-   
+    
     #navbar ul {
         gap: 20px;
     }
-   
+    
     #navbar a {
         font-size: 16px;
         padding: 8px 15px;
     }
-   
+    
     .button-toggle {
         gap: 10px;
     }
-   
+    
     .button-toggle label {
-        padding: 12px 30px;
-        font-size: 16px;
+        padding: 12px 25px;
+        font-size: 14px;
     }
-   
+    
     .button-toggle-2 label {
         padding: 18px 50px;
         font-size: 18px;
+    }
+    
+    .nutrition-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .recipe-output {
+        margin: 30px 10px;
+        padding: 20px;
+    }
+    
+    .feed-container {
+        padding: 10px;
+    }
+    
+    .feed-item {
+        padding: 20px;
+    }
+    
+    .feed-title {
+        font-size: 18px;
+    }
+    
+    .feed-stats {
+        gap: 10px;
+    }
+    
+    .stat-item {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+    
+    .feed-actions {
+        gap: 8px;
+    }
+    
+    .feed-btn {
+        font-size: 12px;
+        padding: 8px 15px;
+    }
+    
+    .challenge-info {
+        gap: 15px;
+    }
+    
+    .friend-dropdown {
+        max-height: 150px;
+    }
+    
+    .friend-option {
+        padding: 10px 12px;
+        font-size: 14px;
+    }
+    
+    .friend-tag {
+        font-size: 12px;
+        padding: 6px 12px;
     }
 }
