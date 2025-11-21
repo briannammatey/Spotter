@@ -3,32 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recipe</title>
-    <link rel = "stylesheet" href = "style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <title>Document</title>
+    <title>Recipe Generator - Spotter</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
 </head>
+
 <body>
-    <header class = "site-header">
-    <div id = "background">
-    
-    <nav id = "navbar">
-        <div class="brand">
-        
-        <img id ="bu_pic" src = "\img\bu_dog.png">
-        <p id = "title">🐾SPOTTER 🐾</p>
-        </div>
-        <ul>
-            <li><a href = "index.html">Create A Challenge</a></li>
-            <li><a href = "logWorkout.html">LogWorkout</a></li>
-            <li><a href = "recipe.html">Recipe Generator</a></li>
-            <li></li>
-        </ul>
-    </nav>
+<header class="site-header">
+    <div id="background">
+        <nav id="navbar">
+            <div class="brand">
+                <img id="bu_pic" src="\img\bu_dog.png">
+                <p id="title">🐾SPOTTER 🐾</p>
+            </div>
+            <ul>
+                <li><a href="index.html">Create A Challenge</a></li>
+                <li><a href="logWorkout.html">LogWorkout</a></li>
+                <li><a href="recipe.html">Recipe Generator</a></li>
+            </ul>
+        </nav>
     </div>
-    
-   
 </header>
-<h1 id ="Title">Log Workout</h1>
+
+<div class="webbody">
+    <h2 id="challenge">🍽️ RECIPE GENERATOR</h2>
+    <div class="box recipe-box">
+        
+        <h4 class="questions">What's Your Goal?</h4>
+        <div class="button-toggle">
+            <input type="radio" id="bulking" name="goal" value="bulking">
+            <label for="bulking">🏋️ Bulking</label>
+
+            <input type="radio" id="cutting" name="goal" value="cutting">
+            <label for="cutting">🔥 Cutting</label>
+
+            <input type="radio" id="maintenance" name="goal" value="maintenance">
+            <label for="maintenance">⚖️ Maintenance</label>
+        </div>
+
+        <h4 class="questions">Dietary Preference</h4>
+        <div class="button-toggle">
+            <input type="radio" id="none" name="diet" value="none">
+            <label for="none">No Preference</label>
+
+            <input type="radio" id="vegetarian" name="diet" value="vegetarian">
+            <label for="vegetarian">🥗 Vegetarian</label>
+
+            <input type="radio" id="vegan" name="diet" value="vegan">
+            <label for="vegan">🌱 Vegan</label>
+        </div>
+
+        <div class="button-toggle" style="margin-top: 10px;">
+            <input type="radio" id="keto" name="diet" value="keto">
+            <label for="keto">🥑 Keto</label>
+
+            <input type="radio" id="highprotein" name="diet" value="highprotein">
+            <label for="highprotein">💪 High Protein</label>
+
+            <input type="radio" id="glutenfree" name="diet" value="glutenfree">
+            <label for="glutenfree">🌾 Gluten-Free</label>
+        </div>
+
+        <h4 class="questions">Meal Type</h4>
+        <div class="button-toggle">
+            <input type="radio" id="breakfast" name="meal" value="breakfast">
+            <label for="breakfast">🌅 Breakfast</label>
+
+            <input type="radio" id="lunch" name="meal" value="lunch">
+            <label for="lunch">☀️ Lunch</label>
+
+            <input type="radio" id="dinner" name="meal" value="dinner">
+            <label for="dinner">🌙 Dinner</label>
+
+            <input type="radio" id="snack" name="meal" value="snack">
+            <label for="snack">🍎 Snack</label>
+        </div>
+
+        <h4 class="questions">Calorie Target (per meal)</h4>
+        <div class="button-toggle">
+            <input type="radio" id="cal300" name="calories" value="300">
+            <label for="cal300">~300 cal</label>
+
+            <input type="radio" id="cal500" name="calories" value="500">
+            <label for="cal500">~500 cal</label>
+
+            <input type="radio" id="cal700" name="calories" value="700">
+            <label for="cal700">~700 cal</label>
+
+            <input type="radio" id="cal900" name="calories" value="900">
+            <label for="cal900">~900 cal</label>
+        </div>
+
+        <h4 class="questions">Cooking Time</h4>
+        <div class="button-toggle">
+            <input type="radio" id="quick" name="time" value="quick">
+            <label for="quick">⚡ Under 15 min</label>
+
+            <input type="radio" id="medium" name="time" value="medium">
+            <label for="medium">⏱️ 15-30 min</label>
+
+            <input type="radio" id="long" name="time" value="long">
+            <label for="long">🍳 30+ min</label>
+        </div>
+
+        <h4 class="questions">Ingredients You Have (optional)</h4>
+        <textarea class="big-box" placeholder="List any ingredients you'd like to use, separated by commas (e.g., chicken, rice, broccoli, eggs...)"></textarea>
+
+        <h4 class="questions">Allergies or Ingredients to Avoid</h4>
+        <textarea class="textBox" placeholder="e.g., nuts, shellfish, dairy..."></textarea>
+
+        <form>
+            <div class="button-toggle-2">
+                <input type="radio" id="generateRecipe" name="generate" value="generate">
+                <label for="generateRecipe">🍴 GENERATE RECIPE</label>
+            </div>
+        </form>
+
+        <!-- Recipe Output Section -->
+        <div class="recipe-output" id="recipeOutput">
+            <h3 class="recipe-title">Your Recipe Will Appear Here</h3>
+            <p class="recipe-placeholder">Select your preferences above and click "Generate Recipe" to get a personalized meal suggestion!</p>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>
