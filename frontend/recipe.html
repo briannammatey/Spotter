@@ -108,17 +108,14 @@
         </div>
 
         <h4 class="questions">Ingredients You Have (optional)</h4>
-        <textarea class="big-box" placeholder="List any ingredients you'd like to use, separated by commas (e.g., chicken, rice, broccoli, eggs...)"></textarea>
+        <textarea id="ingredients" class="big-box" placeholder="List any ingredients you'd like to use, separated by commas (e.g., chicken, rice, broccoli, eggs...)"></textarea>
+
 
         <h4 class="questions">Allergies or Ingredients to Avoid</h4>
-        <textarea class="textBox" placeholder="e.g., nuts, shellfish, dairy..."></textarea>
+        <textarea id="allergies" class="textBox" placeholder="e.g., nuts, shellfish, dairy..."></textarea>
 
-        <form>
-            <div class="button-toggle-2">
-                <input type="radio" id="generateRecipe" name="generate" value="generate">
-                <label for="generateRecipe">🍴 GENERATE RECIPE</label>
-            </div>
-        </form>
+        <button id="generateRecipeBtn" class="generate-btn">🍴 GENERATE RECIPE</button>
+
 
         <!-- Recipe Output Section -->
         <div class="recipe-output" id="recipeOutput">
@@ -127,6 +124,77 @@
         </div>
     </div>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+document.getElementById("generateRecipeBtn").addEventListener("click", async function () {
+    const getCheckedValue = (name) => {
+        const el = document.querySelector(`input[name="${name}"]:checked`);
+        return el ? el.value : null;
+    };
+
+    const body = {
+        goal: getCheckedValue("goal"),
+        diet: getCheckedValue("diet"),
+        mealType: getCheckedValue("meal"),
+        calorieTarget: getCheckedValue("calories"),
+        cookingTime: getCheckedValue("time"),
+        ingredients: document.getElementById("ingredients").value,
+        allergies: document.getElementById("allergies").value,
+    };
+
+    const output = document.getElementById("recipeOutput");
+    output.innerHTML = "<p>Generating your plan...</p>";
+
+    try {
+        const res = await fetch("http://localhost:5000/api/recipe-plan", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body),
+        });
+
+        const data = await res.json();
+
+        if (!data.meals || data.meals.length === 0) {
+            output.innerHTML = "<p>No recipes found. Try adjusting your preferences.</p>";
+            return;
+        }
+
+        const mealHtml = data.meals.map(meal => `
+            <div class="meal-card">
+                <h3>${meal.meal_type} – ${meal.name} (${meal.calories} cal)</h3>
+                <p><strong>Ingredients:</strong> ${meal.ingredients.join(", ")}</p>
+                <p><strong>Instructions:</strong> ${meal.instructions}</p>
+            </div>
+        `).join("");
+
+        output.innerHTML = `
+            <h3>Your 1-Day Plan (${data.total_calories} cal)</h3>
+            ${mealHtml}
+        `;
+    } catch (err) {
+        output.innerHTML = "<p>Something went wrong generating your plan.</p>";
+    }
+});
+</script>
 
 </body>
 </html>
