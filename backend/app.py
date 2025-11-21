@@ -170,17 +170,26 @@ def api_get_workout(workout_id):
 @app.route("/api/recipe-plan", methods=["POST"])
 def recipe_plan():
     data = request.get_json() or {}
+    print("Incoming recipe request:", data)
 
-    plan = generate_day_plan(
-        goal=data.get("goal"),
-        diet=data.get("diet"),
-        calorie_target=data.get("calorieTarget"),
-        cooking_time=data.get("cookingTime"),
-        have_ingredients=data.get("ingredients"),
-        avoid_ingredients=data.get("allergies"),
-    )
+    try:
+        plan = generate_day_plan(
+            goal=data.get("goal"),
+            diet=data.get("diet"),
+            calorie_target=data.get("calorieTarget"),
+            cooking_time=data.get("cookingTime"),
+            have_ingredients=data.get("ingredients"),
+            avoid_ingredients=data.get("allergies"),
+        )
+        print("Generated plan:", plan)
+        return jsonify(plan), 200
 
-    return jsonify(plan), 200
+    except Exception as e:
+        import traceback
+        print("ERROR in /api/recipe-plan:", e)
+        traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
+
 
 
 # TODO: Add recipe generation routes

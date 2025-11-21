@@ -165,35 +165,48 @@ document.getElementById("generateRecipeBtn").addEventListener("click", async fun
     output.innerHTML = "<p>Generating your plan...</p>";
 
     try {
-        const res = await fetch("http://localhost:5001/api/recipe-plan", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(body),
-        });
+    const res = await fetch("http://localhost:5001/api/recipe-plan", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+    });
 
-        const data = await res.json();
+    console.log("Response status:", res.status);
 
-        if (!data.meals || data.meals.length === 0) {
-            output.innerHTML = "<p>No recipes found. Try adjusting your preferences.</p>";
-            return;
-        }
-
-        const mealHtml = data.meals.map(meal => `
-            <div class="meal-card">
-                <h3>${meal.meal_type} – ${meal.name} (${meal.calories} cal)</h3>
-                <p><strong>Ingredients:</strong> ${meal.ingredients.join(", ")}</p>
-                <p><strong>Instructions:</strong> ${meal.instructions}</p>
-            </div>
-        `).join("");
-
-        output.innerHTML = `
-            <h3>Your Current Meal (${data.total_calories} cal)</h3>
-            ${mealHtml}
-        `;
-   } catch (err) {
-    console.error("Recipe error:", err);
-    output.innerHTML = "<p>Something went wrong generating your plan.</p>";
+    // Handle server errors cleanly
+    if (!res.ok) {
+        const text = await res.text();  // read error body
+        console.error("Server error body:", text);
+        output.innerHTML = "<p>Server error while generating your plan.</p>";
+        return;
     }
+
+    // Safely parse JSON
+    const data = await res.json();
+    console.log("Recipe data:", data);
+
+    if (!data.meals || data.meals.length === 0) {
+        output.innerHTML = "<p>No recipes found. Try adjusting your preferences.</p>";
+        return;
+    }
+
+    const mealHtml = data.meals.map(meal => `
+        <div class="meal-card">
+            <h3>${meal.meal_type} – ${meal.name} (${meal.calories} cal)</h3>
+            <p><strong>Ingredients:</strong> ${meal.ingredients.join(", ")}</p>
+            <p><strong>Instructions:</strong> ${meal.instructions}</p>
+        </div>
+    `).join("");
+
+    output.innerHTML = `
+        <h3>Your Current Meal (${data.total_calories} cal)</h3>
+        ${mealHtml}
+    `;
+} catch (err) {
+    console.error("Recipe error:", err); // shows real cause
+    output.innerHTML = "<p>Something went wrong generating your plan.</p>";
+}
+
 });
 </script>
 

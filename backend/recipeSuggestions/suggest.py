@@ -5,8 +5,8 @@ import os
 import json
 from openai import OpenAI
 
-# Initialize OpenAI client (API key from env variable)
-client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+# Let the client read OPENAI_API_KEY from the environment itself
+client = OpenAI()   # no api_key=..., it reads from env
 
 
 def generate_day_plan(
@@ -16,7 +16,7 @@ def generate_day_plan(
     cooking_time: str,
     have_ingredients: str,
     avoid_ingredients: str,
-    max_daily_calories: int = 2000,  # kept for compatibility, but we'll only use per-meal
+    max_daily_calories: int = 2000,  # kept for compatibility
 ) -> Dict[str, Any]:
     """
     Generate ONE meal using the OpenAI API based on user preferences.
@@ -29,7 +29,6 @@ def generate_day_plan(
     have_ingredients = have_ingredients or ""
     avoid_ingredients = avoid_ingredients or ""
 
-    # Map your radio button values to more natural language
     goal_text = {
         "bulking": "bulking (higher calories, high protein)",
         "cutting": "cutting (calorie deficit, high protein)",
@@ -51,7 +50,6 @@ def generate_day_plan(
         "long": "up to 60 minutes",
     }.get(cooking_time, "up to 60 minutes")
 
-    # Per-meal calorie target from your radio buttons (300, 500, 700, 900)
     per_meal_cal = None
     if calorie_target:
         try:
@@ -74,7 +72,7 @@ Constraints:
 - Cooking time: {time_text}
 - Ingredients the user has (optional): {have_ingredients if have_ingredients.strip() else "user did not specify"}
 - Ingredients / allergens to avoid: {avoid_ingredients if avoid_ingredients.strip() else "none specified"}
-- The meal should be something a student could reasonably cook in a small kitchen.
+- The meal should be something a student could reasonably cook in a small college kitchen.
 - Use common ingredients that are not extremely expensive.
 -{calorie_sentence}
 
@@ -90,27 +88,29 @@ Return ONLY a single JSON object, no extra text, matching this structure exactly
 }}
     """.strip()
 
-    # Call OpenAI Chat API and ask for JSON
-    completion = client.chat.completions.create(
-        model="gpt-4o-mini",
-        response_format={"type": "json_object"},
-        messages=[
-            {
-                "role": "system",
-                "content": "You are a nutrition and fitness assistant that designs practical recipes.",
-            },
-            {
-                "role": "user",
-                "content": user_prompt,
-            },
-        ],
-    )
+    try:
+        completion = client.chat.completions.create(
+            model="gpt-4o-mini",
+            response_format={"type": "json_object"},
+            messages=[
+                {
+                    "role": "system",
+                    "content": "You are a nutrition and fitness assistant that designs practical recipes.",
+                },
+                {
+                    "role": "user",
+                    "content": user_prompt,
+                },
+            ],
+        )
+    except Exception as e:
+        # Bubble up a clear error so the route can see it
+        raise RuntimeError(f"OpenAI API call failed: {e}")
 
     raw_content = completion.choices[0].message.content
     try:
         recipe = json.loads(raw_content)
     except json.JSONDecodeError:
-        # Fallback if something weird happens
         recipe = {
             "name": "Fallback Meal",
             "meal_type": "meal",
@@ -119,12 +119,8 @@ Return ONLY a single JSON object, no extra text, matching this structure exactly
             "instructions": "Recipe generation failed. Please try again.",
         }
 
-    # Ensure keys we expect exist
     calories = int(recipe.get("calories", per_meal_cal or 600))
 
-    # Wrap it in the same shape your frontend already expects:
-    # - "meals": list of recipes
-    # - "total_calories": sum (but here it's just one meal)
     return {
         "meals": [recipe],
         "total_calories": calories,
