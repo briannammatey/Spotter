@@ -11,6 +11,7 @@ from data_manager import (load_challenges, get_public_challenges, get_challenge_
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # backend/
 PROJECT_ROOT = os.path.dirname(BASE_DIR)  # project root
 FRONTEND_DIR = os.path.join(PROJECT_ROOT, 'frontend')  # project_root/frontend
+IMG_DIR = os.path.join(PROJECT_ROOT, 'img')  # project_root/img
 
 app = Flask(__name__, static_folder=FRONTEND_DIR, static_url_path='')
 CORS(app)
@@ -24,6 +25,15 @@ def index():
     except Exception as e:
         print(f"Error serving homepage: {e}")
         return f"Error: {e}", 500
+
+@app.route('/img/<path:filename>')
+def serve_image(filename):
+    """Serve images from the img directory"""
+    try:
+        return send_from_directory(IMG_DIR, filename)
+    except Exception as e:
+        print(f"Error serving image {filename}: {e}")
+        return f"Image not found: {filename}", 404
 
 @app.route('/<path:path>')
 def serve_static(path):
