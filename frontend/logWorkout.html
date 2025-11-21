@@ -28,15 +28,17 @@
 <div class="webbody">
     <h2 id="challenge">LOG YOUR WORKOUT</h2>
     <div class="box">
+        <form action="/log-workout" method="POST">
+
         <h4 class="questions">Workout Name</h4>
-        <textarea type="text" placeholder="e.g., Morning Run, Leg Day, Yoga Session" class="textBox"></textarea>
+         <textarea name="workout_name" placeholder="e.g., Morning Run, Leg Day, Yoga Session" class="textBox"></textarea>
 
         <h4 class="questions">Date</h4>
         <label for="workout-date"></label>
-        <input type="date" id="workout-date" class="date-box">
+        <input type="date" id="workout-date" class="date-box" name="workout-date">
 
         <h4 class="questions">Duration (minutes)</h4>
-        <textarea type="number" placeholder="Enter duration in minutes" class="textBox"></textarea>
+    <textarea name="duration" placeholder="Enter duration in minutes" class="textBox"></textarea>
 
         <h4 class="questions">Workout Type</h4>
         <div class="button-toggle">
@@ -68,11 +70,9 @@
         </div>
 
         <h4 class="questions">Calories Burned (optional)</h4>
-        <textarea type="number" placeholder="Estimated calories burned" class="textBox"></textarea>
-
+        <textarea type="number" placeholder="Estimated calories burned" class="textBox" name = "calories"></textarea>
         <h4 class="questions">Workout Notes</h4>
-        <textarea class="big-box" placeholder="Add any notes about your workout - exercises performed, how you felt, personal records, etc."></textarea>
-
+         <textarea name="notes" class="big-box" placeholder="Add any notes about your workout"></textarea>
         <form>
             <div class="button-toggle-2">
                 <input type="radio" id="logWorkout" name="log" value="log">
@@ -81,6 +81,7 @@
         </form>
     </div>
 </div>
+</form>
 
 </body>
 </html>
