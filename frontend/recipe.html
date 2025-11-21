@@ -190,8 +190,9 @@ document.getElementById("generateRecipeBtn").addEventListener("click", async fun
             <h3>Your 1-Day Plan (${data.total_calories} cal)</h3>
             ${mealHtml}
         `;
-    } catch (err) {
-        output.innerHTML = "<p>Something went wrong generating your plan.</p>";
+   } catch (err) {
+    console.error("Recipe error:", err);
+    output.innerHTML = "<p>Something went wrong generating your plan.</p>";
     }
 });
 </script>
