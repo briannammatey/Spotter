@@ -2,7 +2,9 @@
 
 from datetime import datetime
 import uuid
-from data_manager import add_challenge
+#from data_manager import add_challenge
+from .data_manager import add_challenge
+
 
 def validate_challenge_data(data):
     """
