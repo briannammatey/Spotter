@@ -1,1 +1,58 @@
-[]
+[
+  {
+    "id": "5f1330cb-189a-489a-924d-8d7f5682f420",
+    "title": "Triathalon",
+    "goal": "Complete a triatholon by the end of 2028",
+    "start_date": "2025-11-21",
+    "end_date": "2028-11-21",
+    "description": "Train 3 years for a triathalon",
+    "privacy": "public",
+    "invited_friends": [],
+    "creator": "Current User",
+    "created_at": "2025-11-21T21:11:21.250479",
+    "participants": 1,
+    "type": "challenge"
+  },
+  {
+    "id": "3b19e1c7-1ef7-4e18-b932-049c942a16d7",
+    "title": "Marathon",
+    "goal": "Run a marathon in Boston",
+    "start_date": "2026-05-26",
+    "end_date": "2027-05-26",
+    "description": "Do the boston marathon and prepare for it",
+    "privacy": "public",
+    "invited_friends": [],
+    "creator": "Current User",
+    "created_at": "2025-11-21T21:08:37.485281",
+    "participants": 1,
+    "type": "challenge"
+  },
+  {
+    "id": "f23e7596-db22-46a0-a932-813b5a688123",
+    "title": "Pushups",
+    "goal": "100 pushups",
+    "start_date": "2026-10-23",
+    "end_date": "2027-10-23",
+    "description": "Complete 100 pushups in one year",
+    "privacy": "private",
+    "invited_friends": [],
+    "creator": "Current User",
+    "created_at": "2025-11-21T21:04:28.475964",
+    "participants": 1,
+    "type": "challenge"
+  },
+  {
+    "id": "58f4e99b-c719-4d15-8529-56745b2c9e97",
+    "title": "Burpees",
+    "goal": "100 reps",
+    "start_date": "2026-10-23",
+    "end_date": "2027-10-23",
+    "description": "Must do 100 burpees in one year",
+    "privacy": "public",
+    "invited_friends": [],
+    "creator": "Current User",
+    "created_at": "2025-11-21T20:55:33.513843",
+    "participants": 1,
+    "type": "challenge"
+  }
+]
