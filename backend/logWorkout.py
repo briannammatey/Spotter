@@ -2,7 +2,7 @@
 
 from datetime import datetime
 import uuid
-from .data_manager import add_workout
+from data_manager import add_workout
 
 def validate_workout_data(data):
     """
