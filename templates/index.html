@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UserFeed</title>
+    <link rel = "stylesheet" href = "static\style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+</head>
+
+
+
+<body><header class = "site-header">
+    <div id = "background">
+    
+    <nav id = "navbar">
+        <div class="brand">
+        
+        <img id ="bu_pic" src = "static\img\bu_dog.png">
+        <p id = "title">🐾SPOTTER 🐾</p>
+        </div>
+        <ul>
+          <li><a href="homepage.html">Homepage</a></li>
+            <li><a href = "index.html">Create A Challenge</a></li>
+            <li><a href = "logWorkout.html">LogWorkout</a></li>
+            <li><a href = "recipe.html">Recipe Generator</a></li>
+            <li></li>
+        </ul>
+    </nav>
+    </div>
+    
+   
+</header>
+<form action="/create_challenge" method="POST">
+    <h4 class="questions">Challenge Title</h4>
+    <textarea name="title" class="textBox" placeholder="Enter your Challenge Title here"></textarea>
+
+    <h4 class="questions">Goal</h4>
+    <textarea name="goal" class="textBox" placeholder="Enter your Goal here"></textarea>
+
+    <h4 class="questions">Start Date</h4>
+    <input type="date" name="start_date" class="date-box">
+
+    <h4 class="questions">End Date</h4>
+    <input type="date" name="end_date" class="date-box">
+
+    <h4 class="questions">Description</h4>
+    <textarea name="description" class="big-box" placeholder="Describe your workout..."></textarea>
+
+    <h4 class="questions">Privacy</h4>
+    <div class="button-toggle">
+        <input type="radio" id="privateOption" name="privacy" value="private">
+        <label for="privateOption">Private</label>
+        <input type="radio" id="publicOption" name="privacy" value="public">
+        <label for="publicOption">Public</label>
+    </div>
+
+    <div class="button-toggle-2">
+        <button type="submit">START CHALLENGE</button>
+    </div>
+
+    <!-- Messages go right here, inside the form -->
+    <div class="messages">
+        {% if errors %}
+        <div style="color:red; margin-top:20px;">
+            <ul>
+            {% for error in errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        {% if message %}
+        <div style="color:green; margin-top:20px;">
+            <p>{{ message }}</p>
+        </div>
+        {% endif %}
+    </div>
+</form>
+
+</body>
+
+</html>

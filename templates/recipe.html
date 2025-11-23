@@ -13,14 +13,14 @@
     <div id="background">
         <nav id="navbar">
             <div class="brand">
-                <img id="bu_pic" src="/img/bu_dog.png">
+                <img id="bu_pic" src="\img\bu_dog.png">
                 <p id="title">🐾SPOTTER 🐾</p>
             </div>
             <ul>
                 <li><a href="homepage.html">Homepage</a></li>
-                <li><a href="index.html">Challenge</a></li>
-                <li><a href="logWorkout.html">Workout</a></li>
-                <li><a href="recipe.html">Recipes</a></li>
+                <li><a href="index.html">Create A Challenge</a></li>
+                <li><a href="logWorkout.html">LogWorkout</a></li>
+                <li><a href="recipe.html">Recipe Generator</a></li>
             </ul>
         </nav>
     </div>
@@ -108,17 +108,17 @@
         </div>
 
         <h4 class="questions">Ingredients You Have (optional)</h4>
-        <textarea id="ingredients" class="big-box" placeholder="List any ingredients you'd like to use, separated by commas (e.g., chicken, rice, broccoli, eggs...)"></textarea>
-
+        <textarea class="big-box" placeholder="List any ingredients you'd like to use, separated by commas (e.g., chicken, rice, broccoli, eggs...)"></textarea>
 
         <h4 class="questions">Allergies or Ingredients to Avoid</h4>
-        <textarea id="allergies" class="textBox" placeholder="e.g., nuts, shellfish, dairy..."></textarea>
+        <textarea class="textBox" placeholder="e.g., nuts, shellfish, dairy..."></textarea>
 
-
-         <div class="button-toggle-2">
-            <button type="button" id="generateRecipeBtn" class="submit-challenge-btn">🍴 GENERATE RECIPE</button>
-        </div>
-
+        <form>
+            <div class="button-toggle-2">
+                <input type="radio" id="generateRecipe" name="generate" value="generate">
+                <label for="generateRecipe">🍴 GENERATE RECIPE</label>
+            </div>
+        </form>
 
         <!-- Recipe Output Section -->
         <div class="recipe-output" id="recipeOutput">
@@ -127,120 +127,6 @@
         </div>
     </div>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<script>
-document.getElementById("generateRecipeBtn").addEventListener("click", async function () {
-    const getCheckedValue = (name) => {
-        const el = document.querySelector(`input[name="${name}"]:checked`);
-        return el ? el.value : null;
-    };
-
-    const body = {
-        goal: getCheckedValue("goal"),
-        diet: getCheckedValue("diet"),
-        mealType: getCheckedValue("meal"),
-        calorieTarget: getCheckedValue("calories"),
-        cookingTime: getCheckedValue("time"),
-        ingredients: document.getElementById("ingredients").value,
-        allergies: document.getElementById("allergies").value,
-    };
-
-    const output = document.getElementById("recipeOutput");
-    output.innerHTML = `
-        <div class="loading-recipe">
-            <div class="loading-spinner">🍳</div>
-            <p class="loading-text">Generating your personalized recipe...</p>
-        </div>
-    `;
-
-    try {
-        const res = await fetch("http://localhost:5001/api/recipe-plan", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(body),
-        });
-
-        console.log("Response status:", res.status);
-
-        if (!res.ok) {
-            throw new Error("Network response was not ok");
-        }
-
-        // Safely parse JSON
-        const data = await res.json();
-        console.log("Recipe data:", data);
-
-        if (!data.meals || data.meals.length === 0) {
-            output.innerHTML = `
-                <div class="no-recipes">
-                    <div class="no-recipes-icon">😔</div>
-                    <h3 class="no-recipes-title">No Recipes Found</h3>
-                    <p class="no-recipes-text">
-                        Try adjusting your preferences or removing some filters to find more options!
-                    </p>
-                </div>
-            `;
-            return;
-        }
-
-        const mealHtml = data.meals.map(meal => `
-            <div class="meal-card">
-                <div class="meal-header">
-                    <h3 class="meal-name">${meal.meal_type} – ${meal.name}</h3>
-                    <span class="meal-calories">🔥 ${meal.calories} cal</span>
-                </div>
-                <div class="meal-section">
-                    <h4 class="meal-section-title">🛒 Ingredients:</h4>
-                    <p class="meal-ingredients">${Array.isArray(meal.ingredients) ? meal.ingredients.join(", ") : meal.ingredients}</p>
-                </div>
-                <div class="meal-section">
-                    <h4 class="meal-section-title">👨‍🍳 Instructions:</h4>
-                    <p class="meal-instructions">${meal.instructions}</p>
-                </div>
-            </div>
-        `).join("");
-
-        output.innerHTML = `
-            <h3 class="recipe-result-title">
-                ✨ Your Recipe ${data.meals.length > 1 ? "Plan" : ""}
-            </h3>
-            <div class="total-calories">Total: ${data.total_calories} calories</div>
-            ${mealHtml}
-        `;
-    } catch (err) {
-        console.error("Recipe error:", err);
-        output.innerHTML = `
-            <div class="recipe-error">
-                <div class="error-icon">⚠️</div>
-                <h3 class="error-title">Oops! Something Went Wrong</h3>
-                <p class="error-text">
-                    Unable to generate your recipe plan. Please make sure the backend is running and try again.
-                </p>
-            </div>
-        `;
-    }
-});
-</script>
-
 
 </body>
 </html>

@@ -17,6 +17,7 @@ from data_manager import (load_challenges, get_public_challenges, get_challenge_
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # backend/
 PROJECT_ROOT = os.path.dirname(BASE_DIR)  # project root
 FRONTEND_DIR = os.path.join(PROJECT_ROOT, 'frontend')  # project_root/frontend
+IMG_DIR = os.path.join(PROJECT_ROOT, 'img')  # project_root/img
 
 app = Flask(__name__, static_folder=FRONTEND_DIR, static_url_path='')
 CORS(app)
@@ -30,6 +31,15 @@ def index():
     except Exception as e:
         print(f"Error serving homepage: {e}")
         return f"Error: {e}", 500
+
+@app.route('/img/<path:filename>')
+def serve_image(filename):
+    """Serve images from the img directory"""
+    try:
+        return send_from_directory(IMG_DIR, filename)
+    except Exception as e:
+        print(f"Error serving image {filename}: {e}")
+        return f"Image not found: {filename}", 404
 
 @app.route('/<path:path>')
 def serve_static(path):
@@ -166,7 +176,7 @@ def api_get_workout(workout_id):
             "errors": [f"Server error: {str(e)}"]
         }), 500
 
-# API Routes - Future Features (wait to be implemented)
+# API Routes - Recipe Generation
 @app.route("/api/recipe-plan", methods=["POST"])
 def recipe_plan():
     data = request.get_json() or {}
@@ -176,6 +186,7 @@ def recipe_plan():
         plan = generate_day_plan(
             goal=data.get("goal"),
             diet=data.get("diet"),
+            meal_type=data.get("mealType"),
             calorie_target=data.get("calorieTarget"),
             cooking_time=data.get("cookingTime"),
             have_ingredients=data.get("ingredients"),
@@ -183,12 +194,12 @@ def recipe_plan():
         )
         print("Generated plan:", plan)
         return jsonify(plan), 200
-
     except Exception as e:
         import traceback
         print("ERROR in /api/recipe-plan:", e)
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
+  
 
 
 

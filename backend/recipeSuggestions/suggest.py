@@ -1,22 +1,22 @@
 # backend/recipeSuggestions/suggest.py
 
 from typing import Dict, Any
-import os
 import json
 from openai import OpenAI
 
-# Let the client read OPENAI_API_KEY from the environment itself
-client = OpenAI()   # no api_key=..., it reads from env
+# Uses OPENAI_API_KEY from environment (.env loaded in app.py)
+client = OpenAI()
 
 
 def generate_day_plan(
     goal: str,
     diet: str,
+    meal_type: str,
     calorie_target: str,
     cooking_time: str,
     have_ingredients: str,
     avoid_ingredients: str,
-    max_daily_calories: int = 2000,  # kept for compatibility
+    max_daily_calories: int = 2000,  # kept for compatibility, not really used
 ) -> Dict[str, Any]:
     """
     Generate ONE meal using the OpenAI API based on user preferences.
@@ -25,10 +25,12 @@ def generate_day_plan(
 
     goal = (goal or "").lower()
     diet = (diet or "none").lower()
+    meal_type = (meal_type or "").lower()
     cooking_time = (cooking_time or "long").lower()
     have_ingredients = have_ingredients or ""
     avoid_ingredients = avoid_ingredients or ""
 
+    # Map values from your radio buttons into human-readable text
     goal_text = {
         "bulking": "bulking (higher calories, high protein)",
         "cutting": "cutting (calorie deficit, high protein)",
@@ -43,6 +45,13 @@ def generate_day_plan(
         "highprotein": "high protein",
         "glutenfree": "gluten-free",
     }.get(diet, "no specific diet")
+
+    meal_type_text = {
+        "breakfast": "breakfast",
+        "lunch": "lunch",
+        "dinner": "dinner",
+        "snack": "snack",
+    }.get(meal_type, "any meal type")
 
     time_text = {
         "quick": "under 15 minutes",
@@ -67,8 +76,9 @@ def generate_day_plan(
 Generate ONE realistic, college-student-friendly meal recipe.
 
 Constraints:
-- Goal: {goal_text}
+- Fitness goal: {goal_text}
 - Dietary preference: {diet_text}
+- Meal type: {meal_type_text}
 - Cooking time: {time_text}
 - Ingredients the user has (optional): {have_ingredients if have_ingredients.strip() else "user did not specify"}
 - Ingredients / allergens to avoid: {avoid_ingredients if avoid_ingredients.strip() else "none specified"}
@@ -88,32 +98,29 @@ Return ONLY a single JSON object, no extra text, matching this structure exactly
 }}
     """.strip()
 
-    try:
-        completion = client.chat.completions.create(
-            model="gpt-4o-mini",
-            response_format={"type": "json_object"},
-            messages=[
-                {
-                    "role": "system",
-                    "content": "You are a nutrition and fitness assistant that designs practical recipes.",
-                },
-                {
-                    "role": "user",
-                    "content": user_prompt,
-                },
-            ],
-        )
-    except Exception as e:
-        # Bubble up a clear error so the route can see it
-        raise RuntimeError(f"OpenAI API call failed: {e}")
+    completion = client.chat.completions.create(
+        model="gpt-4o-mini",
+        response_format={"type": "json_object"},
+        messages=[
+            {
+                "role": "system",
+                "content": "You are a nutrition and fitness assistant that designs practical recipes.",
+            },
+            {
+                "role": "user",
+                "content": user_prompt,
+            },
+        ],
+    )
 
     raw_content = completion.choices[0].message.content
     try:
         recipe = json.loads(raw_content)
     except json.JSONDecodeError:
+        # Fallback if something weird happens
         recipe = {
             "name": "Fallback Meal",
-            "meal_type": "meal",
+            "meal_type": meal_type_text if meal_type_text != "any meal type" else "meal",
             "calories": per_meal_cal or 600,
             "ingredients": [],
             "instructions": "Recipe generation failed. Please try again.",
@@ -125,3 +132,4 @@ Return ONLY a single JSON object, no extra text, matching this structure exactly
         "meals": [recipe],
         "total_calories": calories,
     }
+

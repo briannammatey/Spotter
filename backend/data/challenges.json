@@ -1,5 +1,33 @@
 [
   {
+    "id": "f4a97d00-ebbd-40ad-b862-54823b129176",
+    "title": "New York Marathon",
+    "goal": "Run this by the end of 2030",
+    "start_date": "2026-12-20",
+    "end_date": "2027-12-20",
+    "description": "Run any NY marathon between those dates",
+    "privacy": "private",
+    "invited_friends": [],
+    "creator": "Current User",
+    "created_at": "2025-11-21T22:34:32.604855",
+    "participants": 1,
+    "type": "challenge"
+  },
+  {
+    "id": "2b3306f6-cc27-4adb-81b6-f9dfd6dc8d12",
+    "title": "Marahton",
+    "goal": "you homey",
+    "start_date": "2026-10-23",
+    "end_date": "2027-10-23",
+    "description": "Runa  marathon",
+    "privacy": "private",
+    "invited_friends": [],
+    "creator": "Current User",
+    "created_at": "2025-11-21T22:31:49.083484",
+    "participants": 1,
+    "type": "challenge"
+  },
+  {
     "id": "5f1330cb-189a-489a-924d-8d7f5682f420",
     "title": "Triathalon",
     "goal": "Complete a triatholon by the end of 2028",

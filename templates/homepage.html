@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage - Spotter</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+<header class="site-header">
+    <div id="background">
+        <nav id="navbar">
+            <div class="brand">
+                <img id="bu_pic" src="\img\bu_dog.png">
+                <p id="title">🐾SPOTTER 🐾</p>
+            </div>
+            <ul>
+                <li><a href="homepage.html">Homepage</a></li>
+                <li><a href="index.html">Create A Challenge</a></li>
+                <li><a href="logWorkout.html">LogWorkout</a></li>
+                <li><a href="recipe.html">Recipe Generator</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<div class="webbody">
+    <h2 id="challenge">ACTIVITY FEED</h2>
+    
+    <div class="feed-container">
+
+        
+        <!-- Sample Activity 1: Workout -->
+        <div class="feed-item">
+            <div class="feed-header">
+                <div class="feed-user-info">
+                    <div class="feed-avatar">👤</div>
+                    <div class="feed-user-details">
+                        <h3 class="feed-username">Person 1</h3>
+                        <p class="feed-timestamp">2 hours ago</p>
+                    </div>
+                </div>
+                <div class="feed-type-badge workout-badge">🏋️ Workout</div>
+            </div>
+            <div class="feed-content">
+                <h4 class="feed-title">Morning Strength Training</h4>
+                <p class="feed-description">Completed a workout session. Feeling great! 💪</p>
+                <div class="feed-stats">
+                    <span class="stat-item">⏱️ 45 min</span>
+                    <span class="stat-item">🔥 320 cal</span>
+                    <span class="stat-item">💪 Strength</span>
+                </div>
+            </div>
+            <div class="feed-actions">
+                <button class="feed-btn like-btn">❤️ Like</button>
+                <button class="feed-btn comment-btn">💬 Comment</button>
+                <button class="feed-btn share-btn">🔗 Share</button>
+            </div>
+        </div>
+
+        <!-- Sample Activity 2: Challenge -->
+        <div class="feed-item">
+            <div class="feed-header">
+                <div class="feed-user-info">
+                    <div class="feed-avatar">👤</div>
+                    <div class="feed-user-details">
+                        <h3 class="feed-username">Person 2</h3>
+                        <p class="feed-timestamp">5 hours ago</p>
+                    </div>
+                </div>
+                <div class="feed-type-badge challenge-badge">🏆 Challenge</div>
+            </div>
+            <div class="feed-content">
+                <h4 class="feed-title">30-Day Plank Challenge</h4>
+                <p class="feed-description">Started a new challenge! Join me!🔥</p>
+                <div class="challenge-info">
+                    <div class="challenge-detail">
+                        <span class="challenge-label">Start:</span>
+                        <span class="challenge-value">Nov 20, 2025</span>
+                    </div>
+                    <div class="challenge-detail">
+                        <span class="challenge-label">End:</span>
+                        <span class="challenge-value">Dec 20, 2025</span>
+                    </div>
+                    <div class="challenge-detail">
+                        <span class="challenge-label">Participants:</span>
+                        <span class="challenge-value">12 joined</span>
+                    </div>
+                </div>
+            </div>
+            <div class="feed-actions">
+                <button class="feed-btn like-btn">❤️ Like</button>
+                <button class="feed-btn comment-btn">💬 Comment</button>
+                <button class="feed-btn join-btn">✅ Join Challenge</button>
+            </div>
+        </div>
+
+        <!-- Empty State Message (hidden when there are activities) -->
+        <div class="feed-empty" style="display: none;">
+            <div class="empty-icon">📭</div>
+            <h3>No Activities Yet</h3>
+            <p>Start your fitness journey by logging a workout or creating a challenge!</p>
+            <div class="empty-actions">
+                <a href="logWorkout.html" class="empty-btn">Log Workout</a>
+                <a href="index.html" class="empty-btn">Create Challenge</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+
