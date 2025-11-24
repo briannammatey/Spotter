@@ -94,7 +94,7 @@ def add_workout(workout):
 # Combined Activity Feed
 def get_all_activities():
     """Get all activities (challenges and workouts) sorted by creation time"""
-    challenges = get_public_challenges()
+    challenges = load_challenges()
     workouts = load_workouts()
     
     # Combine and sort by created_at timestamp, newest is first
