@@ -67,6 +67,11 @@ def validate_workout_data(data):
     elif len(notes) > 1000:
         errors.append("Workout notes must be less than 1000 characters")
     
+    # Extract and validate privacy
+    privacy = data.get("privacy", "").strip()
+    if not privacy or privacy not in ["private", "public"]:
+        errors.append("Privacy setting is required (private or public)")
+
     # Validate calories (optional)
     calories = data.get("calories", "")
     if calories and str(calories).strip():
@@ -110,6 +115,7 @@ def log_workout(data):
         workout_type = data.get("workout_type", "").strip()
         intensity = data.get("intensity", "").strip()
         notes = data.get("notes", "").strip()
+        privacy = data.get("privacy", "").strip()
         
         # optional calories field
         calories = data.get("calories", "")
@@ -128,6 +134,7 @@ def log_workout(data):
             "intensity": intensity,
             "calories": calories,  
             "notes": notes,
+            "privacy": privacy,
             "creator": "Current User",  # test user
             "created_at": datetime.now().isoformat(),
             "type": "workout"
