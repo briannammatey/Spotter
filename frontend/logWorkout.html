@@ -77,6 +77,15 @@
         <h4 class="questions">Workout Notes</h4>
         <textarea id="workoutNotes" class="big-box" placeholder="Add any notes about your workout - exercises performed, how you felt, personal records, etc."></textarea>
 
+        <h4 class="questions">Select privacy:</h4>
+        <div class="button-toggle">
+            <input type="radio" id="privateOption" name="privacy" value="private">
+            <label for="privateOption">Private</label>
+
+            <input type="radio" id="publicOption" name="privacy" value="public">
+            <label for="publicOption">Public</label>
+        </div>
+
         <div class="button-toggle-2">
             <button type="button" id="logWorkoutBtn" class="submit-challenge-btn">LOG WORKOUT</button>
         </div>
@@ -94,6 +103,7 @@ document.getElementById('logWorkoutBtn').addEventListener('click', async functio
     const intensity = document.querySelector('input[name="intensity"]:checked')?.value;
     const calories = document.getElementById('workoutCalories').value.trim();
     const notes = document.getElementById('workoutNotes').value.trim();
+    const privacy = document.querySelector('input[name="privacy"]:checked')?.value;
     
     // Client-side validation
     const errors = [];
@@ -104,6 +114,7 @@ document.getElementById('logWorkoutBtn').addEventListener('click', async functio
     if (!workoutType) errors.push("Workout type is required");
     if (!intensity) errors.push("Intensity level is required");
     if (!notes) errors.push("Workout notes are required");
+    if (!privacy) errors.push("Privacy setting is required");
     
     if (errors.length > 0) {
         showMessage(errors.join('<br>'), 'error');
@@ -117,7 +128,8 @@ document.getElementById('logWorkoutBtn').addEventListener('click', async functio
         duration: duration,
         workout_type: workoutType,
         intensity: intensity,
-        notes: notes
+        notes: notes,
+        privacy: privacy
     };
     
     // Only add calories if it's provided

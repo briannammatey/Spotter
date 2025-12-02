@@ -163,11 +163,13 @@ function createWorkoutFeedItem(workout) {
                     <span class="stat-item">${typeEmojis[workout.workout_type] || '🏋️'} ${workout.workout_type.charAt(0).toUpperCase() + workout.workout_type.slice(1)}</span>
                 </div>
             </div>
+            ${workout.privacy !== 'private' ? `
             <div class="feed-actions">
                 <button class="feed-btn like-btn">❤️ Like</button>
                 <button class="feed-btn comment-btn">💬 Comment</button>
                 <button class="feed-btn share-btn">🔗 Share</button>
             </div>
+            ` : ''}
         </div>
     `;
 }
