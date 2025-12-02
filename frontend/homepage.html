@@ -112,11 +112,13 @@ function createChallengeFeedItem(challenge) {
                     </div>
                 ` : ''}
             </div>
+            ${challenge.privacy !== 'private' ? `
             <div class="feed-actions">
                 <button class="feed-btn like-btn">❤️ Like</button>
                 <button class="feed-btn comment-btn">💬 Comment</button>
                 <button class="feed-btn join-btn">✅ Join Challenge</button>
             </div>
+            ` : ''}
         </div>
     `;
 }

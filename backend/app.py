@@ -1,12 +1,17 @@
 # Spotter Backend Application
+from dotenv import load_dotenv 
+load_dotenv()
 
+import os
+print("Loaded API key:", os.environ.get("OPENAI_API_KEY"))
+
+from recipeSuggestions.suggest import generate_day_plan
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import os
-from .createChallenge import create_challenge
-from .logWorkout import log_workout
-from .data_manager import (load_challenges, get_public_challenges, get_challenge_by_id,load_workouts, get_workout_by_id, get_all_activities)
-from .recipeSuggestions.suggest import generate_day_plan
+from create_Challenge import create_challenge
+from logWorkout import log_workout
+from data_manager import (load_challenges, get_public_challenges, get_challenge_by_id,load_workouts, get_workout_by_id, get_all_activities)
 
 # Get the path to the frontend directory
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # backend/
@@ -175,18 +180,27 @@ def api_get_workout(workout_id):
 @app.route("/api/recipe-plan", methods=["POST"])
 def recipe_plan():
     data = request.get_json() or {}
+    print("Incoming recipe request:", data)
 
-    plan = generate_day_plan(
-        goal=data.get("goal"),
-        diet=data.get("diet"),
-        meal_type=data.get("mealType"),
-        calorie_target=data.get("calorieTarget"),
-        cooking_time=data.get("cookingTime"),
-        have_ingredients=data.get("ingredients"),
-        avoid_ingredients=data.get("allergies"),
-    )
+    try:
+        plan = generate_day_plan(
+            goal=data.get("goal"),
+            diet=data.get("diet"),
+            meal_type=data.get("mealType"),
+            calorie_target=data.get("calorieTarget"),
+            cooking_time=data.get("cookingTime"),
+            have_ingredients=data.get("ingredients"),
+            avoid_ingredients=data.get("allergies"),
+        )
+        print("Generated plan:", plan)
+        return jsonify(plan), 200
+    except Exception as e:
+        import traceback
+        print("ERROR in /api/recipe-plan:", e)
+        traceback.print_exc()
+        return jsonify({"error": str(e)}), 500
+  
 
-    return jsonify(plan), 200
 
 
 # TODO: Add recipe generation routes

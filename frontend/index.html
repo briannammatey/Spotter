@@ -63,12 +63,14 @@
       <label for="publicOption">Public</label>
     </div>
 
+    <div id="inviteSection">
     <h4 class="questions">Invite Friends:</h4>
     <div class="invite-friends-container">
       <input type="text" id="friendSearch" class="textBox" placeholder="Search for friends to invite...">
       <div class="invited-friends-list" id="invitedFriendsList">
         <!-- Selected friends will appear here -->
       </div>
+    </div>
     </div>
 
     <br>
@@ -80,7 +82,7 @@
 </div>
 
 <script>
-// Sample friend data (this would come from backend in production)
+// Sample friend data
 const sampleFriends = [
     "Alice Johnson", "Bob Smith", "Charlie Brown", "Diana Prince",
     "Emma Watson", "Frank Miller", "Grace Lee", "Henry Davis",
@@ -162,6 +164,26 @@ document.addEventListener('click', function(e) {
         dropdown.style.display = 'none';
     }
 });
+
+// Toggle invite section based on privacy
+const inviteSection = document.getElementById('inviteSection');
+const privacyRadios = document.getElementsByName('privacy');
+
+function toggleInviteSection() {
+    const privateSelected = document.getElementById('privateOption').checked;
+    if (privateSelected) {
+        inviteSection.style.display = 'none';
+    } else {
+        inviteSection.style.display = 'block';
+    }
+}
+
+privacyRadios.forEach(radio => {
+    radio.addEventListener('change', toggleInviteSection);
+});
+
+// Default to showing if nothing selected
+toggleInviteSection();
 
 // Form submission handler
 document.getElementById('startChallengeBtn').addEventListener('click', async function() {
