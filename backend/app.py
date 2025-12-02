@@ -1,11 +1,12 @@
 # Spotter Backend Application
-from recipeSuggestions.suggest import generate_day_plan
+
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import os
-from createChallenge import create_challenge
-from logWorkout import log_workout
-from data_manager import (load_challenges, get_public_challenges, get_challenge_by_id,load_workouts, get_workout_by_id, get_all_activities)
+from .createChallenge import create_challenge
+from .logWorkout import log_workout
+from .data_manager import (load_challenges, get_public_challenges, get_challenge_by_id,load_workouts, get_workout_by_id, get_all_activities)
+from .recipeSuggestions.suggest import generate_day_plan
 
 # Get the path to the frontend directory
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # backend/
