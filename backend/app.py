@@ -12,6 +12,7 @@ import os
 from create_Challenge import create_challenge
 from logWorkout import log_workout
 from data_manager import (load_challenges, get_public_challenges, get_challenge_by_id,load_workouts, get_workout_by_id, get_all_activities)
+from getExercises import (generate_exercises, list_muscles_for_body_parts, NoBodyPartsSelected, NoMusclesSelected, InvalidMuscleSelection)
 
 # Get the path to the frontend directory
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # backend/
@@ -200,7 +201,81 @@ def recipe_plan():
         traceback.print_exc()
         return jsonify({"error": str(e)}), 500
   
+# API Routes - Exercise Generation
+@app.route("/api/generate_exercises", methods=["POST"])
+def api_generate_exercises():
+    """
+    Generate exercises based on selected body parts and muscles.
+    Expects JSON:
+    {
+        "bodyParts": [...],
+        "muscles": [...]
+    }
+    """
 
+    data = request.get_json() or {}
+
+    body_parts = data.get("bodyParts", [])
+    muscles = data.get("muscles", [])
+
+    try:
+        # Call AI generator
+        results = generate_exercises(body_parts, muscles)
+
+        return jsonify({
+            "success": True,
+            "exercises": results
+        }), 200
+
+    except NoBodyPartsSelected as e:
+        return jsonify({
+            "success": False,
+            "errorType": "NoBodyPartsSelected",
+            "message": str(e)
+        }), 400
+
+    except NoMusclesSelected as e:
+        return jsonify({
+            "success": False,
+            "errorType": "NoMusclesSelected",
+            "message": str(e)
+        }), 400
+
+    except InvalidMuscleSelection as e:
+        return jsonify({
+            "success": False,
+            "errorType": "InvalidMuscleSelection",
+            "message": str(e)
+        }), 400
+
+    except Exception as e:
+        # Catch-all for unexpected errors
+        return jsonify({
+            "success": False,
+            "errorType": "ServerError",
+            "message": f"Unexpected error: {str(e)}"
+        }), 500
+    
+# API Routes - Generates list of muscles
+@app.route("/api/get_muscles_for_parts", methods=["POST"])
+def api_get_muscles_for_parts():
+    """
+    Returns the list of muscles available for given body parts.
+    Expects JSON:
+    {
+        "bodyParts": [...]
+    }
+    """
+
+    data = request.get_json() or {}
+    body_parts = data.get("bodyParts", [])
+
+    allowed = list_muscles_for_body_parts(body_parts)
+
+    return jsonify({
+        "success": True,
+        "muscles": allowed
+    }), 200
 
 
 # TODO: Add recipe generation routes
