@@ -1,6 +1,8 @@
 # Spotter Backend Application
 from dotenv import load_dotenv 
 load_dotenv()
+from db import users, friend_requests, friendships, challenges, challenge_participants
+
 
 import os
 print("Loaded API key:", os.environ.get("OPENAI_API_KEY"))
@@ -277,6 +279,51 @@ def api_get_muscles_for_parts():
         "muscles": allowed
     }), 200
 
+@app.route("/api/users/create", methods=["POST"])
+def create_user():
+    data = request.get_json()
+    result = users.insert_one(data)
+    return jsonify({"user_id": str(result.inserted_id)}), 201
+
+@app.route("/api/users/<user_id>", methods=["GET"])
+def get_user(user_id):
+    user = users.find_one({"_id": ObjectId(user_id)})
+    return jsonify(user), 200 if user else 404
+
+# Friends
+@app.route("/api/friends/request/send", methods=["POST"])
+def send_request():
+    data = request.get_json()
+    friend_requests.insert_one({"senderId": data["senderId"], "receiverId": data["receiverId"], "status": "pending"})
+    return jsonify({"status": "request sent"}), 201
+
+@app.route("/api/friends/request/accept", methods=["POST"])
+def accept_request():
+    data = request.get_json()
+    friend_requests.update_one({"senderId": data["senderId"], "receiverId": data["receiverId"]}, {"$set": {"status": "accepted"}})
+    friendships.insert_one({"userId": data["senderId"], "friendId": data["receiverId"]})
+    friendships.insert_one({"userId": data["receiverId"], "friendId": data["senderId"]})
+    return jsonify({"status": "request accepted"}), 200
+
+@app.route("/api/friends/<user_id>", methods=["GET"])
+def list_friends(user_id):
+    friends = list(friendships.find({"userId": user_id}))
+    for f in friends:
+        f["_id"] = str(f["_id"])
+    return jsonify(friends), 200
+
+# Challenges
+@app.route("/api/challenges/create", methods=["POST"])
+def create_challenge():
+    data = request.get_json()
+    result = challenges.insert_one(data)
+    return jsonify({"challenge_id": str(result.inserted_id)}), 201
+
+@app.route("/api/challenges/<challenge_id>/invite", methods=["POST"])
+def invite_friend(challenge_id):
+    data = request.get_json()
+    challenge_participants.insert_one({"challengeId": challenge_id, "userId": data["friendId"], "invitedBy": data["invitedBy"], "status": "invited"})
+    return jsonify({"status": "friend invited"}), 200
 
 # TODO: Add recipe generation routes
 # @app.route("/api/generate_recipe", methods=["POST"])
