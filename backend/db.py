@@ -1,8 +1,7 @@
 from pymongo import MongoClient
-
+from secrets import MONGODB_URL
 
 #database url
-MONGO_URL = "mongodb+srv://briianna_db_user:EMJ1Xurwv5FlZelQ@spotter-db.j6xscen.mongodb.net/?appName=spotter-db"
 
 client = MongoClient(MONGO_URL)
 
