@@ -1,4 +1,5 @@
 # Spotter Backend Application
+from auth import register_user, login_user
 from dotenv import load_dotenv 
 load_dotenv()
 from db import users, friend_requests, friendships, challenges, challenge_participants
@@ -356,6 +357,27 @@ def find_classes_route():
 # @app.route("/api/login", methods=["POST"])
 # @app.route("/api/register", methods=["POST"])
 # @app.route("/api/logout", methods=["POST"])
+# API Routes - Auth
+
+@app.route("/api/register", methods=["POST"])
+def api_register():
+    data = request.get_json() or {}
+    email = data.get("email")
+    password = data.get("password")
+
+    success, result, status_code = register_user(email, password)
+    return jsonify(result), status_code
+
+
+@app.route("/api/login", methods=["POST"])
+def api_login():
+    data = request.get_json() or {}
+    email = data.get("email")
+    password = data.get("password")
+
+    success, result, status_code = login_user(email, password)
+    return jsonify(result), status_code
+
 
 
 # Server Startup

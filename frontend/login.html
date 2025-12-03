@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Spotter</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="site-header">
+    <div id="background">
+        <nav id="navbar">
+            <div class="brand">
+                <img id="bu_pic" src="/img/bu_dog.png">
+                <p id="title">🐾SPOTTER 🐾</p>
+            </div>
+            <ul>
+                <li><a href="homepage.html">Homepage</a></li>
+                <li><a href="index.html">Challenge</a></li>
+                <li><a href="logWorkout.html">Workout</a></li>
+                <li><a href="recipe.html">Recipes</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<div class="webbody">
+    <h2 id="challenge">🔑 Login / Register</h2>
+    <div class="box">
+        <h4 class="questions">BU Email</h4>
+        <input id="email" type="email" class="textBox" placeholder="you@bu.edu">
+
+        <h4 class="questions">Password</h4>
+        <input id="password" type="password" class="textBox" placeholder="Choose a password">
+
+        <div style="margin-top: 15px;">
+            <button id="registerBtn" class="generate-btn">📝 Register</button>
+            <button id="loginBtn" class="generate-btn">🔓 Login</button>
+        </div>
+
+        <p id="authMessage" style="margin-top: 10px;"></p>
+    </div>
+</div>
+
+<script>
+const apiBase = "http://localhost:5001";
+
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const messageEl = document.getElementById("authMessage");
+
+async function callAuth(endpoint) {
+    const email = emailInput.value.trim();
+    const password = passwordInput.value.trim();
+
+    if (!email || !password) {
+        messageEl.textContent = "Please enter email and password.";
+        return;
+    }
+
+    messageEl.textContent = "Processing...";
+
+    try {
+        const res = await fetch(`${apiBase}/api/${endpoint}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password }),
+        });
+
+        const data = await res.json();
+        console.log("Auth response:", data);
+
+        if (!res.ok || !data.success) {
+            messageEl.textContent = data.error || "Something went wrong.";
+            return;
+        }
+
+        // Store fake token + email in localStorage
+        localStorage.setItem("spotterToken", data.token);
+        localStorage.setItem("spotterEmail", data.email);
+
+        messageEl.textContent = data.message + " Logged in as " + data.email;
+
+        // OPTIONAL: Redirect after login
+        // window.location.href = "homepage.html";
+
+    } catch (err) {
+        console.error("Auth error:", err);
+        messageEl.textContent = "Network error, please try again.";
+    }
+}
+
+document.getElementById("registerBtn").addEventListener("click", () => {
+    callAuth("register");
+});
+
+document.getElementById("loginBtn").addEventListener("click", () => {
+    callAuth("login");
+});
+</script>
+
+</body>
+</html>
