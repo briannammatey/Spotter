@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find Exercise Classes - Spotter</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+<header class="site-header">
+    <div id="background">
+        <nav id="navbar">
+            <div class="brand">
+                <img id="bu_pic" src="/img/bu_dog.png">
+                <p id="title">🐾SPOTTER 🐾</p>
+            </div>
+            <ul>
+                <li><a href="homepage.html">Homepage</a></li>
+                <li><a href="index.html">Challenge</a></li>
+                <li><a href="logWorkout.html">Workout</a></li>
+                <li><a href="recipe.html">Recipes</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<div class="webbody">
+    <h2 id="challenge">FIND EXERCISE CLASSES</h2>
+    <div class="box">
+
+        <!-- Error + Success Messages -->
+        <div id="messageContainer" style="display: none;"></div>
+
+        <h4 class="questions">Where Would You Like to Work Out?</h4>
+        <div class="button-toggle">
+            <input type="radio" id="onCampus" name="campus" value="on">
+            <label for="onCampus">On Campus</label>
+
+            <input type="radio" id="offCampus" name="campus" value="off">
+            <label for="offCampus">Off Campus</label>
+        </div>
+
+        <h4 class="questions" style="margin-top: 20px;">What Types of Classes Are You Interested In?</h4>
+
+        <select id="categorySelect" multiple class="multi-select">
+            <option value="yoga">Yoga</option>
+            <option value="pilates">Pilates</option>
+            <option value="cycling">Cycling</option>
+            <option value="dance">Dance</option>
+            <option value="boxing">Boxing</option>
+            <option value="strength conditioning">Strength Conditioning</option>
+            <option value="martial arts">Martial Arts</option>
+            <option value="cardio">Cardio</option>
+        </select>
+
+        <div class="button-toggle-2" style="margin-top: 25px;">
+            <button id="findClassesBtn" type="button" class="submit-challenge-btn">
+                SEARCH FOR CLASSES
+            </button>
+        </div>
+    </div>
+
+    <div id="resultsBox" class="box" style="display: none; margin-top: 30px;">
+        <h3>Results</h3>
+        <div id="results"></div>
+    </div>
+</div>
+
+<script>
+    // Utility for showing user messages
+    function showMessage(message, type) {
+        const container = document.getElementById("messageContainer");
+        container.innerHTML = message;
+        container.className = type === "success" ? "success-message" : "error-message";
+        container.style.display = "block";
+    
+        if (type === "error") {
+            setTimeout(() => container.style.display = "none", 4000);
+        }
+    }
+    
+    // CLICK HANDLER
+    document.getElementById("findClassesBtn").addEventListener("click", async () => {
+        const campus = document.querySelector('input[name="campus"]:checked')?.value;
+    
+        // GET MULTIPLE SELECTED OPTIONS
+        const categorySelect = document.getElementById("categorySelect");
+        const categories = [...categorySelect.selectedOptions].map(opt => opt.value);
+    
+        // VALIDATION
+        let errors = [];
+        if (!campus) errors.push("Please select On Campus or Off Campus.");
+        if (categories.length === 0) errors.push("Please select at least one category.");
+    
+        if (errors.length) {
+            showMessage(errors.join("<br>"), "error");
+            return;
+        }
+    
+        const btn = document.getElementById("findClassesBtn");
+        const oldText = btn.textContent;
+        btn.textContent = "SEARCHING...";
+        btn.disabled = true;
+    
+        try {
+            const response = await fetch("/api/find_classes", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({ campus, categories })
+            });
+    
+            const result = await response.json();
+    
+            if (!result.success) {
+                showMessage(result.error, "error");
+                btn.textContent = oldText;
+                btn.disabled = false;
+                return;
+            }
+    
+            const classes = result.classes;
+            const resultsDiv = document.getElementById("results");
+            resultsDiv.innerHTML = "";
+    
+            if (classes.length === 0) {
+                resultsDiv.innerHTML = "<p>No classes found for those categories.</p>";
+            } else {
+                classes.forEach(c => {
+                    const div = document.createElement("div");
+                    div.className = "result-card";
+                    div.innerHTML = `
+                        <strong>${c.name}</strong><br>
+                        <b>Category:</b> ${c.category}<br>
+                        <b>Time:</b> ${c.time || "N/A"}<br>
+                        <b>Location:</b> ${c.location || c.address}<br>
+                        ${c.distance_mi ? `<b>Distance:</b> ${c.distance_mi} miles<br>` : ""}
+                        ${c.description ? `<p>${c.description}</p>` : ""}
+                    `;
+                    resultsDiv.appendChild(div);
+                });
+            }
+    
+            document.getElementById("resultsBox").style.display = "block";
+            showMessage("Classes found!", "success");
+    
+        } catch (err) {
+            showMessage("Server error. Is your backend running?", "error");
+        }
+    
+        btn.textContent = oldText;
+        btn.disabled = false;
+    });
+    </script>
+    
+    </body>
+    </html>
