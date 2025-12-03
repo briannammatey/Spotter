@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workout - Spotter</title>
+     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+<header class="site-header">
+    <div id="background">
+        <nav id="navbar">
+            <div class="brand">
+                <img id="bu_pic" src="{{ url_for('static', filename='img/bu_dog.png') }}">
+                <p id="title">🐾SPOTTER 🐾</p>
+            </div>
+            <ul>
+                <li><a href="homepage.html">Homepage</a></li>
+                <li><a href="index.html">Challenge</a></li>
+                <li><a href="workoutsection.html">Workout</a></li>
+                <li><a href="recipe.html">Recipes</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<div class="webbody">
+    <h2 id="challenge">WORKOUT</h2>
+    
+   
+
+    <div class="box">
+        <div class="workout-options">
+            <a href="logWorkout.html" class="workout-option-btn">
+                <h3>LOG WORKOUT</h3>
+                <p>Track your exercises and progress</p>
+            </a>
+
+            <a href="/find-workout" class="workout-option-btn">
+                <h3> FIND WORKOUT</h3>
+                <p>Discover new workout routines</p>
+            </a>
+            <a href="/find-workout" class="workout-option-btn">
+                <h3> FIND CLASSES</h3>
+                <p>Find nearby classes</p>
+            </a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
