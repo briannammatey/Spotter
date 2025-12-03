@@ -15,6 +15,7 @@ from create_Challenge import create_challenge
 from logWorkout import log_workout
 from data_manager import (load_challenges, get_public_challenges, get_challenge_by_id,load_workouts, get_workout_by_id, get_all_activities)
 from getExercises import (generate_exercises, list_muscles_for_body_parts, NoBodyPartsSelected, NoMusclesSelected, InvalidMuscleSelection)
+from findClasses import find_classes
 
 # Get the path to the frontend directory
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # backend/
@@ -324,6 +325,27 @@ def invite_friend(challenge_id):
     data = request.get_json()
     challenge_participants.insert_one({"challengeId": challenge_id, "userId": data["friendId"], "invitedBy": data["invitedBy"], "status": "invited"})
     return jsonify({"status": "friend invited"}), 200
+
+# API Routes - findClasses
+@app.route("/find-classes", methods=["POST"])
+def find_classes_route():
+    data = request.get_json()
+
+    campus = data.get("campus")           # "on" or "off"
+    categories = data.get("categories")   # list of strings
+
+    try:
+        results = find_classes(campus, categories)
+        return jsonify({"classes": results}), 200
+
+    except ValueError as e:
+        # This catches the “no categories selected” error
+        return jsonify({"error": str(e)}), 400
+
+    except Exception as e:
+        # Catch all unexpected crashes
+        return jsonify({"error": "Internal server error", "details": str(e)}), 500
+
 
 # TODO: Add recipe generation routes
 # @app.route("/api/generate_recipe", methods=["POST"])
