@@ -1,9 +1,11 @@
 from pymongo import MongoClient
-from secrets import MONGODB_URL
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 #database url
-
-client = MongoClient(MONGO_URL)
+MONGO_URI = os.getenv("MONGO_URI")
+client = MongoClient(MONGO_URI)
 
 db = client["spotter-db"] 
 
