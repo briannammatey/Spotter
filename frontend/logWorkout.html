@@ -188,6 +188,13 @@ function showMessage(message, type) {
     }
 }
 </script>
+<script>
+const token = localStorage.getItem("spotterToken");
+if (!token) {
+    // Not logged in → go to login
+    window.location.href = "login.html";
+}
+</script>
 
 </body>
 </html>
