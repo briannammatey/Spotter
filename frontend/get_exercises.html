@@ -63,6 +63,7 @@
     </div>
 </div>
 
+<script src="auth-utils.js"></script>
 <script>
 // Body part → muscle mappings for dynamic updating
 const BODY_PARTS = {
@@ -135,10 +136,10 @@ document.getElementById("getExercisesBtn").addEventListener("click", async () =>
     btn.disabled = true;
 
     try {
-        const response = await fetch("/api/get_exercises", {
+        const response = await authFetch("/api/generate_exercises", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ body_parts: bodyParts, muscles })
+            body: JSON.stringify({ bodyParts: bodyParts, muscles })
         });
 
         const result = await response.json();
