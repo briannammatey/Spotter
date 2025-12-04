@@ -1,53 +1,10 @@
 # backend/auth.py
 
-import os
-import json
-import uuid
-from datetime import datetime, timedelta
 from typing import Tuple, Dict, Any, Optional
+from datetime import datetime, timedelta
 from werkzeug.security import generate_password_hash, check_password_hash
-
-DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
-USERS_FILE = os.path.join(DATA_DIR, "users.json")
-SESSIONS_FILE = os.path.join(DATA_DIR, "sessions.json")
-
-
-def _ensure_data_dir():
-    os.makedirs(DATA_DIR, exist_ok=True)
-
-
-def _load_users() -> Dict[str, Any]:
-    _ensure_data_dir()
-    if not os.path.exists(USERS_FILE):
-        return {}
-    with open(USERS_FILE, "r") as f:
-        try:
-            return json.load(f)
-        except json.JSONDecodeError:
-            return {}
-
-
-def _save_users(users: Dict[str, Any]) -> None:
-    _ensure_data_dir()
-    with open(USERS_FILE, "w") as f:
-        json.dump(users, f, indent=2)
-
-
-def _load_sessions() -> Dict[str, Any]:
-    _ensure_data_dir()
-    if not os.path.exists(SESSIONS_FILE):
-        return {}
-    with open(SESSIONS_FILE, "r") as f:
-        try:
-            return json.load(f)
-        except json.JSONDecodeError:
-            return {}
-
-
-def _save_sessions(sessions: Dict[str, Any]) -> None:
-    _ensure_data_dir()
-    with open(SESSIONS_FILE, "w") as f:
-        json.dump(sessions, f, indent=2)
+import uuid
+from db import users, sessions
 
 
 def _is_bu_email(email: str) -> bool:
@@ -57,18 +14,17 @@ def _is_bu_email(email: str) -> bool:
 def _create_session(email: str) -> str:
     """Create a new session token for the user"""
     token = str(uuid.uuid4())
-    sessions = _load_sessions()
     
     # Session expires in 7 days
-    expiry = (datetime.now() + timedelta(days=7)).isoformat()
+    expiry = datetime.now() + timedelta(days=7)
     
-    sessions[token] = {
+    sessions.insert_one({
+        "token": token,
         "email": email,
-        "created_at": datetime.now().isoformat(),
+        "created_at": datetime.now(),
         "expires_at": expiry
-    }
+    })
     
-    _save_sessions(sessions)
     return token
 
 
@@ -80,18 +36,15 @@ def validate_token(token: str) -> Tuple[bool, Optional[str]]:
     if not token:
         return False, None
     
-    sessions = _load_sessions()
-    session = sessions.get(token)
+    session = sessions.find_one({"token": token})
     
     if not session:
         return False, None
     
     # Check if expired
-    expiry = datetime.fromisoformat(session["expires_at"])
-    if datetime.now() > expiry:
+    if datetime.now() > session["expires_at"]:
         # Remove expired session
-        del sessions[token]
-        _save_sessions(sessions)
+        sessions.delete_one({"token": token})
         return False, None
     
     return True, session["email"]
@@ -102,10 +55,7 @@ def logout_user(token: str) -> Tuple[bool, Dict[str, Any], int]:
     if not token:
         return False, {"success": False, "error": "No token provided"}, 400
     
-    sessions = _load_sessions()
-    if token in sessions:
-        del sessions[token]
-        _save_sessions(sessions)
+    sessions.delete_one({"token": token})
     
     return True, {"success": True, "message": "Logged out successfully"}, 200
 
@@ -126,9 +76,8 @@ def register_user(email: str, password: str) -> Tuple[bool, Dict[str, Any], int]
             "error": "Only BU emails (@bu.edu) are allowed."
         }, 400
 
-    users = _load_users()
-
-    if email in users:
+    # Check if user already exists
+    if users.find_one({"email": email}):
         return False, {
             "success": False,
             "error": "An account with this email already exists."
@@ -142,13 +91,11 @@ def register_user(email: str, password: str) -> Tuple[bool, Dict[str, Any], int]
 
     password_hash = generate_password_hash(password)
 
-    users[email] = {
+    users.insert_one({
         "email": email,
         "password_hash": password_hash,
-        "created_at": datetime.now().isoformat()
-    }
-
-    _save_users(users)
+        "created_at": datetime.now()
+    })
 
     # Create session
     token = _create_session(email)
@@ -170,9 +117,8 @@ def login_user(email: str, password: str) -> Tuple[bool, Dict[str, Any], int]:
         return False, {"success": False, "error": "Email and password are required."}, 400
 
     email = email.strip().lower()
-    users = _load_users()
+    user = users.find_one({"email": email})
 
-    user = users.get(email)
     if not user:
         return False, {"success": False, "error": "Invalid email or password."}, 401
 

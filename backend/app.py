@@ -1,6 +1,7 @@
 # Spotter Backend Application
 from dotenv import load_dotenv 
 load_dotenv()
+from data_manager import (load_challenges, get_public_challenges, get_challenge_by_id, load_workouts, get_workout_by_id, get_all_activities, get_user_activities)  # Add get_user_activities
 
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
@@ -254,7 +255,15 @@ def api_get_workout(workout_id):
 def api_get_activities():
     """Get all activities for the feed"""
     try:
-        activities = get_all_activities()
+        # Get filter parameter - 'all' for public feed, 'mine' for user's own posts
+        feed_type = request.args.get('type', 'all')
+        
+        if feed_type == 'mine':
+            # Get only the current user's activities (both public and private)
+            activities = get_user_activities(request.user_email)
+        else:
+            # Get all public activities
+            activities = get_all_activities()
         
         return jsonify({
             "success": True,
