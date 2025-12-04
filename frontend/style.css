@@ -1373,3 +1373,203 @@ header {
         padding: 6px 12px;
     }
 }
+/* Multi-Select Dropdown Styling */
+.multi-select {
+    border: 2px solid #ddb5b5;
+    border-radius: 12px;
+    padding: 15px;
+    font-size: 16px;
+    font-family: 'Poppins', sans-serif;
+    width: calc(100% - 40px);
+    margin: 0 20px;
+    min-height: 120px;
+    transition: all 0.3s ease;
+    background-color: white;
+    cursor: pointer;
+}
+
+.multi-select:focus {
+    outline: none;
+    border-color: #ff6b6b;
+    box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+    transform: translateY(-2px);
+}
+
+.multi-select:disabled {
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.multi-select option {
+    padding: 10px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    cursor: pointer;
+    border-radius: 6px;
+    margin: 4px 0;
+}
+
+.multi-select option:hover {
+    background-color: #fff0f0;
+}
+
+.multi-select option:checked {
+    background: linear-gradient(135deg, #ff6b6b 0%, #c92a2a 100%);
+    color: white;
+    font-weight: 600;
+}
+
+/* Submit Button */
+.submit-challenge-btn {
+    padding: 20px 60px;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    background: linear-gradient(135deg, #ff6b6b 0%, #c92a2a 100%);
+    color: white;
+    transition: all 0.3s ease;
+    font-weight: 700;
+    font-size: 20px;
+    font-family: 'Poppins', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 0 8px 20px rgba(201, 42, 42, 0.3);
+}
+
+.submit-challenge-btn:hover:not(:disabled) {
+    background: linear-gradient(135deg, #c92a2a 0%, #a61e1e 100%);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(201, 42, 42, 0.4);
+}
+
+.submit-challenge-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Results Card Styling */
+.result-card {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    border: 2px solid #ffcccc;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.result-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    border-color: #ff6b6b;
+}
+
+.result-card strong {
+    font-size: 22px;
+    color: #c92a2a;
+    font-weight: 700;
+    display: block;
+    margin-bottom: 15px;
+    font-family: 'Poppins', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.result-card b {
+    color: #600d0d;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+}
+
+.result-card ul {
+    margin-top: 15px;
+    margin-left: 20px;
+    color: #2c2c2c;
+    line-height: 1.8;
+}
+
+.result-card li {
+    margin-bottom: 8px;
+    font-size: 15px;
+}
+
+.result-card li:last-child {
+    margin-bottom: 0;
+}
+
+/* Message Containers */
+.success-message,
+.error-message {
+    padding: 18px 25px;
+    border-radius: 12px;
+    margin: 0 20px 25px 20px;
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    font-size: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.success-message {
+    background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);
+    color: white;
+    border: 2px solid #2f9e44;
+}
+
+.error-message {
+    background: linear-gradient(135deg, #ff6b6b 0%, #fa5252 100%);
+    color: white;
+    border: 2px solid #f03e3e;
+}
+
+.box h3 {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 700;
+    font-size: 32px;
+    color: #600d0d;
+    margin-bottom: 25px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .multi-select {
+        min-height: 100px;
+        font-size: 14px;
+    }
+
+    .submit-challenge-btn {
+        padding: 15px 40px;
+        font-size: 18px;
+    }
+
+    .result-card strong {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 480px) {
+    .questions {
+        font-size: 18px;
+    }
+
+    .submit-challenge-btn {
+        padding: 12px 30px;
+        font-size: 16px;
+    }
+}
