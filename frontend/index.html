@@ -233,11 +233,15 @@ document.getElementById('startChallengeBtn').addEventListener('click', async fun
     btn.disabled = true;
     
     try {
+        // Get auth token
+        const token = localStorage.getItem("spotterToken");
+        
         // Send to backend
         const response = await fetch('/api/create_challenge', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(challengeData)
         });
