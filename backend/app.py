@@ -380,7 +380,220 @@ def find_classes_route():
     except Exception as e:
         return jsonify({"error": "Internal server error", "details": str(e)}), 500
 
+# Add these imports at the top
+from db import (
+    search_users, send_friend_request, get_friend_requests,
+    accept_friend_request, reject_friend_request, get_friends, remove_friend
+)
 
+# Add these routes after your existing routes
+
+# Friend Search Route
+@app.route("/api/search-users", methods=["GET"])
+@require_auth
+def api_search_users():
+    """Search for users to add as friends"""
+    query = request.args.get('q', '').strip()
+    
+    if not query:
+        return jsonify({
+            "success": False,
+            "error": "Search query required"
+        }), 400
+    
+    try:
+        results = search_users(query, request.user_email)
+        
+        return jsonify({
+            "success": True,
+            "users": results
+        }), 200
+        
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": f"Server error: {str(e)}"
+        }), 500
+
+
+# Send Friend Request
+@app.route("/api/send-friend-request", methods=["POST"])
+@require_auth
+def api_send_friend_request():
+    """Send a friend request"""
+    data = request.get_json() or {}
+    to_user_email = data.get("to_user_email")
+    
+    if not to_user_email:
+        return jsonify({
+            "success": False,
+            "error": "Recipient email required"
+        }), 400
+    
+    try:
+        success, message = send_friend_request(request.user_email, to_user_email)
+        
+        if success:
+            return jsonify({
+                "success": True,
+                "message": message
+            }), 200
+        else:
+            return jsonify({
+                "success": False,
+                "error": message
+            }), 400
+            
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": f"Server error: {str(e)}"
+        }), 500
+
+
+# Get Friend Requests
+@app.route("/api/friend-requests", methods=["GET"])
+@require_auth
+def api_get_friend_requests():
+    """Get all pending friend requests"""
+    try:
+        requests = get_friend_requests(request.user_email)
+        
+        return jsonify({
+            "success": True,
+            "requests": requests
+        }), 200
+        
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": f"Server error: {str(e)}"
+        }), 500
+
+
+# Accept Friend Request
+@app.route("/api/accept-friend-request", methods=["POST"])
+@require_auth
+def api_accept_friend_request():
+    """Accept a friend request"""
+    data = request.get_json() or {}
+    from_user_email = data.get("from_user_email")
+    
+    if not from_user_email:
+        return jsonify({
+            "success": False,
+            "error": "Sender email required"
+        }), 400
+    
+    try:
+        success, message = accept_friend_request(from_user_email, request.user_email)
+        
+        if success:
+            return jsonify({
+                "success": True,
+                "message": message
+            }), 200
+        else:
+            return jsonify({
+                "success": False,
+                "error": message
+            }), 400
+            
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": f"Server error: {str(e)}"
+        }), 500
+
+
+# Reject Friend Request
+@app.route("/api/reject-friend-request", methods=["POST"])
+@require_auth
+def api_reject_friend_request():
+    """Reject a friend request"""
+    data = request.get_json() or {}
+    from_user_email = data.get("from_user_email")
+    
+    if not from_user_email:
+        return jsonify({
+            "success": False,
+            "error": "Sender email required"
+        }), 400
+    
+    try:
+        success, message = reject_friend_request(from_user_email, request.user_email)
+        
+        if success:
+            return jsonify({
+                "success": True,
+                "message": message
+            }), 200
+        else:
+            return jsonify({
+                "success": False,
+                "error": message
+            }), 400
+            
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": f"Server error: {str(e)}"
+        }), 500
+
+
+# Get Friends List
+@app.route("/api/friends", methods=["GET"])
+@require_auth
+def api_get_friends():
+    """Get list of all friends"""
+    try:
+        friends = get_friends(request.user_email)
+        
+        return jsonify({
+            "success": True,
+            "friends": friends
+        }), 200
+        
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": f"Server error: {str(e)}"
+        }), 500
+
+
+# Remove Friend
+@app.route("/api/remove-friend", methods=["POST"])
+@require_auth
+def api_remove_friend():
+    """Remove a friend"""
+    data = request.get_json() or {}
+    friend_email = data.get("friend_email")
+    
+    if not friend_email:
+        return jsonify({
+            "success": False,
+            "error": "Friend email required"
+        }), 400
+    
+    try:
+        success, message = remove_friend(request.user_email, friend_email)
+        
+        if success:
+            return jsonify({
+                "success": True,
+                "message": message
+            }), 200
+        else:
+            return jsonify({
+                "success": False,
+                "error": message
+            }), 400
+            
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": f"Server error: {str(e)}"
+        }), 500
 # Server Startup
 if __name__ == "__main__":
     PORT = 5001
@@ -392,4 +605,3 @@ if __name__ == "__main__":
     print(f"🌐 Or try: http://127.0.0.1:{PORT}")
     print("="*60 + "\n")
     app.run(debug=True, host='0.0.0.0', port=PORT)
-

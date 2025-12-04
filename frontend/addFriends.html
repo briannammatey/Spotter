@@ -3,9 +3,173 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Workout - Spotter</title>
-     <link rel="stylesheet" href="style.css">
+    <title>Find Friends - Spotter</title>
+    <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <style>
+        .search-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .search-form {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid #ddb5b5;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: 'Poppins', sans-serif;
+            background-color: white;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #ff6b6b;
+            box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.1);
+        }
+
+        .btn-search {
+            padding: 15px 40px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #c92a2a 100%);
+            color: white;
+            font-size: 16px;
+            font-weight: 700;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(201, 42, 42, 0.3);
+        }
+
+        .btn-search:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(201, 42, 42, 0.4);
+        }
+
+        .search-results {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .search-results h3 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: #2c2c2c;
+            margin-bottom: 20px;
+        }
+
+        .user-card {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 20px;
+            background: linear-gradient(135deg, #fff5f5 0%, #ffe8e8 100%);
+            border: 2px solid #ffcccc;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .user-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-color: #ff6b6b;
+        }
+
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #ff6b6b 0%, #c92a2a 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            flex-shrink: 0;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-info h4 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: #2c2c2c;
+            margin: 0 0 5px 0;
+        }
+
+        .user-info p {
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            color: #666;
+            margin: 0;
+        }
+
+        .btn-add-friend {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #51cf66 0%, #37b24d 100%);
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: 'Poppins', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-add-friend:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(55, 178, 77, 0.4);
+        }
+
+        .btn-add-friend:disabled,
+        .btn-pending {
+            background: #adb5bd;
+            cursor: not-allowed;
+        }
+
+        .btn-friends {
+            background: linear-gradient(135deg, #ffd43b 0%, #fab005 100%);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .no-results p {
+            font-family: 'Poppins', sans-serif;
+            font-size: 18px;
+            color: #666;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-family: 'Poppins', sans-serif;
+            color: #666;
+        }
+    </style>
 </head>
 
 <body>
@@ -13,15 +177,14 @@
     <div id="background">
         <nav id="navbar">
             <div class="brand">
-                <img id="bu_pic" src= "/img/bu_dog.png">
+                <img id="bu_pic" src="/img/bu_dog.png">
                 <p id="title">🐾SPOTTER 🐾</p>
             </div>
             <ul>
-                <li><a href="/feed">Feed</a></li>
-                <li><a href="/challenges">My Challenges</a></li>
-                <li><a href="/friends">Friends</a></li>
-                <li><a href="/search-users">Find Friends</a></li>
-                <li><a href="/logout">Logout</a></li>
+                <li><a href="homepage.html">Homepage</a></li>
+                <li><a href="index.html">Challenge</a></li>
+                <li><a href="workoutsection.html">Workout</a></li>
+                <li><a href="recipe.html">Recipes</a></li>
             </ul>
         </nav>
     </div>
@@ -30,41 +193,143 @@
 <div class="webbody">
     <h2 id="challenge">🔍 FIND FRIENDS</h2>
     
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-                <div class="message {{ category }}">{{ message }}</div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
+    <div id="messageContainer" style="display: none;"></div>
 
     <div class="search-container">
-        <form action="/search-users" method="GET" class="search-form">
-            <input type="text" name="q" placeholder="Search by username..." value="{{ query or '' }}" class="search-input">
-            <button type="submit" class="btn-search">🔍 Search</button>
-        </form>
+        <div class="search-form">
+            <input 
+                type="text" 
+                id="searchInput" 
+                placeholder="Search by email or username..." 
+                class="search-input"
+            >
+            <button onclick="searchUsers()" class="btn-search">🔍 Search</button>
+        </div>
 
-        {% if users %}
-            <div class="search-results">
-                <h3>Search Results</h3>
-                {% for user in users %}
+        <div id="resultsContainer"></div>
+    </div>
+</div>
+
+<script>
+const token = localStorage.getItem("spotterToken");
+if (!token) {
+    window.location.href = "login.html";
+}
+
+function showMessage(message, type) {
+    const container = document.getElementById("messageContainer");
+    container.innerHTML = message;
+    container.className = type === "success" ? "success-message" : "error-message";
+    container.style.display = "block";
+    
+    setTimeout(() => {
+        container.style.display = "none";
+    }, 4000);
+}
+
+// Allow Enter key to search
+document.getElementById('searchInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        searchUsers();
+    }
+});
+
+async function searchUsers() {
+    const query = document.getElementById('searchInput').value.trim();
+    const resultsContainer = document.getElementById('resultsContainer');
+    
+    if (!query) {
+        showMessage('Please enter a search term', 'error');
+        return;
+    }
+    
+    resultsContainer.innerHTML = '<div class="loading">Searching...</div>';
+    
+    try {
+        const response = await fetch(`/api/search-users?q=${encodeURIComponent(query)}`, {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            displayResults(data.users, query);
+        } else {
+            showMessage(data.error, 'error');
+            resultsContainer.innerHTML = '';
+        }
+    } catch (error) {
+        showMessage('Error searching users', 'error');
+        resultsContainer.innerHTML = '';
+    }
+}
+
+function displayResults(users, query) {
+    const resultsContainer = document.getElementById('resultsContainer');
+    
+    if (users.length === 0) {
+        resultsContainer.innerHTML = `
+            <div class="no-results">
+                <p>No users found matching "${query}"</p>
+            </div>
+        `;
+        return;
+    }
+    
+    resultsContainer.innerHTML = `
+        <div class="search-results">
+            <h3>Search Results (${users.length})</h3>
+            ${users.map(user => `
                 <div class="user-card">
                     <div class="user-avatar">👤</div>
                     <div class="user-info">
-                        <h4>{{ user.username }}</h4>
-                        <p>{{ user.bio or 'No bio' }}</p>
+                        <h4>${user.username}</h4>
+                        <p>${user.bio || 'No bio available'}</p>
                     </div>
-                    <a href="/add-friend/{{ user.id }}" class="btn-add-friend">➕ Add Friend</a>
+                    ${getFriendButton(user)}
                 </div>
-                {% endfor %}
-            </div>
-        {% elif query %}
-            <div class="no-results">
-                <p>No users found matching "{{ query }}"</p>
-            </div>
-        {% endif %}
-    </div>
-</div>
+            `).join('')}
+        </div>
+    `;
+}
+
+function getFriendButton(user) {
+    if (user.is_friend) {
+        return '<button class="btn-add-friend btn-friends" disabled>✓ Friends</button>';
+    } else if (user.has_pending_request) {
+        return '<button class="btn-add-friend btn-pending" disabled>⏳ Pending</button>';
+    } else {
+        return `<button class="btn-add-friend" onclick="sendFriendRequest('${user.email}')">➕ Add Friend</button>`;
+    }
+}
+
+async function sendFriendRequest(toEmail) {
+    try {
+        const response = await fetch('/api/send-friend-request', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ to_user_email: toEmail })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            showMessage('Friend request sent!', 'success');
+            // Re-search to update button states
+            searchUsers();
+        } else {
+            showMessage(data.error, 'error');
+        }
+    } catch (error) {
+        showMessage('Error sending friend request', 'error');
+    }
+}
+</script>
 
 </body>
 </html>
