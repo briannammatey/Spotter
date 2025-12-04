@@ -2,7 +2,6 @@
 
 from datetime import datetime
 import uuid
-#from data_manager import add_challenge
 from data_manager import add_challenge
 
 
@@ -67,9 +66,12 @@ def validate_challenge_data(data):
     
     return len(errors) == 0, errors
 
-def create_challenge(data):
+def create_challenge(data, creator_email=None):
     """
     Create a new challenge
+    Args:
+        data: Challenge data dictionary
+        creator_email: Email of the user creating the challenge (from auth)
     """
     try:
         # Validate data
@@ -100,7 +102,7 @@ def create_challenge(data):
             "description": description,
             "privacy": privacy,
             "invited_friends": invited_friends,
-            "creator": "Current User",  # test user
+            "creator": creator_email or "Anonymous",  # Use authenticated email
             "created_at": datetime.now().isoformat(),
             "participants": 1,  # Creator is first participant
             "type": "challenge"
@@ -126,4 +128,3 @@ def create_challenge(data):
             "success": False,
             "errors": [f"Server error: {str(e)}"]
         }, 500
-        

@@ -86,21 +86,16 @@ def validate_workout_data(data):
     
     return len(errors) == 0, errors
 
-def log_workout(data):
+def log_workout(data, creator_email=None):
     """
     Log a new workout
+    Args:
+        data: Workout data dictionary
+        creator_email: Email of the user logging the workout (from auth)
     """
     try:
-        # Debug test
-        # print(f"Received data: {data}")
-        
         # Validate data
         is_valid, errors = validate_workout_data(data)
-        
-        # Debug validation results
-        print(f"Validation passed: {is_valid}")
-        if not is_valid:
-            print(f"Validation errors: {errors}")
         
         if not is_valid:
             return False, {
@@ -135,7 +130,7 @@ def log_workout(data):
             "calories": calories,  
             "notes": notes,
             "privacy": privacy,
-            "creator": "Current User",  # test user
+            "creator": creator_email or "Anonymous",  # Use authenticated email
             "created_at": datetime.now().isoformat(),
             "type": "workout"
         }

@@ -1,104 +1,115 @@
-# Data Manager Module
-# Handles all data storage
+# backend/data_manager.py
+# Handles all data storage using MongoDB
 
+from db import challenges, workouts
+from datetime import datetime
 
-import json
-import os
-
-# Path to store data
-DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
-CHALLENGES_FILE = os.path.join(DATA_DIR, 'challenges.json')
-WORKOUTS_FILE = os.path.join(DATA_DIR, 'workouts.json')
-
-# Create data directory if doesn't exist
-if not os.path.exists(DATA_DIR):
-    os.makedirs(DATA_DIR)
-
-# Initialize data files if don't exist
-if not os.path.exists(CHALLENGES_FILE):
-    with open(CHALLENGES_FILE, 'w') as f:
-        json.dump([], f)
-
-if not os.path.exists(WORKOUTS_FILE):
-    with open(WORKOUTS_FILE, 'w') as f:
-        json.dump([], f)
 
 def load_challenges():
-    """Load all challenges from the JSON file"""
+    """Load all challenges from MongoDB"""
     try:
-        with open(CHALLENGES_FILE, 'r') as f:
-            return json.load(f)
+        # Convert MongoDB cursor to list and remove _id field
+        challenge_list = list(challenges.find({}, {"_id": 0}).sort("created_at", -1))
+        return challenge_list
     except Exception as e:
         print(f"Error loading challenges: {e}")
         return []
 
-def save_challenges(challenges):
-    """Save challenges to the JSON file"""
-    try:
-        with open(CHALLENGES_FILE, 'w') as f:
-            json.dump(challenges, f, indent=2)
-        return True
-    except Exception as e:
-        print(f"Error saving challenges: {e}")
-        return False
+
+def save_challenges(challenge_list):
+    """This function is no longer needed with MongoDB, but kept for compatibility"""
+    return True
+
 
 def get_challenge_by_id(challenge_id):
     """Get a specific challenge by ID"""
-    challenges = load_challenges()
-    return next((c for c in challenges if c['id'] == challenge_id), None)
+    return challenges.find_one({"id": challenge_id}, {"_id": 0})
+
 
 def get_public_challenges():
     """Get all public challenges"""
-    challenges = load_challenges()
-    return [c for c in challenges if c.get('privacy') == 'public']
+    return list(challenges.find({"privacy": "public"}, {"_id": 0}).sort("created_at", -1))
+
+
+def get_challenges_by_creator(email):
+    """Get challenges created by a specific user"""
+    return list(challenges.find({"creator": email}, {"_id": 0}).sort("created_at", -1))
+
 
 def add_challenge(challenge):
-    """Add a new challenge to the beginning of the list"""
-    challenges = load_challenges()
-    challenges.insert(0, challenge)
-    return save_challenges(challenges)
+    """Add a new challenge to MongoDB"""
+    try:
+        challenges.insert_one(challenge)
+        return True
+    except Exception as e:
+        print(f"Error adding challenge: {e}")
+        return False
 
 
 # Workout Data Operations
 def load_workouts():
-    """Load all workouts from the JSON file"""
+    """Load all workouts from MongoDB"""
     try:
-        with open(WORKOUTS_FILE, 'r') as f:
-            return json.load(f)
+        workout_list = list(workouts.find({}, {"_id": 0}).sort("created_at", -1))
+        return workout_list
     except Exception as e:
         print(f"Error loading workouts: {e}")
         return []
 
-def save_workouts(workouts):
-    """Save workouts to the JSON file"""
-    try:
-        with open(WORKOUTS_FILE, 'w') as f:
-            json.dump(workouts, f, indent=2)
-        return True
-    except Exception as e:
-        print(f"Error saving workouts: {e}")
-        return False
+
+def save_workouts(workout_list):
+    """This function is no longer needed with MongoDB, but kept for compatibility"""
+    return True
+
 
 def get_workout_by_id(workout_id):
     """Get a specific workout by ID"""
-    workouts = load_workouts()
-    return next((w for w in workouts if w['id'] == workout_id), None)
+    return workouts.find_one({"id": workout_id}, {"_id": 0})
+
+
+def get_workouts_by_creator(email):
+    """Get workouts created by a specific user"""
+    return list(workouts.find({"creator": email}, {"_id": 0}).sort("created_at", -1))
+
 
 def add_workout(workout):
-    """Add a new workout to the beginning of the list"""
-    workouts = load_workouts()
-    workouts.insert(0, workout)
-    return save_workouts(workouts)
+    """Add a new workout to MongoDB"""
+    try:
+        workouts.insert_one(workout)
+        return True
+    except Exception as e:
+        print(f"Error adding workout: {e}")
+        return False
 
 
 # Combined Activity Feed
 def get_all_activities():
-    """Get all activities (challenges and workouts) sorted by creation time"""
-    challenges = load_challenges()
-    workouts = load_workouts()
-    
-    # Combine and sort by created_at timestamp, newest is first
-    all_activities = challenges + workouts
-    all_activities.sort(key=lambda x: x.get('created_at', ''), reverse=True)
-    
-    return all_activities
+    """Get all PUBLIC activities (challenges and workouts) sorted by creation time"""
+    try:
+        # Get only public challenges and workouts
+        all_challenges = list(challenges.find({"privacy": "public"}, {"_id": 0}))
+        all_workouts = list(workouts.find({"privacy": "public"}, {"_id": 0}))
+        
+        # Combine and sort by created_at timestamp, newest first
+        all_activities = all_challenges + all_workouts
+        all_activities.sort(key=lambda x: x.get('created_at', ''), reverse=True)
+        
+        return all_activities
+    except Exception as e:
+        print(f"Error loading activities: {e}")
+        return []
+
+
+def get_user_activities(email):
+    """Get all activities (public and private) for a specific user"""
+    try:
+        user_challenges = list(challenges.find({"creator": email}, {"_id": 0}))
+        user_workouts = list(workouts.find({"creator": email}, {"_id": 0}))
+        
+        all_activities = user_challenges + user_workouts
+        all_activities.sort(key=lambda x: x.get('created_at', ''), reverse=True)
+        
+        return all_activities
+    except Exception as e:
+        print(f"Error loading user activities: {e}")
+        return []

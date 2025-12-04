@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Exercise Suggestions - Spotter</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+<header class="site-header">
+    <div id="background">
+        <nav id="navbar">
+            <div class="brand">
+                <img id="bu_pic" src="/img/bu_dog.png">
+                <p id="title">🐾SPOTTER 🐾</p>
+            </div>
+            <ul>
+                <li><a href="homepage.html">Homepage</a></li>
+                <li><a href="index.html">Challenge</a></li>
+                <li><a href="logWorkout.html">Workout</a></li>
+                <li><a href="recipe.html">Recipes</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<div class="webbody">
+    <h2 id="challenge">GET NEW WORKOUT</h2>
+    <div class="box">
+
+        <!-- Error + Success Messages -->
+        <div id="messageContainer" style="display: none;"></div>
+
+        <h4 class="questions">What Body Parts Would You Like To Work Out?</h4>
+
+        <select id="bodyPartSelect" multiple class="multi-select">
+            <option value="Arms">Arms</option>
+            <option value="Legs">Legs</option>
+            <option value="Chest">Chest</option>
+            <option value="Back">Back</option>
+            <option value="Abs">Abs</option>
+            <option value="Shoulders">Shoulders</option>
+        </select>
+
+        <h4 class="questions" style="margin-top: 20px;">Which Muscles Would You Like To Target?</h4>
+
+        <select id="muscleSelect" multiple class="multi-select" disabled>
+            <!-- Dynamically populated -->
+        </select>
+
+        <div class="button-toggle-2" style="margin-top: 25px;">
+            <button id="getExercisesBtn" type="button" class="submit-challenge-btn">
+                GENERATE EXERCISES
+            </button>
+        </div>
+    </div>
+
+    <div id="resultsBox" class="box" style="display: none; margin-top: 30px;">
+        <h3>Results</h3>
+        <div id="results"></div>
+    </div>
+</div>
+
+<script>
+// Body part → muscle mappings for dynamic updating
+const BODY_PARTS = {
+    "Arms": ["Biceps", "Triceps", "Forearms"],
+    "Legs": ["Quads", "Hamstrings", "Calves", "Glutes", "Abductors", "Adductors"],
+    "Chest": ["Upper Chest", "Middle Chest", "Lower Chest"],
+    "Back": ["Lats", "Traps", "Lower Back", "Rhomboids"],
+    "Abs": ["Upper Abs", "Lower Abs", "Obliques"],
+    "Shoulders": ["Front Delts", "Side Delts", "Rear Delts"]
+};
+
+function showMessage(message, type) {
+    const container = document.getElementById("messageContainer");
+    container.innerHTML = message;
+    container.className = type === "success" ? "success-message" : "error-message";
+    container.style.display = "block";
+
+    if (type === "error") {
+        setTimeout(() => container.style.display = "none", 4000);
+    }
+}
+
+// Update muscles when body parts change
+document.getElementById("bodyPartSelect").addEventListener("change", () => {
+    const bodySelect = document.getElementById("bodyPartSelect");
+    const muscleSelect = document.getElementById("muscleSelect");
+
+    const selectedParts = [...bodySelect.selectedOptions].map(o => o.value);
+
+    muscleSelect.innerHTML = "";
+    
+    if (selectedParts.length === 0) {
+        muscleSelect.disabled = true;
+        return;
+    }
+
+    muscleSelect.disabled = false;
+
+    // Build list of allowed muscles
+    let muscles = new Set();
+    selectedParts.forEach(part => {
+        BODY_PARTS[part].forEach(m => muscles.add(m));
+    });
+
+    [...muscles].sort().forEach(m => {
+        const opt = document.createElement("option");
+        opt.value = m;
+        opt.textContent = m;
+        muscleSelect.appendChild(opt);
+    });
+});
+
+// Button handler
+document.getElementById("getExercisesBtn").addEventListener("click", async () => {
+    const bodyParts = [...document.getElementById("bodyPartSelect").selectedOptions].map(o => o.value);
+    const muscles = [...document.getElementById("muscleSelect").selectedOptions].map(o => o.value);
+
+    let errors = [];
+    if (bodyParts.length === 0) errors.push("Please select at least one body part.");
+    if (muscles.length === 0) errors.push("Please select at least one muscle.");
+
+    if (errors.length > 0) {
+        showMessage(errors.join("<br>"), "error");
+        return;
+    }
+
+    const btn = document.getElementById("getExercisesBtn");
+    const oldText = btn.textContent;
+    btn.textContent = "GENERATING...";
+    btn.disabled = true;
+
+    try {
+        const response = await fetch("/api/get_exercises", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ body_parts: bodyParts, muscles })
+        });
+
+        const result = await response.json();
+
+        if (!result.success) {
+            showMessage(result.error, "error");
+            btn.textContent = oldText;
+            btn.disabled = false;
+            return;
+        }
+
+        const resultsDiv = document.getElementById("results");
+        resultsDiv.innerHTML = "";
+
+        const exercises = result.exercises;
+
+        exercises.forEach(ex => {
+            const card = document.createElement("div");
+            card.className = "result-card";
+
+            card.innerHTML = `
+                <strong>${ex.name}</strong><br>
+                <b>Primary Muscle:</b> ${ex.primary_muscle}<br>
+                <b>Secondary Muscles:</b> ${ex.secondary_muscles.join(", ")}<br>
+                <b>Equipment:</b> ${ex.equipment}<br>
+                <ul>
+                    ${ex.instructions.map(i => `<li>${i}</li>`).join("")}
+                </ul>
+            `;
+
+            resultsDiv.appendChild(card);
+        });
+
+        document.getElementById("resultsBox").style.display = "block";
+        showMessage("Exercises generated!", "success");
+
+    } catch (err) {
+        showMessage("Server error. Is your backend running?", "error");
+    }
+
+    btn.textContent = oldText;
+    btn.disabled = false;
+});
+</script>
+
+</body>
+</html>

@@ -21,6 +21,7 @@
                 <li><a href="index.html">Challenge</a></li>
                 <li><a href="workoutsection.html">Workout</a></li>
                 <li><a href="recipe.html">Recipes</a></li>
+                <li><a href="#" onclick="logout(); return false;">🚪 Logout</a></li>
             </ul>
         </nav>
     </div>
@@ -92,7 +93,13 @@
     </div>
 </div>
 
+<!-- Include auth utilities -->
+<script src="auth-utils.js"></script>
+
 <script>
+// Check authentication on page load
+requireAuth();
+
 // Form submission handler
 document.getElementById('logWorkoutBtn').addEventListener('click', async function() {
     // Get form values
@@ -144,8 +151,8 @@ document.getElementById('logWorkoutBtn').addEventListener('click', async functio
     btn.disabled = true;
     
     try {
-        // Send to backend
-        const response = await fetch('/api/log_workout', {
+        // Send to backend with authentication
+        const response = await authFetch('/api/log_workout', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
