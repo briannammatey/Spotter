@@ -107,7 +107,7 @@ def search_off_campus_exercise(categories):
     """
 
     SYSTEM_PROMPT = """
-    You are a Boston fitness expert. Return ONLY a JSON list of off-campus
+    You are a Boston fitness expert. Return a JSON object with a key "classes" containing a list of off-campus
     fitness studios near Boston University. For each class include:
     - name
     - category
@@ -121,7 +121,7 @@ def search_off_campus_exercise(categories):
     Find OFF-CAMPUS fitness class locations near Boston University.
     Categories requested: {", ".join(categories)}.
     Provide 8–15 results across ANY of the categories.
-    ONLY return JSON list — no explanation.
+    Return a JSON object in the format {{ "classes": [...] }}.
     """
 
     response = client.chat.completions.create(
@@ -137,7 +137,8 @@ def search_off_campus_exercise(categories):
         import json
         result = json.loads(response.choices[0].message.content)  # Fixed: output_json() -> proper parsing
         return result.get("classes", [])
-    except:
+    except Exception as e:
+        print(f"Error parsing OpenAI response: {e}")
         return []
 
 

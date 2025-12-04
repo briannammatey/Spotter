@@ -372,13 +372,13 @@ def find_classes_route():
 
     try:
         results = find_classes(campus, categories)
-        return jsonify({"classes": results}), 200
+        return jsonify({"success": True, "classes": results}), 200
 
     except ValueError as e:
-        return jsonify({"error": str(e)}), 400
+        return jsonify({"success": False, "error": str(e)}), 400
 
     except Exception as e:
-        return jsonify({"error": "Internal server error", "details": str(e)}), 500
+        return jsonify({"success": False, "error": "Internal server error", "details": str(e)}), 500
 
 # Add these imports at the top
 from db import (
