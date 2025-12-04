@@ -124,16 +124,19 @@ def search_off_campus_exercise(categories):
     ONLY return JSON list — no explanation.
     """
 
-    response = client.responses.create(
-        model="gpt-4.1-mini",
-        input=[
+    response = client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": user_prompt}
         ]
+        response_format={"type": "json_object"}
     )
 
     try:
-        return response.output_json()
+        import json
+        result = json.loads(response.choices[0].message.content)  # Fixed: output_json() -> proper parsing
+        return result.get("classes", [])
     except:
         return []
 
@@ -164,4 +167,4 @@ def find_classes(campus, categories=None):
         return search_off_campus_exercise(categories)
 
     else:
-        raise ValueError("You must select 'On Campus' or 'Off Campus''")
+        raise ValueError("You must select 'On Campus' or 'Off Campus'")

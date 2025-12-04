@@ -63,18 +63,20 @@ def generate_exercises(body_parts, muscles):
 
     # OpenAI prompt
     prompt = f"""
-    Generate a JSON list of weightlifting exercises that target ONLY:
-    Body parts: {body_parts}
-    Muscles: {muscles}
+    Generate a JSON object with an "exercises" key containing a list of 
+    weightlifting exercises that target ONLY:
+    Body parts: {', '.join(body_parts)}
+    Muscles: {', '.join(muscles)}
 
     For each exercise, include:
     - name
     - primary_muscle
-    - secondary_muscles
+    - secondary_muscles (as a list)
     - equipment
-    - instructions (2–4 bullet points)
+    - instructions (as a list of 2-4 bullet points)
 
-    Return ONLY valid JSON.
+    Return a JSON object with format: {{"exercises": [...]}}
+    Return ONLY valid JSON, no additional text.
     """
 
     # OpenAI call
@@ -84,4 +86,5 @@ def generate_exercises(body_parts, muscles):
         response_format={"type": "json_object"}
     )
 
-    return json.loads(response.choices[0].message.content)
+    result = json.loads(response.choices[0].message.content)
+    return result.get("exercises", [])
