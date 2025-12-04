@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workout - Spotter</title>
+     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+</head>
+
+<body>
+<header class="site-header">
+    <div id="background">
+        <nav id="navbar">
+            <div class="brand">
+                <img id="bu_pic" src= "/img/bu_dog.png">
+                <p id="title">🐾SPOTTER 🐾</p>
+            </div>
+            <ul>
+                <li><a href="/feed">Feed</a></li>
+                <li><a href="/challenges">My Challenges</a></li>
+                <li><a href="/friends">Friends</a></li>
+                <li><a href="/search-users">Find Friends</a></li>
+                <li><a href="/logout">Logout</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<div class="webbody">
+    <h2 id="challenge">🔍 FIND FRIENDS</h2>
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="message {{ category }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div class="search-container">
+        <form action="/search-users" method="GET" class="search-form">
+            <input type="text" name="q" placeholder="Search by username..." value="{{ query or '' }}" class="search-input">
+            <button type="submit" class="btn-search">🔍 Search</button>
+        </form>
+
+        {% if users %}
+            <div class="search-results">
+                <h3>Search Results</h3>
+                {% for user in users %}
+                <div class="user-card">
+                    <div class="user-avatar">👤</div>
+                    <div class="user-info">
+                        <h4>{{ user.username }}</h4>
+                        <p>{{ user.bio or 'No bio' }}</p>
+                    </div>
+                    <a href="/add-friend/{{ user.id }}" class="btn-add-friend">➕ Add Friend</a>
+                </div>
+                {% endfor %}
+            </div>
+        {% elif query %}
+            <div class="no-results">
+                <p>No users found matching "{{ query }}"</p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+</body>
+</html>
