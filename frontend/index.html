@@ -6,12 +6,10 @@
     <title>UserFeed</title>
     <link rel = "stylesheet" href = "style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-
 </head>
 
-
-
-<body><header class = "site-header">
+<body>
+<header class = "site-header">
     <div id = "background">
     
     <nav id = "navbar">
@@ -26,12 +24,13 @@
             <li><a href = "workoutsection.html">Workout</a></li>
             <li><a href = "recipe.html">Recipes</a></li>
             <li><a href="addFriends.html">AddFriends</a></li>
+            <li><a href="profile.html">Profile</a></li>
+            <li><a href="#" onclick="logout(); return false;">🚪 Logout</a></li>
         </ul>
     </nav>
     </div>
-    
-   
 </header>
+
 <div class ="webbody">
  <h2 id = "challenge">CREATE A NEW CHALLENGE</h2>
     <div class="box">
@@ -82,6 +81,16 @@
     </div>
 </div>
 
+<!-- FIX 1: Move authentication check to TOP -->
+<script>
+// Check authentication FIRST
+const token = localStorage.getItem("spotterToken");
+if (!token) {
+    window.location.href = "login.html";
+}
+</script>
+
+<!-- FIX 2: Friend search and invite functionality -->
 <script>
 // Sample friend data
 const sampleFriends = [
@@ -186,6 +195,24 @@ privacyRadios.forEach(radio => {
 // Default to showing if nothing selected
 toggleInviteSection();
 
+// Show message function
+function showMessage(message, type) {
+    const messageContainer = document.getElementById('messageContainer');
+    messageContainer.innerHTML = message;
+    messageContainer.className = type === 'success' ? 'success-message' : 'error-message';
+    messageContainer.style.display = 'block';
+    
+    // Auto-hide after 5 seconds for errors
+    if (type === 'error') {
+        setTimeout(() => {
+            messageContainer.style.display = 'none';
+        }, 5000);
+    }
+}
+</script>
+
+<!-- FIX 3: Challenge submission with authentication -->
+<script>
 // Form submission handler
 document.getElementById('startChallengeBtn').addEventListener('click', async function() {
     // Get form values
@@ -233,14 +260,30 @@ document.getElementById('startChallengeBtn').addEventListener('click', async fun
     btn.disabled = true;
     
     try {
+        // Get auth token
+        const token = localStorage.getItem("spotterToken");
+        
         // Send to backend
         const response = await fetch('/api/create_challenge', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(challengeData)
         });
+        
+        // FIX: Better error handling
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            if (response.status === 401) {
+                // Token expired
+                localStorage.removeItem("spotterToken");
+                window.location.href = "login.html";
+                return;
+            }
+            throw new Error(errorData.error || `Server returned ${response.status}`);
+        }
         
         const result = await response.json();
         
@@ -256,35 +299,13 @@ document.getElementById('startChallengeBtn').addEventListener('click', async fun
             btn.disabled = false;
         }
     } catch (error) {
-        showMessage('Error connecting to server. Please make sure the backend is running.', 'error');
+        console.error('Challenge creation error:', error);
+        showMessage(error.message || 'Error connecting to server. Please make sure the backend is running.', 'error');
         btn.textContent = originalText;
         btn.disabled = false;
     }
 });
-
-// Show message function
-function showMessage(message, type) {
-    const messageContainer = document.getElementById('messageContainer');
-    messageContainer.innerHTML = message;
-    messageContainer.className = type === 'success' ? 'success-message' : 'error-message';
-    messageContainer.style.display = 'block';
-    
-    // Auto-hide after 5 seconds for errors
-    if (type === 'error') {
-        setTimeout(() => {
-            messageContainer.style.display = 'none';
-        }, 5000);
-    }
-}
-</script>
-<script>
-const token = localStorage.getItem("spotterToken");
-if (!token) {
-    // Not logged in → go to login
-    window.location.href = "login.html";
-}
 </script>
 
 </body>
-
 </html>
