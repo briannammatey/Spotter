@@ -74,8 +74,11 @@ Open your web browser and navigate to:
 
 ## How To Test
 Dependencies to install: pytest, coverage, mongomock
+<br>
 Set your api key for OpenAI feature: $env:OPENAI_API_KEY="your_api_key_here"
+<br>
 To test run:  python -m pytest -v 
+<br>
 To run coverage: 
 - python -m coverage run -m pytest
 - python -m coverage report
