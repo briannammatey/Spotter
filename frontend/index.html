@@ -37,12 +37,41 @@
     <!-- Error/Success Messages -->
     <div id="messageContainer" style="display: none;"></div>
     
+    <h4 class="questions">What Type of Challenge?</h4>
+    <div class="button-toggle">
+        <input type="radio" id="timeBased" name="challengeType" value="Time-Based">
+        <label for="timeBased">Time-Based</label>
+
+        <input type="radio" id="AchievementBased" name="challengeType" value="Achievement-Based">
+        <label for="AchievementBased">Achievement-Based</label>
+    </div>
+
+    <h4 class="questions">Challenge Category</h4>
+    <div class="button-toggle">
+        <input type="radio" id="weightliftingCat" name="category" value="Weightlifting">
+        <label for="weightliftingCat">Weightlifting</label>
+
+        <input type="radio" id="cardioCat" name="category" value="Cardio">
+        <label for="cardioCat">Cardio</label>
+
+        <input type="radio" id="classesCat" name="category" value="Classes">
+        <label for="classesCat">Classes</label>
+    </div>
+
     <h4 class = "questions">Challenge Title</h4>
     <textarea id="challengeTitle" type="text" placeholder="Enter your Challenge Title here" class = "textBox"></textarea>
 
     <h4 class = "questions">Goal</h4>
     <textarea id="challengeGoal" type="text" placeholder="Enter your Goal here" class = "textBox"></textarea>
     
+    <div id="AchievementFields" style="display: none;">
+        <h4 class="questions">Target Value</h4>
+        <input type="number" id="targetValueInput" placeholder="e.g., 100" min="0" step="0.1" class="textBox">
+
+        <h4 class="questions">Metric</h4>
+        <input type="text" id="metricInput" placeholder="e.g., miles, pounds, classes" class="textBox">
+    </div>
+
     <h4 class = "questions">Start Date</h4>
     <label for="startDate"></label>
     <input type="date" id="startDate" class = "date-box">
@@ -109,6 +138,25 @@ const dropdown = document.createElement('div');
 dropdown.className = 'friend-dropdown';
 dropdown.style.display = 'none';
 friendSearchInput.parentElement.appendChild(dropdown);
+
+// Show/hide achievement fields based on challenge type
+document.querySelectorAll('input[name="challengeType"]').forEach(radio => {
+    radio.addEventListener('change', (e) => {
+        const AchievementFields = document.getElementById('AchievementFields');
+        if (e.target.value === 'Achievement-Based') {
+            AchievementFields.style.display = 'block';
+        } else {
+            AchievementFields.style.display = 'none';
+            document.getElementById('targetValueInput').value = '';
+            document.getElementById('metricInput').value = '';
+        }
+    });
+});
+
+// Set minimum date to today
+const today = new Date().toISOString().split('T')[0];
+document.getElementById('startDate').min = today;
+document.getElementById('endDate').min = today;
 
 // Add search functionality
 friendSearchInput.addEventListener('input', function(e) {
@@ -216,6 +264,8 @@ function showMessage(message, type) {
 // Form submission handler
 document.getElementById('startChallengeBtn').addEventListener('click', async function() {
     // Get form values
+    const challengeType = document.querySelector('input[name="challengeType"]:checked')?.value;
+    const category = document.querySelector('input[name="category"]:checked')?.value;
     const title = document.getElementById('challengeTitle').value.trim();
     const goal = document.getElementById('challengeGoal').value.trim();
     const startDate = document.getElementById('startDate').value;
@@ -226,6 +276,8 @@ document.getElementById('startChallengeBtn').addEventListener('click', async fun
     // Client-side validation
     const errors = [];
     
+    if (!challengeType) errors.push("Please select a challenge type");
+    if (!category) errors.push("Please select a category");
     if (!title) errors.push("Challenge title is required");
     if (!goal) errors.push("Goal is required");
     if (!startDate) errors.push("Start date is required");
@@ -237,6 +289,20 @@ document.getElementById('startChallengeBtn').addEventListener('click', async fun
         errors.push("End date must be after start date");
     }
     
+    // Achievement-based specific validation
+    let targetValue, metric;
+    if (challengeType === 'Achievement-Based') {
+        targetValue = document.getElementById('targetValueInput').value;
+        metric = document.getElementById('metricInput').value.trim();
+        
+        if (!targetValue || parseFloat(targetValue) <= 0) {
+            errors.push("Please enter a valid target value greater than 0");
+        }
+        if (!metric) {
+            errors.push("Please enter a metric (e.g., miles, pounds, classes)");
+        }
+    }
+
     if (errors.length > 0) {
         showMessage(errors.join('<br>'), 'error');
         return;
@@ -244,6 +310,8 @@ document.getElementById('startChallengeBtn').addEventListener('click', async fun
     
     // Prepare data
     const challengeData = {
+        challenge_type: challengeType,
+        category: category,
         title,
         goal,
         start_date: startDate,
@@ -253,6 +321,12 @@ document.getElementById('startChallengeBtn').addEventListener('click', async fun
         invited_friends: Array.from(invitedFriends)
     };
     
+    // Add achievement-based specific fields
+    if (challengeType === 'Achievement-Based') {
+        challengeData.target_value = parseFloat(targetValue);
+        challengeData.metric = metric;
+    }
+
     // Disable button while submitting
     const btn = document.getElementById('startChallengeBtn');
     const originalText = btn.textContent;
