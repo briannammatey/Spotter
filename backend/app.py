@@ -2,7 +2,10 @@
 from dotenv import load_dotenv 
 load_dotenv()
 from data_manager import (load_challenges, get_public_challenges, get_challenge_by_id, load_workouts, get_workout_by_id, get_all_activities, get_user_activities)  # Add get_user_activities
-
+from db import (
+    get_user_profile, update_user_profile, get_user_stats,
+    get_user_recent_activities
+)
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import os
@@ -560,7 +563,131 @@ def api_get_friends():
             "error": f"Server error: {str(e)}"
         }), 500
 
+# Profile Routes
+@app.route("/api/profile", methods=["GET"])
+@require_auth
+def api_get_profile():
+    """Get current user's profile"""
+    try:
+        profile = get_user_profile(request.user_email)
+        
+        if not profile:
+            return jsonify({
+                "success": False,
+                "error": "Profile not found"
+            }), 404
+        
+        return jsonify({
+            "success": True,
+            "profile": profile
+        }), 200
+        
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": f"Server error: {str(e)}"
+        }), 500
 
+
+@app.route("/api/profile/<email>", methods=["GET"])
+@require_auth
+def api_get_user_profile(email):
+    """Get another user's profile (public info only)"""
+    try:
+        profile = get_user_profile(email)
+        
+        if not profile:
+            return jsonify({
+                "success": False,
+                "error": "Profile not found"
+            }), 404
+        
+        # Check if viewing own profile or friend's profile
+        is_own_profile = email == request.user_email
+        is_friend = check_friendship(request.user_email, email) if not is_own_profile else True
+        
+        # Remove private info if not own profile
+        if not is_own_profile:
+            profile.pop('email', None)
+        
+        return jsonify({
+            "success": True,
+            "profile": profile,
+            "is_own_profile": is_own_profile,
+            "is_friend": is_friend
+        }), 200
+        
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": f"Server error: {str(e)}"
+        }), 500
+
+
+@app.route("/api/profile", methods=["PUT"])
+@require_auth
+def api_update_profile():
+    """Update current user's profile"""
+    data = request.get_json() or {}
+    
+    try:
+        success, message = update_user_profile(request.user_email, data)
+        
+        if success:
+            return jsonify({
+                "success": True,
+                "message": message
+            }), 200
+        else:
+            return jsonify({
+                "success": False,
+                "error": message
+            }), 400
+            
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": f"Server error: {str(e)}"
+        }), 500
+
+
+@app.route("/api/profile/stats", methods=["GET"])
+@require_auth
+def api_get_profile_stats():
+    """Get current user's stats"""
+    try:
+        stats = get_user_stats(request.user_email)
+        
+        return jsonify({
+            "success": True,
+            "stats": stats
+        }), 200
+        
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": f"Server error: {str(e)}"
+        }), 500
+
+
+@app.route("/api/profile/activities", methods=["GET"])
+@require_auth
+def api_get_profile_activities():
+    """Get current user's recent activities"""
+    try:
+        limit = int(request.args.get('limit', 10))
+        activities = get_user_recent_activities(request.user_email, limit)
+        
+        return jsonify({
+            "success": True,
+            "activities": activities
+        }), 200
+        
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": f"Server error: {str(e)}"
+        }), 500
 # Remove Friend
 @app.route("/api/remove-friend", methods=["POST"])
 @require_auth
