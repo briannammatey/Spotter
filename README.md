@@ -72,6 +72,16 @@ Open your web browser and navigate to:
 - Or `http://127.0.0.1:5001`
 
 
+## How To Test
+Dependencies to install: pytest, coverage, mongomock
+Set your api key for OpenAI feature: $env:OPENAI_API_KEY="your_api_key_here"
+To test run:  python -m pytest -v 
+To run coverage: 
+- python -m coverage run -m pytest
+- python -m coverage report
+- python -m coverage html (To see HTML version)
+
+
 ## Project Structure
 ```
 Spotter/
