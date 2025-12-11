@@ -202,13 +202,12 @@ def create_challenge(data, creator_email=None):
         success = add_challenge(challenge)
         
         if success:
-            # Remove 
             challenge_response = {k: v for k, v in challenge.items() if k != "_id"}
             
             return True, {
                 "success": True,
                 "message": "Challenge created successfully!",
-                "challenge": challenge
+                "challenge": challenge_response
             }, 201
         else:
             return False, {
