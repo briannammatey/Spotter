@@ -98,7 +98,7 @@ def validate_challenge_data(data):
                 if target <= 0:
                     errors.append("Target value must be greater than 0")
                 
-                # Sanity checks based on category and metric
+                # Sanity checks based on category and target value
                 if category == "Weightlifting":
                     if metric in ["pounds", "lbs", "kg", "kilograms"]:
                         if target > 1000:

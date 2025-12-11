@@ -139,7 +139,7 @@ dropdown.className = 'friend-dropdown';
 dropdown.style.display = 'none';
 friendSearchInput.parentElement.appendChild(dropdown);
 
-// Show/hide achievement fields based on challenge type
+// Show or hide achievement fields based on challenge type
 document.querySelectorAll('input[name="challengeType"]').forEach(radio => {
     radio.addEventListener('change', (e) => {
         const AchievementFields = document.getElementById('AchievementFields');
