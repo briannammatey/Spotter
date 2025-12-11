@@ -34,13 +34,17 @@ venv\Scripts\activate
 
 ### 3. Install Dependencies
 ```bash
-pip install flask flask-cors python-dotenv pytest pytest-cov
+pip install flask flask-cors python-dotenv pymongo pytest pytest-cov mongomock
 ```
 
 ### 4. Set Up Environment Variables
 Create a `.env` file in the backend folder and paste in the two API Keys provided in the final deliverable
 ```bash
-PORT=5001
+# OpenAI API Key
+OPENAI_API_KEY=key_here
+
+# MongoDB Connection
+MONGO_URI=key_here
 ```
 
 ## Running the Application
@@ -101,5 +105,7 @@ Spotter/
 ├── tests/           # Test suite
 │   ├── test_createChallenge.py
 │   └── test_logWorkout.py
-└── README.md
+├── img/                       # Image assets
+├── .env                       # Environment variables (not in repo)
+└── README.md         
 ```
