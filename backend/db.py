@@ -20,6 +20,9 @@ challenges = db.challenges
 workouts = db.workouts
 challenge_participants = db.challenge_participants
 feed_posts = db.feed_posts
+likes = db.likes
+comments = db.comments
+challenge_invitations = db.challenge_invitations
 
 # Create indexes for better performance and uniqueness
 try:
@@ -32,6 +35,11 @@ try:
     workouts.create_index("created_at")
     friend_requests.create_index([("from_user", 1), ("to_user", 1)], unique=True)
     friendships.create_index([("user1", 1), ("user2", 1)], unique=True)
+    likes.create_index([("user_email", 1), ("post_id", 1), ("post_type", 1)], unique=True)
+    comments.create_index("post_id")
+    comments.create_index("created_at")
+    challenge_invitations.create_index([("challenge_id", 1), ("invitee_email", 1)], unique=True)
+    challenge_invitations.create_index("invitee_email")
     print("MongoDB indexes created successfully")
 except Exception as e:
     print(f"Note: Some indexes may already exist - {e}")
@@ -405,3 +413,265 @@ def get_user_recent_activities(email, limit=10):
     # Sort by creation date and limit
     activities.sort(key=lambda x: x["data"]["created_at"], reverse=True)
     return activities[:limit]
+
+
+# Likes and Comments Functions
+def add_like(user_email, post_id, post_type):
+    """Add a like to a post (workout or challenge)"""
+    try:
+        # Check if already liked
+        existing = likes.find_one({
+            "user_email": user_email,
+            "post_id": post_id,
+            "post_type": post_type
+        })
+        
+        if existing:
+            return False, "Already liked"
+        
+        likes.insert_one({
+            "user_email": user_email,
+            "post_id": post_id,
+            "post_type": post_type,
+            "created_at": datetime.utcnow()
+        })
+        
+        return True, "Like added"
+    except Exception as e:
+        return False, str(e)
+
+
+def remove_like(user_email, post_id, post_type):
+    """Remove a like from a post"""
+    try:
+        result = likes.delete_one({
+            "user_email": user_email,
+            "post_id": post_id,
+            "post_type": post_type
+        })
+        
+        if result.deleted_count > 0:
+            return True, "Like removed"
+        else:
+            return False, "Like not found"
+    except Exception as e:
+        return False, str(e)
+
+
+def get_likes_for_post(post_id, post_type):
+    """Get all likes for a specific post"""
+    try:
+        like_list = list(likes.find({
+            "post_id": post_id,
+            "post_type": post_type
+        }))
+        
+        # Get user details for each like
+        likes_with_users = []
+        for like in like_list:
+            user = users.find_one({"email": like["user_email"]})
+            if user:
+                likes_with_users.append({
+                    "user_email": like["user_email"],
+                    "username": user.get("username", like["user_email"].split("@")[0]),
+                    "created_at": like["created_at"]
+                })
+        
+        return likes_with_users
+    except Exception as e:
+        return []
+
+
+def get_like_count(post_id, post_type):
+    """Get the number of likes for a post"""
+    return likes.count_documents({
+        "post_id": post_id,
+        "post_type": post_type
+    })
+
+
+def has_user_liked(user_email, post_id, post_type):
+    """Check if a user has liked a post"""
+    return likes.find_one({
+        "user_email": user_email,
+        "post_id": post_id,
+        "post_type": post_type
+    }) is not None
+
+
+def add_comment(user_email, post_id, post_type, comment_text):
+    """Add a comment to a post"""
+    try:
+        user = users.find_one({"email": user_email})
+        
+        comment = {
+            "user_email": user_email,
+            "username": user.get("username", user_email.split("@")[0]) if user else user_email,
+            "post_id": post_id,
+            "post_type": post_type,
+            "comment_text": comment_text,
+            "created_at": datetime.utcnow()
+        }
+        
+        result = comments.insert_one(comment)
+        comment["_id"] = str(result.inserted_id)
+        
+        return True, "Comment added", comment
+    except Exception as e:
+        return False, str(e), None
+
+
+def get_comments_for_post(post_id, post_type):
+    """Get all comments for a specific post"""
+    try:
+        comment_list = list(comments.find({
+            "post_id": post_id,
+            "post_type": post_type
+        }).sort("created_at", -1))
+        
+        # Convert ObjectId to string
+        for comment in comment_list:
+            comment["_id"] = str(comment["_id"])
+        
+        return comment_list
+    except Exception as e:
+        return []
+
+
+def get_comment_count(post_id, post_type):
+    """Get the number of comments for a post"""
+    return comments.count_documents({
+        "post_id": post_id,
+        "post_type": post_type
+    })
+
+
+def delete_comment(comment_id, user_email):
+    """Delete a comment (only if user is the comment author)"""
+    try:
+        from bson import ObjectId
+        result = comments.delete_one({
+            "_id": ObjectId(comment_id),
+            "user_email": user_email
+        })
+        
+        if result.deleted_count > 0:
+            return True, "Comment deleted"
+        else:
+            return False, "Comment not found or not authorized"
+    except Exception as e:
+        return False, str(e)
+
+
+def get_friends_and_self_emails(user_email):
+    """Get list of emails including user and their friends"""
+    emails = [user_email]
+    
+    # Get all friendships
+    friends_list = friendships.find({
+        "$or": [
+            {"user1": user_email},
+            {"user2": user_email}
+        ]
+    })
+    
+    for friendship in friends_list:
+        friend_email = friendship["user2"] if friendship["user1"] == user_email else friendship["user1"]
+        emails.append(friend_email)
+    
+    return emails
+
+
+# Challenge Invitation Functions
+def send_challenge_invitation(challenge_id, challenge_title, inviter_email, invitee_email):
+    """Send a challenge invitation to a user"""
+    try:
+        # Check if invitation already exists
+        existing = challenge_invitations.find_one({
+            "challenge_id": challenge_id,
+            "invitee_email": invitee_email
+        })
+        
+        if existing:
+            return False, "Already invited"
+        
+        # Get inviter details
+        inviter = users.find_one({"email": inviter_email})
+        inviter_username = inviter.get("username", inviter_email.split("@")[0]) if inviter else inviter_email
+        
+        challenge_invitations.insert_one({
+            "challenge_id": challenge_id,
+            "challenge_title": challenge_title,
+            "inviter_email": inviter_email,
+            "inviter_username": inviter_username,
+            "invitee_email": invitee_email,
+            "status": "pending",
+            "created_at": datetime.utcnow()
+        })
+        
+        return True, "Invitation sent"
+    except Exception as e:
+        return False, str(e)
+
+
+def get_challenge_invitations(user_email):
+    """Get all pending challenge invitations for a user"""
+    try:
+        invitations = list(challenge_invitations.find({
+            "invitee_email": user_email,
+            "status": "pending"
+        }).sort("created_at", -1))
+        
+        # Convert ObjectId to string
+        for invitation in invitations:
+            invitation["_id"] = str(invitation["_id"])
+        
+        return invitations
+    except Exception as e:
+        return []
+
+
+def accept_challenge_invitation(challenge_id, user_email):
+    """Accept a challenge invitation"""
+    try:
+        # Update invitation status
+        result = challenge_invitations.update_one(
+            {"challenge_id": challenge_id, "invitee_email": user_email, "status": "pending"},
+            {"$set": {"status": "accepted", "accepted_at": datetime.utcnow()}}
+        )
+        
+        if result.modified_count == 0:
+            return False, "Invitation not found"
+        
+        # Add user to challenge participants
+        challenge_participants.insert_one({
+            "challenge_id": challenge_id,
+            "participant_email": user_email,
+            "joined_at": datetime.utcnow()
+        })
+        
+        # Update challenge participants count
+        challenges.update_one(
+            {"id": challenge_id},
+            {"$inc": {"participants": 1}}
+        )
+        
+        return True, "Challenge invitation accepted"
+    except Exception as e:
+        return False, str(e)
+
+
+def decline_challenge_invitation(challenge_id, user_email):
+    """Decline a challenge invitation"""
+    try:
+        result = challenge_invitations.update_one(
+            {"challenge_id": challenge_id, "invitee_email": user_email, "status": "pending"},
+            {"$set": {"status": "declined", "declined_at": datetime.utcnow()}}
+        )
+        
+        if result.modified_count == 0:
+            return False, "Invitation not found"
+        
+        return True, "Challenge invitation declined"
+    except Exception as e:
+        return False, str(e)

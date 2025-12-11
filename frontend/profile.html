@@ -360,6 +360,18 @@
                 </div>
             </div>
 
+            <!-- Friend Requests Section -->
+            <div id="friendRequestsSection" style="display: none; background: #fff3cd; border: 2px solid #ffc107; border-radius: 15px; padding: 20px; margin-bottom: 20px;">
+                <h3 style="margin: 0 0 15px 0; color: #856404;">🔔 Friend Requests (<span id="requestCount">0</span>)</h3>
+                <div id="friendRequestsList"></div>
+            </div>
+
+            <!-- Challenge Invitations Section -->
+            <div id="challengeInvitationsSection" style="display: none; background: #e8f5e9; border: 2px solid #4caf50; border-radius: 15px; padding: 20px; margin-bottom: 20px;">
+                <h3 style="margin: 0 0 15px 0; color: #2e7d32;">🏆 Challenge Invitations (<span id="challengeInviteCount">0</span>)</h3>
+                <div id="challengeInvitationsList"></div>
+            </div>
+
             <!-- Stats Grid -->
             <div class="stats-grid">
                 <div class="stat-card">
@@ -506,6 +518,12 @@ function displayProfile(profile) {
 
     // Load recent activities
     loadRecentActivities();
+    
+    // Load friend requests
+    loadFriendRequests();
+    
+    // Load challenge invitations
+    loadChallengeInvitations();
 }
 
 // Load recent activities
@@ -615,6 +633,163 @@ document.getElementById('editProfileForm').addEventListener('submit', async func
         submitBtn.disabled = false;
     }
 });
+
+// Load friend requests
+async function loadFriendRequests() {
+    try {
+        const response = await authFetch('/api/friend-requests');
+        const result = await response.json();
+
+        if (result.success && result.requests.length > 0) {
+            const section = document.getElementById('friendRequestsSection');
+            const requestsList = document.getElementById('friendRequestsList');
+            const requestCount = document.getElementById('requestCount');
+            
+            requestCount.textContent = result.requests.length;
+            section.style.display = 'block';
+            
+            requestsList.innerHTML = result.requests.map(req => `
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 15px; background: white; border-radius: 10px; margin-bottom: 10px; border: 1px solid #ffc107;">
+                    <div>
+                        <strong style="font-size: 16px; color: #2d3748;">${req.from_username}</strong>
+                        <p style="margin: 5px 0 0 0; color: #718096; font-size: 14px;">${req.from_email}</p>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button onclick="handleFriendRequest('${req.from_email}', 'accept')" 
+                                style="background: #51cf66; color: white; border: none; padding: 8px 20px; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                            ✓ Accept
+                        </button>
+                        <button onclick="handleFriendRequest('${req.from_email}', 'reject')" 
+                                style="background: #ff6b6b; color: white; border: none; padding: 8px 20px; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                            ✗ Decline
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+    } catch (error) {
+        console.error('Error loading friend requests:', error);
+    }
+}
+
+// Handle friend request (accept/reject)
+async function handleFriendRequest(fromEmail, action) {
+    try {
+        const endpoint = action === 'accept' ? '/api/accept-friend-request' : '/api/reject-friend-request';
+        const response = await authFetch(endpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ from_user_email: fromEmail })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            showMessage(`Friend request ${action}ed!`, 'success');
+            // Reload friend requests and profile stats
+            loadFriendRequests();
+            loadProfile();
+        } else {
+            showMessage(result.error, 'error');
+        }
+    } catch (error) {
+        console.error(`Error ${action}ing friend request:`, error);
+        showMessage(`Failed to ${action} friend request`, 'error');
+    }
+}
+
+// Show message helper
+function showMessage(message, type) {
+    const messageDiv = document.createElement('div');
+    messageDiv.style.cssText = `
+        position: fixed;
+        top: 80px;
+        right: 20px;
+        padding: 15px 25px;
+        border-radius: 10px;
+        color: white;
+        font-weight: 600;
+        z-index: 10000;
+        animation: slideIn 0.3s ease;
+        ${type === 'success' ? 'background: #51cf66;' : 'background: #ff6b6b;'}
+    `;
+    messageDiv.textContent = message;
+    document.body.appendChild(messageDiv);
+    
+    setTimeout(() => {
+        messageDiv.remove();
+    }, 3000);
+}
+
+// Load challenge invitations
+async function loadChallengeInvitations() {
+    try {
+        const response = await authFetch('/api/challenge-invitations');
+        const result = await response.json();
+
+        if (result.success && result.invitations.length > 0) {
+            const section = document.getElementById('challengeInvitationsSection');
+            const invitationsList = document.getElementById('challengeInvitationsList');
+            const inviteCount = document.getElementById('challengeInviteCount');
+            
+            inviteCount.textContent = result.invitations.length;
+            section.style.display = 'block';
+            
+            invitationsList.innerHTML = result.invitations.map(inv => `
+                <div style="display: flex; align-items: center; justify-content: space-between; padding: 15px; background: white; border-radius: 10px; margin-bottom: 10px; border: 1px solid #4caf50;">
+                    <div>
+                        <strong style="font-size: 18px; color: #2d3748;">🏆 ${inv.challenge_title}</strong>
+                        <p style="margin: 5px 0 0 0; color: #718096; font-size: 14px;">
+                            Invited by <strong>${inv.inviter_username}</strong>
+                        </p>
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button onclick="handleChallengeInvitation('${inv.challenge_id}', 'accept')" 
+                                style="background: #51cf66; color: white; border: none; padding: 8px 20px; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                            ✓ Accept
+                        </button>
+                        <button onclick="handleChallengeInvitation('${inv.challenge_id}', 'decline')" 
+                                style="background: #ff6b6b; color: white; border: none; padding: 8px 20px; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                            ✗ Decline
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+    } catch (error) {
+        console.error('Error loading challenge invitations:', error);
+    }
+}
+
+// Handle challenge invitation (accept/decline)
+async function handleChallengeInvitation(challengeId, action) {
+    try {
+        const endpoint = action === 'accept' ? '/api/accept-challenge-invitation' : '/api/decline-challenge-invitation';
+        const response = await authFetch(endpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ challenge_id: challengeId })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            showMessage(`Challenge invitation ${action}ed!`, 'success');
+            // Reload invitations and profile stats
+            loadChallengeInvitations();
+            loadProfile();
+        } else {
+            showMessage(result.error, 'error');
+        }
+    } catch (error) {
+        console.error(`Error ${action}ing challenge invitation:`, error);
+        showMessage(`Failed to ${action} challenge invitation`, 'error');
+    }
+}
 
 // Load profile on page load
 document.addEventListener('DOMContentLoaded', loadProfile);

@@ -113,3 +113,27 @@ def get_user_activities(email):
     except Exception as e:
         print(f"Error loading user activities: {e}")
         return []
+
+
+def get_friends_activities(email_list):
+    """Get all PUBLIC activities from a list of users (self + friends)"""
+    try:
+        # Get public challenges and workouts from the specified users
+        friend_challenges = list(challenges.find({
+            "creator": {"$in": email_list},
+            "privacy": "public"
+        }, {"_id": 0}))
+        
+        friend_workouts = list(workouts.find({
+            "creator": {"$in": email_list},
+            "privacy": "public"
+        }, {"_id": 0}))
+        
+        # Combine and sort by created_at timestamp, newest first
+        all_activities = friend_challenges + friend_workouts
+        all_activities.sort(key=lambda x: x.get('created_at', ''), reverse=True)
+        
+        return all_activities
+    except Exception as e:
+        print(f"Error loading friends activities: {e}")
+        return []

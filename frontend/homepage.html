@@ -80,8 +80,14 @@ function timeAgo(dateString) {
 
 // Function to create a challenge feed item
 function createChallengeFeedItem(challenge) {
+    const postId = challenge.id;
+    const postType = 'challenge';
+    const liked = challenge.user_has_liked;
+    const likeCount = challenge.like_count || 0;
+    const commentCount = challenge.comment_count || 0;
+    
     return `
-        <div class="feed-item">
+        <div class="feed-item" data-post-id="${postId}" data-post-type="${postType}">
             <div class="feed-header">
                 <div class="feed-user-info">
                     <div class="feed-avatar">👤</div>
@@ -121,19 +127,33 @@ function createChallengeFeedItem(challenge) {
                     </div>
                 ` : ''}
             </div>
-            ${challenge.privacy !== 'private' ? `
             <div class="feed-actions">
-                <button class="feed-btn like-btn">❤️ Like</button>
-                <button class="feed-btn comment-btn">💬 Comment</button>
-                <button class="feed-btn join-btn">✅ Join Challenge</button>
+                <button class="feed-btn like-btn ${liked ? 'liked' : ''}" onclick="toggleLike('${postId}', '${postType}', this)">
+                    ${liked ? '❤️' : '🤍'} <span class="like-count">${likeCount}</span>
+                </button>
+                <button class="feed-btn comment-btn" onclick="toggleComments('${postId}', '${postType}')">
+                    💬 <span class="comment-count">${commentCount}</span>
+                </button>
             </div>
-            ` : ''}
+            <div class="comments-section" id="comments-${postId}" style="display: none;">
+                <div class="comment-input-container">
+                    <input type="text" placeholder="Write a comment..." class="comment-input" id="input-${postId}">
+                    <button onclick="postComment('${postId}', '${postType}')" class="comment-submit-btn">Post</button>
+                </div>
+                <div class="comments-list" id="list-${postId}"></div>
+            </div>
         </div>
     `;
 }
 
 // Function to create a workout feed item
 function createWorkoutFeedItem(workout) {
+    const postId = workout.id;
+    const postType = 'workout';
+    const liked = workout.user_has_liked;
+    const likeCount = workout.like_count || 0;
+    const commentCount = workout.comment_count || 0;
+    
     // Map workout type to emoji
     const typeEmojis = {
         'cardio': '🏃',
@@ -150,7 +170,7 @@ function createWorkoutFeedItem(workout) {
     };
     
     return `
-        <div class="feed-item">
+        <div class="feed-item" data-post-id="${postId}" data-post-type="${postType}">
             <div class="feed-header">
                 <div class="feed-user-info">
                     <div class="feed-avatar">👤</div>
@@ -172,13 +192,21 @@ function createWorkoutFeedItem(workout) {
                     <span class="stat-item">${typeEmojis[workout.workout_type] || '🏋️'} ${workout.workout_type.charAt(0).toUpperCase() + workout.workout_type.slice(1)}</span>
                 </div>
             </div>
-            ${workout.privacy !== 'private' ? `
             <div class="feed-actions">
-                <button class="feed-btn like-btn">❤️ Like</button>
-                <button class="feed-btn comment-btn">💬 Comment</button>
-                <button class="feed-btn share-btn">🔗 Share</button>
+                <button class="feed-btn like-btn ${liked ? 'liked' : ''}" onclick="toggleLike('${postId}', '${postType}', this)">
+                    ${liked ? '❤️' : '🤍'} <span class="like-count">${likeCount}</span>
+                </button>
+                <button class="feed-btn comment-btn" onclick="toggleComments('${postId}', '${postType}')">
+                    💬 <span class="comment-count">${commentCount}</span>
+                </button>
             </div>
-            ` : ''}
+            <div class="comments-section" id="comments-${postId}" style="display: none;">
+                <div class="comment-input-container">
+                    <input type="text" placeholder="Write a comment..." class="comment-input" id="input-${postId}">
+                    <button onclick="postComment('${postId}', '${postType}')" class="comment-submit-btn">Post</button>
+                </div>
+                <div class="comments-list" id="list-${postId}"></div>
+            </div>
         </div>
     `;
 }
@@ -222,9 +250,178 @@ async function loadActivities() {
     }
 }
 
+// Toggle like on a post
+async function toggleLike(postId, postType, button) {
+    const likeCountSpan = button.querySelector('.like-count');
+    const isLiked = button.classList.contains('liked');
+    const endpoint = isLiked ? '/api/unlike' : '/api/like';
+    
+    try {
+        const response = await authFetch(endpoint, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ post_id: postId, post_type: postType })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            // Update UI
+            button.classList.toggle('liked');
+            button.innerHTML = `${isLiked ? '🤍' : '❤️'} <span class="like-count">${result.like_count}</span>`;
+        }
+    } catch (error) {
+        console.error('Error toggling like:', error);
+    }
+}
+
+// Toggle comments section
+async function toggleComments(postId, postType) {
+    const commentsSection = document.getElementById(`comments-${postId}`);
+    const commentsList = document.getElementById(`list-${postId}`);
+    
+    if (commentsSection.style.display === 'none') {
+        commentsSection.style.display = 'block';
+        // Load comments
+        await loadComments(postId, postType, commentsList);
+    } else {
+        commentsSection.style.display = 'none';
+    }
+}
+
+// Load comments for a post
+async function loadComments(postId, postType, commentsList) {
+    try {
+        const response = await authFetch(`/api/comments/${postId}/${postType}`);
+        const result = await response.json();
+        
+        if (result.success && result.comments.length > 0) {
+            commentsList.innerHTML = result.comments.map(comment => `
+                <div class="comment-item">
+                    <strong>${comment.username}</strong>
+                    <p>${comment.comment_text}</p>
+                    <small>${timeAgo(comment.created_at)}</small>
+                </div>
+            `).join('');
+        } else {
+            commentsList.innerHTML = '<p style="text-align: center; color: #718096; padding: 10px;">No comments yet. Be the first!</p>';
+        }
+    } catch (error) {
+        console.error('Error loading comments:', error);
+    }
+}
+
+// Post a comment
+async function postComment(postId, postType) {
+    const input = document.getElementById(`input-${postId}`);
+    const commentText = input.value.trim();
+    
+    if (!commentText) {
+        return;
+    }
+    
+    try {
+        const response = await authFetch('/api/comment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                post_id: postId,
+                post_type: postType,
+                comment_text: commentText
+            })
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            // Clear input
+            input.value = '';
+            
+            // Update comment count
+            const feedItem = document.querySelector(`[data-post-id="${postId}"]`);
+            const commentCountSpan = feedItem.querySelector('.comment-count');
+            if (commentCountSpan) {
+                commentCountSpan.textContent = result.comment_count;
+            }
+            
+            // Reload comments
+            const commentsList = document.getElementById(`list-${postId}`);
+            await loadComments(postId, postType, commentsList);
+        }
+    } catch (error) {
+        console.error('Error posting comment:', error);
+    }
+}
+
 // Load activities when page loads
 document.addEventListener('DOMContentLoaded', loadActivities);
 </script>
+
+<style>
+.liked {
+    background: #ffe8e8 !important;
+}
+
+.comments-section {
+    padding: 15px;
+    background: #f8f9fa;
+    border-top: 1px solid #e2e8f0;
+}
+
+.comment-input-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.comment-input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.comment-submit-btn {
+    padding: 10px 20px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.comment-submit-btn:hover {
+    background: #5568d3;
+}
+
+.comment-item {
+    background: white;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.comment-item strong {
+    color: #2d3748;
+    font-size: 14px;
+}
+
+.comment-item p {
+    margin: 5px 0;
+    color: #4a5568;
+}
+
+.comment-item small {
+    color: #718096;
+    font-size: 12px;
+}
+</style>
 
 </body>
 </html>

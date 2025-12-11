@@ -3,6 +3,7 @@
 from datetime import datetime
 import uuid
 from data_manager import add_challenge
+from db import send_challenge_invitation
 
 
 def validate_challenge_data(data):
@@ -204,10 +205,28 @@ def create_challenge(data, creator_email=None):
         if success:
             challenge_response = {k: v for k, v in challenge.items() if k != "_id"}
             
+            # Send invitations to invited friends (if any)
+            invitation_results = []
+            if invited_friends and isinstance(invited_friends, list):
+                for friend_email in invited_friends:
+                    if friend_email and friend_email.strip():
+                        inv_success, inv_message = send_challenge_invitation(
+                            challenge["id"],
+                            challenge["title"],
+                            creator_email,
+                            friend_email.strip()
+                        )
+                        invitation_results.append({
+                            "friend": friend_email,
+                            "success": inv_success,
+                            "message": inv_message
+                        })
+            
             return True, {
                 "success": True,
                 "message": "Challenge created successfully!",
-                "challenge": challenge_response
+                "challenge": challenge_response,
+                "invitations": invitation_results
             }, 201
         else:
             return False, {

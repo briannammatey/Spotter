@@ -1,10 +1,14 @@
 # Spotter Backend Application
 from dotenv import load_dotenv 
 load_dotenv()
-from data_manager import (load_challenges, get_public_challenges, get_challenge_by_id, load_workouts, get_workout_by_id, get_all_activities, get_user_activities)  # Add get_user_activities
+from data_manager import (load_challenges, get_public_challenges, get_challenge_by_id, load_workouts, get_workout_by_id, get_all_activities, get_user_activities, get_friends_activities)  # Add get_user_activities
 from db import (
     get_user_profile, update_user_profile, get_user_stats,
-    get_user_recent_activities
+    get_user_recent_activities, check_friendship,
+    add_like, remove_like, get_like_count, has_user_liked,
+    add_comment, get_comments_for_post, get_comment_count, delete_comment,
+    get_friends_and_self_emails,
+    get_challenge_invitations, accept_challenge_invitation, decline_challenge_invitation
 )
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
@@ -258,15 +262,29 @@ def api_get_workout(workout_id):
 def api_get_activities():
     """Get all activities for the feed"""
     try:
-        # Get filter parameter - 'all' for public feed, 'mine' for user's own posts
-        feed_type = request.args.get('type', 'all')
+        # Get filter parameter - 'all' for public feed, 'mine' for user's own posts, 'friends' for friends feed
+        feed_type = request.args.get('type', 'friends')  # Default to friends feed
         
         if feed_type == 'mine':
             # Get only the current user's activities (both public and private)
             activities = get_user_activities(request.user_email)
+        elif feed_type == 'friends':
+            # Get activities from user and their friends
+            friends_emails = get_friends_and_self_emails(request.user_email)
+            activities = get_friends_activities(friends_emails)
         else:
             # Get all public activities
             activities = get_all_activities()
+        
+        # Add like and comment counts to each activity
+        for activity in activities:
+            activity_id = activity.get('id')
+            activity_type = activity.get('type', 'workout' if 'workout_name' in activity else 'challenge')
+            
+            # Add interaction data
+            activity['like_count'] = get_like_count(activity_id, activity_type)
+            activity['comment_count'] = get_comment_count(activity_id, activity_type)
+            activity['user_has_liked'] = has_user_liked(request.user_email, activity_id, activity_type)
         
         return jsonify({
             "success": True,
@@ -277,6 +295,168 @@ def api_get_activities():
         return jsonify({
             "success": False,
             "errors": [f"Server error: {str(e)}"]
+        }), 500
+
+
+# Likes and Comments Routes
+@app.route("/api/like", methods=["POST"])
+@require_auth
+def api_add_like():
+    """Add a like to a post"""
+    data = request.get_json() or {}
+    post_id = data.get("post_id")
+    post_type = data.get("post_type")  # 'workout' or 'challenge'
+    
+    if not post_id or not post_type:
+        return jsonify({
+            "success": False,
+            "error": "post_id and post_type are required"
+        }), 400
+    
+    try:
+        success, message = add_like(request.user_email, post_id, post_type)
+        
+        if success:
+            return jsonify({
+                "success": True,
+                "message": message,
+                "like_count": get_like_count(post_id, post_type)
+            }), 200
+        else:
+            return jsonify({
+                "success": False,
+                "error": message
+            }), 400
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": f"Server error: {str(e)}"
+        }), 500
+
+
+@app.route("/api/unlike", methods=["POST"])
+@require_auth
+def api_remove_like():
+    """Remove a like from a post"""
+    data = request.get_json() or {}
+    post_id = data.get("post_id")
+    post_type = data.get("post_type")
+    
+    if not post_id or not post_type:
+        return jsonify({
+            "success": False,
+            "error": "post_id and post_type are required"
+        }), 400
+    
+    try:
+        success, message = remove_like(request.user_email, post_id, post_type)
+        
+        if success:
+            return jsonify({
+                "success": True,
+                "message": message,
+                "like_count": get_like_count(post_id, post_type)
+            }), 200
+        else:
+            return jsonify({
+                "success": False,
+                "error": message
+            }), 400
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": f"Server error: {str(e)}"
+        }), 500
+
+
+@app.route("/api/comment", methods=["POST"])
+@require_auth
+def api_add_comment():
+    """Add a comment to a post"""
+    data = request.get_json() or {}
+    post_id = data.get("post_id")
+    post_type = data.get("post_type")
+    comment_text = data.get("comment_text", "").strip()
+    
+    if not post_id or not post_type:
+        return jsonify({
+            "success": False,
+            "error": "post_id and post_type are required"
+        }), 400
+    
+    if not comment_text:
+        return jsonify({
+            "success": False,
+            "error": "Comment text cannot be empty"
+        }), 400
+    
+    if len(comment_text) > 500:
+        return jsonify({
+            "success": False,
+            "error": "Comment must be less than 500 characters"
+        }), 400
+    
+    try:
+        success, message, comment = add_comment(request.user_email, post_id, post_type, comment_text)
+        
+        if success:
+            return jsonify({
+                "success": True,
+                "message": message,
+                "comment": comment,
+                "comment_count": get_comment_count(post_id, post_type)
+            }), 201
+        else:
+            return jsonify({
+                "success": False,
+                "error": message
+            }), 400
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": f"Server error: {str(e)}"
+        }), 500
+
+
+@app.route("/api/comments/<post_id>/<post_type>", methods=["GET"])
+@require_auth
+def api_get_comments(post_id, post_type):
+    """Get all comments for a post"""
+    try:
+        comments = get_comments_for_post(post_id, post_type)
+        
+        return jsonify({
+            "success": True,
+            "comments": comments
+        }), 200
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": f"Server error: {str(e)}"
+        }), 500
+
+
+@app.route("/api/comment/<comment_id>", methods=["DELETE"])
+@require_auth
+def api_delete_comment(comment_id):
+    """Delete a comment"""
+    try:
+        success, message = delete_comment(comment_id, request.user_email)
+        
+        if success:
+            return jsonify({
+                "success": True,
+                "message": message
+            }), 200
+        else:
+            return jsonify({
+                "success": False,
+                "error": message
+            }), 400
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": f"Server error: {str(e)}"
         }), 500
 
 
@@ -704,6 +884,94 @@ def api_remove_friend():
     
     try:
         success, message = remove_friend(request.user_email, friend_email)
+        
+        if success:
+            return jsonify({
+                "success": True,
+                "message": message
+            }), 200
+        else:
+            return jsonify({
+                "success": False,
+                "error": message
+            }), 400
+            
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": f"Server error: {str(e)}"
+        }), 500
+
+
+# Challenge Invitation Routes
+@app.route("/api/challenge-invitations", methods=["GET"])
+@require_auth
+def api_get_challenge_invitations():
+    """Get all pending challenge invitations"""
+    try:
+        invitations = get_challenge_invitations(request.user_email)
+        
+        return jsonify({
+            "success": True,
+            "invitations": invitations
+        }), 200
+        
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": f"Server error: {str(e)}"
+        }), 500
+
+
+@app.route("/api/accept-challenge-invitation", methods=["POST"])
+@require_auth
+def api_accept_challenge_invitation():
+    """Accept a challenge invitation"""
+    data = request.get_json() or {}
+    challenge_id = data.get("challenge_id")
+    
+    if not challenge_id:
+        return jsonify({
+            "success": False,
+            "error": "Challenge ID required"
+        }), 400
+    
+    try:
+        success, message = accept_challenge_invitation(challenge_id, request.user_email)
+        
+        if success:
+            return jsonify({
+                "success": True,
+                "message": message
+            }), 200
+        else:
+            return jsonify({
+                "success": False,
+                "error": message
+            }), 400
+            
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": f"Server error: {str(e)}"
+        }), 500
+
+
+@app.route("/api/decline-challenge-invitation", methods=["POST"])
+@require_auth
+def api_decline_challenge_invitation():
+    """Decline a challenge invitation"""
+    data = request.get_json() or {}
+    challenge_id = data.get("challenge_id")
+    
+    if not challenge_id:
+        return jsonify({
+            "success": False,
+            "error": "Challenge ID required"
+        }), 400
+    
+    try:
+        success, message = decline_challenge_invitation(challenge_id, request.user_email)
         
         if success:
             return jsonify({

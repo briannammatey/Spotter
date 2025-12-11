@@ -121,14 +121,38 @@ if (!token) {
 
 <!-- FIX 2: Friend search and invite functionality -->
 <script>
-// Sample friend data
-const sampleFriends = [
-    "Alice Johnson", "Bob Smith", "Charlie Brown", "Diana Prince",
-    "Emma Watson", "Frank Miller", "Grace Lee", "Henry Davis",
-    "Isabella Garcia", "Jack Wilson", "Kate Martinez", "Liam Taylor"
-];
-
+// Load actual friends from API
+let actualFriends = [];
 let invitedFriends = new Set();
+
+// Load friends on page load
+async function loadFriends() {
+    const token = localStorage.getItem('spotterToken');
+    if (!token) return;
+    
+    try {
+        const response = await fetch('/api/friends', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        
+        const result = await response.json();
+        
+        if (result.success && result.friends) {
+            actualFriends = result.friends.map(friend => ({
+                email: friend.email,
+                username: friend.username,
+                displayName: `${friend.username} (${friend.email})`
+            }));
+        }
+    } catch (error) {
+        console.error('Error loading friends:', error);
+    }
+}
+
+// Call loadFriends when page loads
+document.addEventListener('DOMContentLoaded', loadFriends);
 
 const friendSearchInput = document.getElementById('friendSearch');
 const invitedFriendsList = document.getElementById('invitedFriendsList');
@@ -136,7 +160,20 @@ const invitedFriendsList = document.getElementById('invitedFriendsList');
 // Create dropdown for search suggestions
 const dropdown = document.createElement('div');
 dropdown.className = 'friend-dropdown';
-dropdown.style.display = 'none';
+dropdown.style.cssText = `
+    display: none;
+    position: absolute;
+    background: white;
+    border: 2px solid #ddb5b5;
+    border-radius: 8px;
+    max-height: 300px;
+    overflow-y: auto;
+    width: calc(100% - 4px);
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    margin-top: 5px;
+`;
+friendSearchInput.parentElement.style.position = 'relative';
 friendSearchInput.parentElement.appendChild(dropdown);
 
 // Show or hide achievement fields based on challenge type
@@ -158,50 +195,76 @@ const today = new Date().toISOString().split('T')[0];
 document.getElementById('startDate').min = today;
 document.getElementById('endDate').min = today;
 
+// Show dropdown on focus/click
+friendSearchInput.addEventListener('focus', function() {
+    showFriendsDropdown('');
+});
+
 // Add search functionality
 friendSearchInput.addEventListener('input', function(e) {
     const searchTerm = e.target.value.toLowerCase().trim();
-    
-    if (searchTerm.length === 0) {
-        dropdown.style.display = 'none';
+    showFriendsDropdown(searchTerm);
+});
+
+// Function to show friends dropdown
+function showFriendsDropdown(searchTerm) {
+    if (actualFriends.length === 0) {
+        dropdown.innerHTML = '<div class="friend-option" style="color: #999;">No friends yet. Add friends first!</div>';
+        dropdown.style.display = 'block';
         return;
     }
     
-    const matches = sampleFriends.filter(friend => 
-        friend.toLowerCase().includes(searchTerm) && !invitedFriends.has(friend)
+    // Filter friends based on search term and already invited
+    const matches = actualFriends.filter(friend => 
+        !invitedFriends.has(friend.email) &&
+        (searchTerm === '' || 
+         friend.displayName.toLowerCase().includes(searchTerm) ||
+         friend.username.toLowerCase().includes(searchTerm) ||
+         friend.email.toLowerCase().includes(searchTerm))
     );
     
     if (matches.length > 0) {
         dropdown.innerHTML = matches.map(friend => 
-            `<div class="friend-option" data-name="${friend}">${friend}</div>`
+            `<div class="friend-option" data-email="${friend.email}" data-name="${friend.username}" 
+                  style="padding: 12px; cursor: pointer; border-bottom: 1px solid #f0f0f0; transition: background 0.2s;"
+                  onmouseover="this.style.background='#fff5f5'"
+                  onmouseout="this.style.background='white'">
+                <strong style="color: #2d3748; font-size: 15px;">${friend.username}</strong><br>
+                <small style="color: #718096;">${friend.email}</small>
+            </div>`
         ).join('');
+        dropdown.style.display = 'block';
+    } else if (searchTerm) {
+        dropdown.innerHTML = '<div class="friend-option" style="color: #999;">No matching friends found</div>';
         dropdown.style.display = 'block';
     } else {
         dropdown.style.display = 'none';
     }
-});
+}
 
 // Handle friend selection from dropdown
 dropdown.addEventListener('click', function(e) {
-    if (e.target.classList.contains('friend-option')) {
-        const friendName = e.target.getAttribute('data-name');
-        addFriend(friendName);
+    const option = e.target.closest('.friend-option');
+    if (option && option.hasAttribute('data-email')) {
+        const friendEmail = option.getAttribute('data-email');
+        const friendName = option.getAttribute('data-name');
+        addFriend(friendEmail, friendName);
         friendSearchInput.value = '';
         dropdown.style.display = 'none';
     }
 });
 
 // Add friend to invited list
-function addFriend(name) {
-    if (invitedFriends.has(name)) return;
+function addFriend(email, name) {
+    if (invitedFriends.has(email)) return;
     
-    invitedFriends.add(name);
+    invitedFriends.add(email);
     
     const friendTag = document.createElement('div');
     friendTag.className = 'friend-tag';
     friendTag.innerHTML = `
         <span>${name}</span>
-        <span class="remove-friend" data-name="${name}">✕</span>
+        <span class="remove-friend" data-email="${email}">✕</span>
     `;
     
     invitedFriendsList.appendChild(friendTag);
@@ -210,8 +273,8 @@ function addFriend(name) {
 // Remove friend from invited list
 invitedFriendsList.addEventListener('click', function(e) {
     if (e.target.classList.contains('remove-friend')) {
-        const friendName = e.target.getAttribute('data-name');
-        invitedFriends.delete(friendName);
+        const friendEmail = e.target.getAttribute('data-email');
+        invitedFriends.delete(friendEmail);
         e.target.parentElement.remove();
     }
 });
