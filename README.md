@@ -37,8 +37,8 @@ venv\Scripts\activate
 pip install flask flask-cors python-dotenv pytest pytest-cov
 ```
 
-### 4. Set Up Environment Variables (Optional)
-Create a `.env` file in the project root if you need custom configuration:
+### 4. Set Up Environment Variables
+Create a `.env` file in the backend folder and paste in the two API Keys provided in the final deliverable
 ```bash
 PORT=5001
 ```
