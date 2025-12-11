@@ -219,3 +219,189 @@ def remove_friend(user_email, friend_email):
         return False, "Friendship not found"
     
     return True, "Friend removed"
+# Add these functions to your db.py file
+
+def get_user_profile(email):
+    """Get user profile information"""
+    user = users.find_one({"email": email})
+    
+    if not user:
+        return None
+    
+    # Get user stats
+    stats = get_user_stats(email)
+    
+    return {
+        "email": email,
+        "username": user.get("username", email.split("@")[0]),
+        "bio": user.get("bio", ""),
+        "profile_picture": user.get("profile_picture", ""),
+        "joined_date": user.get("created_at", datetime.utcnow()),
+        "favorite_workout": user.get("favorite_workout", ""),
+        "fitness_goal": user.get("fitness_goal", ""),
+        "stats": stats
+    }
+
+
+def update_user_profile(email, data):
+    """Update user profile information"""
+    allowed_fields = ["username", "bio", "profile_picture", "favorite_workout", "fitness_goal"]
+    
+    update_data = {}
+    for field in allowed_fields:
+        if field in data:
+            update_data[field] = data[field]
+    
+    if not update_data:
+        return False, "No valid fields to update"
+    
+    update_data["updated_at"] = datetime.utcnow()
+    
+    result = users.update_one(
+        {"email": email},
+        {"$set": update_data}
+    )
+    
+    if result.modified_count > 0:
+        return True, "Profile updated successfully"
+    else:
+        return False, "No changes made"
+
+
+def get_user_stats(email):
+    """Calculate user statistics"""
+    # Count challenges created
+    challenges_created = challenges.count_documents({"creator": email})
+    
+    # Count challenges participated in
+    challenges_joined = challenge_participants.count_documents({"participant_email": email})
+    
+    # Count workouts logged
+    workouts_logged = workouts.count_documents({"creator": email})
+    
+    # Count friends
+    friends_count = friendships.count_documents({
+        "$or": [
+            {"user1": email},
+            {"user2": email}
+        ]
+    })
+    
+    # Calculate total workout duration
+    workout_pipeline = [
+        {"$match": {"creator": email}},
+        {"$group": {
+            "_id": None,
+            "total_duration": {"$sum": "$duration"},
+            "total_calories": {"$sum": "$calories"}
+        }}
+    ]
+    
+    workout_stats = list(workouts.aggregate(workout_pipeline))
+    total_duration = workout_stats[0]["total_duration"] if workout_stats else 0
+    total_calories = workout_stats[0]["total_calories"] if workout_stats else 0
+    
+    # Get workout streak (days with at least one workout)
+    recent_workouts = list(workouts.find(
+        {"creator": email}
+    ).sort("date", -1).limit(30))
+    
+    streak = calculate_streak(recent_workouts)
+    
+    return {
+        "challenges_created": challenges_created,
+        "challenges_joined": challenges_joined,
+        "workouts_logged": workouts_logged,
+        "total_workout_minutes": total_duration,
+        "total_calories_burned": total_calories,
+        "friends_count": friends_count,
+        "current_streak": streak
+    }
+
+
+def calculate_streak(workouts):
+    """Calculate the current workout streak in days"""
+    if not workouts:
+        return 0
+    
+    from datetime import timedelta
+    
+    # Get unique workout dates
+    workout_dates = set()
+    for workout in workouts:
+        workout_date = workout.get("date")
+        if isinstance(workout_date, str):
+            workout_date = datetime.strptime(workout_date, "%Y-%m-%d").date()
+        elif isinstance(workout_date, datetime):
+            workout_date = workout_date.date()
+        workout_dates.add(workout_date)
+    
+    if not workout_dates:
+        return 0
+    
+    # Sort dates in descending order
+    sorted_dates = sorted(workout_dates, reverse=True)
+    
+    # Check if the most recent workout was today or yesterday
+    today = datetime.utcnow().date()
+    yesterday = today - timedelta(days=1)
+    
+    if sorted_dates[0] not in [today, yesterday]:
+        return 0
+    
+    # Count consecutive days
+    streak = 1
+    expected_date = sorted_dates[0] - timedelta(days=1)
+    
+    for i in range(1, len(sorted_dates)):
+        if sorted_dates[i] == expected_date:
+            streak += 1
+            expected_date -= timedelta(days=1)
+        else:
+            break
+    
+    return streak
+
+
+def get_user_recent_activities(email, limit=10):
+    """Get user's recent activities (challenges and workouts)"""
+    activities = []
+    
+    # Get recent challenges
+    user_challenges = challenges.find(
+        {"creator": email}
+    ).sort("created_at", -1).limit(limit)
+    
+    for challenge in user_challenges:
+        activities.append({
+            "type": "challenge",
+            "data": {
+                "id": str(challenge["_id"]),
+                "title": challenge["title"],
+                "goal": challenge["goal"],
+                "created_at": challenge["created_at"],
+                "privacy": challenge.get("privacy", "public")
+            }
+        })
+    
+    # Get recent workouts
+    user_workouts = workouts.find(
+        {"creator": email}
+    ).sort("created_at", -1).limit(limit)
+    
+    for workout in user_workouts:
+        activities.append({
+            "type": "workout",
+            "data": {
+                "id": str(workout["_id"]),
+                "workout_name": workout["workout_name"],
+                "workout_type": workout["workout_type"],
+                "duration": workout["duration"],
+                "created_at": workout["created_at"],
+                "privacy": workout.get("privacy", "public")
+            }
+        })
+    
+    # Sort by creation date and limit
+    activities.sort(key=lambda x: x["data"]["created_at"], reverse=True)
+    return activities[:limit]
