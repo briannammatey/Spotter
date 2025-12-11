@@ -139,10 +139,12 @@ def log_workout(data, creator_email=None):
         success = add_workout(workout)
         
         if success:
+            workout_response = {k: v for k, v in workout.items() if k != "_id"}
+            
             return True, {
                 "success": True,
                 "message": "Workout logged successfully!",
-                "workout": workout
+                "workout": workout_response
             }, 201
         else:
             return False, {
