@@ -135,17 +135,14 @@ def log_workout(data, creator_email=None):
             "type": "workout"
         }
         
-        # Save workout 
+        # Save workout
         success = add_workout(workout)
         
         if success:
-            # Remove
-            workout_response = {k: v for k, v in workout.items() if k != "_id"}
-            
             return True, {
                 "success": True,
                 "message": "Workout logged successfully!",
-                "workout": workout_response
+                "workout": workout
             }, 201
         else:
             return False, {

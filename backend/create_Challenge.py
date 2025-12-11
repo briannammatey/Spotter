@@ -198,23 +198,17 @@ def create_challenge(data, creator_email=None):
             "type": "challenge"
         }
         
-        # Add type-specific fields for achievement-based challenges
-        if challenge_type == "Achievement-Based":
-            challenge["target_value"] = float(data.get("target_value"))
-            challenge["metric"] = data.get("metric", "").strip().lower()
-            challenge["current_progress"] = 0  # Track progress toward goal
-        
         # Save challenge 
         success = add_challenge(challenge)
         
         if success:
-            # Remove internal MongoDB _id if present
+            # Remove 
             challenge_response = {k: v for k, v in challenge.items() if k != "_id"}
             
             return True, {
                 "success": True,
                 "message": "Challenge created successfully!",
-                "challenge": challenge_response
+                "challenge": challenge
             }, 201
         else:
             return False, {

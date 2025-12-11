@@ -35,6 +35,11 @@
         <h4 class="questions">Password</h4>
         <input id="password" type="password" class="textBox" placeholder="Choose a password">
 
+        <div id="confirmPasswordSection" style="display: none;">
+            <h4 class="questions">Confirm Password</h4>
+            <input id="confirmPassword" type="password" class="textBox" placeholder="Re-enter your password">
+        </div>
+
         <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
             <button id="registerBtn" class="generate-btn">📝 Create Account</button>
             <button id="loginBtn" class="generate-btn">🔓 Login</button>
@@ -56,7 +61,28 @@ if (existingToken) {
 
 const emailInput = document.getElementById("email");
 const passwordInput = document.getElementById("password");
+const confirmPasswordInput = document.getElementById("confirmPassword");
+const confirmPasswordSection = document.getElementById("confirmPasswordSection");
 const messageEl = document.getElementById("authMessage");
+const registerBtn = document.getElementById("registerBtn");
+const loginBtn = document.getElementById("loginBtn");
+
+// Toggle active button state
+function setActiveMode(mode) {
+    if (mode === 'register') {
+        confirmPasswordSection.style.display = 'block';
+        registerBtn.style.opacity = '1';
+        loginBtn.style.opacity = '0.7';
+        passwordInput.placeholder = "Choose a password";
+    } else {
+        confirmPasswordSection.style.display = 'none';
+        registerBtn.style.opacity = '0.7';
+        loginBtn.style.opacity = '1';
+        passwordInput.placeholder = "Enter your password";
+        confirmPasswordInput.value = ''; // Clear confirm password
+    }
+    messageEl.textContent = ''; // Clear any messages
+}
 
 async function callAuth(endpoint) {
     const email = emailInput.value.trim();
@@ -64,10 +90,35 @@ async function callAuth(endpoint) {
 
     if (!email || !password) {
         messageEl.textContent = "Please enter email and password.";
+        messageEl.style.color = "red";
         return;
     }
 
+    // Additional validation for registration
+    if (endpoint === "register") {
+        const confirmPassword = confirmPasswordInput.value.trim();
+        
+        if (!confirmPassword) {
+            messageEl.textContent = "Please confirm your password.";
+            messageEl.style.color = "red";
+            return;
+        }
+        
+        if (password !== confirmPassword) {
+            messageEl.textContent = "Passwords do not match. Please try again.";
+            messageEl.style.color = "red";
+            return;
+        }
+
+        if (password.length < 6) {
+            messageEl.textContent = "Password must be at least 6 characters long.";
+            messageEl.style.color = "red";
+            return;
+        }
+    }
+
     messageEl.textContent = "Processing...";
+    messageEl.style.color = "black";
 
     try {
         const res = await fetch(`${apiBase}/api/${endpoint}`, {
@@ -81,6 +132,7 @@ async function callAuth(endpoint) {
 
         if (!res.ok || !data.success) {
             messageEl.textContent = data.error || "Something went wrong.";
+            messageEl.style.color = "red";
             return;
         }
 
@@ -89,6 +141,7 @@ async function callAuth(endpoint) {
         localStorage.setItem("spotterEmail", data.email);
 
         messageEl.textContent = data.message + " Logged in as " + data.email;
+        messageEl.style.color = "green";
 
         // Redirect to homepage after a moment
         setTimeout(() => {
@@ -98,14 +151,17 @@ async function callAuth(endpoint) {
     } catch (err) {
         console.error("Auth error:", err);
         messageEl.textContent = "Network error, please try again.";
+        messageEl.style.color = "red";
     }
 }
 
-document.getElementById("registerBtn").addEventListener("click", () => {
+registerBtn.addEventListener("click", () => {
+    setActiveMode('register');
     callAuth("register");
 });
 
-document.getElementById("loginBtn").addEventListener("click", () => {
+loginBtn.addEventListener("click", () => {
+    setActiveMode('login');
     callAuth("login");
 });
 </script>
