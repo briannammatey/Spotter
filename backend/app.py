@@ -25,6 +25,10 @@ from logWorkout import log_workout
 from data_manager import (load_challenges, get_public_challenges, get_challenge_by_id, load_workouts, get_workout_by_id, get_all_activities)
 from getExercises import (generate_exercises, list_muscles_for_body_parts, NoBodyPartsSelected, NoMusclesSelected, InvalidMuscleSelection)
 from findClasses import find_classes
+from db import (
+    search_users, send_friend_request, get_friend_requests,
+    accept_friend_request, reject_friend_request, get_friends, remove_friend
+)
 
 # Get the path to the frontend directory
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # backend/
@@ -563,13 +567,6 @@ def find_classes_route():
     except Exception as e:
         return jsonify({"success": False, "error": "Internal server error", "details": str(e)}), 500
 
-# Add these imports at the top
-from db import (
-    search_users, send_friend_request, get_friend_requests,
-    accept_friend_request, reject_friend_request, get_friends, remove_friend
-)
-
-# Add these routes after your existing routes
 
 # Friend Search Route
 @app.route("/api/search-users", methods=["GET"])
