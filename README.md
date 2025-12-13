@@ -8,6 +8,9 @@ Spotter helps students track workouts, join challenges, stay motivated, and buil
 Spotter is a group project focused on improving student wellness at Boston University. Our goal is to create an easy-to-use fitness companion that encourages stronger workout habits, community engagement, and consistent progress tracking.
 Unlike generic fitness apps, Spotter tailors the experience to BU students by connecting activities, locations, and challenges directly to them.
 
+## Video Link Demo
+[CLICK HERE FOR Our Video Demo!](https://youtu.be/gLwX5k3L6Lw)
+
 ## Prerequisites
 - Python 3.8 or higher
 - pip (Python package installer)
